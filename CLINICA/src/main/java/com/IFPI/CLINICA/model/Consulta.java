@@ -11,7 +11,7 @@ public class Consulta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idConsulta;
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

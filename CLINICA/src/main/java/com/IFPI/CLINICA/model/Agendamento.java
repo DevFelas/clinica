@@ -3,11 +3,10 @@ package com.IFPI.CLINICA.model;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Entity
-@Table(name = "tbConsulta")
-public class Consulta {
+@Table(name = "tbAgendamento")
+public class Agendamento {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +14,7 @@ public class Consulta {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private StatusConsulta status;
+    private StatusAgendamento status;
 
     @Column(nullable = false)
     private LocalDate data;
@@ -35,7 +34,7 @@ public class Consulta {
     @JoinColumn(name = "Paciente", nullable = false)
     private Paciente paciente;
 
-    @OneToMany(mappedBy = "consulta", cascade = CascadeType.ALL)
-    private List<ConsultaProcedimento> procedimentos;
-
+    @ManyToOne
+    @JoinColumn(name = "Procedimento", nullable = false)
+    private Procedimento procedimento;
 }

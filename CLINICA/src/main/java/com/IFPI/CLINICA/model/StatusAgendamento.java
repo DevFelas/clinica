@@ -1,6 +1,6 @@
 package com.IFPI.CLINICA.model;
 
-public enum StatusConsulta {
+public enum StatusAgendamento {
     AGENDADA,
     REALIZADA,
     CANCELADA

@@ -4,7 +4,13 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Time;
 import java.util.List;
+import lombok .*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tbProcedimento")
 public class Procedimento {
@@ -24,5 +30,4 @@ public class Procedimento {
 
     @OneToMany(mappedBy = "procedimento")
     private List<Agendamento> agendamentos;
-
 }

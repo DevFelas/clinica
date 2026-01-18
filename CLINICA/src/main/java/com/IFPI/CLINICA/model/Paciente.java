@@ -1,5 +1,7 @@
 package com.IFPI.CLINICA.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,8 +14,9 @@ import java.util.List;
 public class Paciente {
 
     @Id
+    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPaciente;
+    private Integer id;
 
     @Setter
     @Column(nullable = false)
@@ -24,6 +27,10 @@ public class Paciente {
     @Column(nullable = false, length = 100)
     private String nome;
 
+    @Getter
+    @Setter
+    @JsonProperty("dataNascimento")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dataNascimento;
 
     @Getter

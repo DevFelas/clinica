@@ -33,7 +33,7 @@ public class PacienteService {
         return pacienteRepository.save(paciente);
     }
 
-    public void remover(Integer id){
+    public void remover(Integer id) {
         pacienteRepository.deleteById(id);
     }
 

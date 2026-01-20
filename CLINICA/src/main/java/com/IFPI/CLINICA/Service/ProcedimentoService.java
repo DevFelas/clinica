@@ -1,7 +1,7 @@
 package com.IFPI.CLINICA.Service;
 
-import com.IFPI.CLINICA.model.Procedimento;
-import com.IFPI.CLINICA.repository.ProcedimentoRepository;
+import com.IFPI.CLINICA.Model.Procedimento;
+import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import org.springframework.stereotype.Service;
 
 @Service

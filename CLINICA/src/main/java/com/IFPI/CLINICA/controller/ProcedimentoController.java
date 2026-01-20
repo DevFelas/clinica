@@ -21,7 +21,19 @@ public class ProcedimentoController {
 
     @GetMapping
     public ResponseEntity<Procedimento> buscarProcedimentoPorId(@RequestParam Integer id){
-        return new ResponseEntity.ok(ProcedimentoService.buscarProcedimentoPorId(id));
+        return  ResponseEntity.ok(procedimentoService.buscarProcedimentoPorId(id));
     }
 
+    @DeleteMapping
+    public ResponseEntity<Void> deletarProcedimentoPorId(@RequestParam Integer id){
+        procedimentoService.deletarProcedimentoPorId(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping
+    public ResponseEntity<Void> atualizarProcedimentoPorId(@RequestParam Integer id,
+                                                           @RequestBody Procedimento procedimento){
+        procedimentoService.atualizarProcedimentoPorId(id, procedimento);
+        return ResponseEntity.ok().build();
+    }
 }

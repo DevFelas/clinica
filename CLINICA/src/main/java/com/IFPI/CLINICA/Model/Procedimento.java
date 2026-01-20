@@ -1,4 +1,4 @@
-package com.IFPI.CLINICA.model;
+package com.IFPI.CLINICA.Model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;

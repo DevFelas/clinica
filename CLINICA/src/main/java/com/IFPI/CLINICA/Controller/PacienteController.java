@@ -1,7 +1,7 @@
-package com.IFPI.CLINICA.controller;
+package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Service.PacienteService;
-import com.IFPI.CLINICA.model.Paciente;
+import com.IFPI.CLINICA.Model.Paciente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

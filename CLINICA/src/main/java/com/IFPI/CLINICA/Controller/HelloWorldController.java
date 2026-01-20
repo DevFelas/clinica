@@ -1,4 +1,4 @@
-package com.IFPI.CLINICA.controller;
+package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Service.clinicaTeste.ClinicaService;
 import org.springframework.beans.factory.annotation.Autowired;

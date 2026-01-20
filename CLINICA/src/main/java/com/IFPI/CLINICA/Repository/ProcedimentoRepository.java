@@ -1,6 +1,6 @@
-package com.IFPI.CLINICA.repository;
+package com.IFPI.CLINICA.Repository;
 
-import com.IFPI.CLINICA.model.Procedimento;
+import com.IFPI.CLINICA.Model.Procedimento;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProcedimentoRepository extends JpaRepository<Procedimento, Integer>{ }

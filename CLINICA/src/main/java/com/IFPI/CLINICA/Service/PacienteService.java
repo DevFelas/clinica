@@ -1,7 +1,7 @@
 package com.IFPI.CLINICA.Service;
 
-import com.IFPI.CLINICA.model.Paciente;
-import com.IFPI.CLINICA.repository.PacienteRepository;
+import com.IFPI.CLINICA.Model.Paciente;
+import com.IFPI.CLINICA.Repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

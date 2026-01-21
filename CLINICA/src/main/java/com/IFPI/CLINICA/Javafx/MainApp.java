@@ -1,0 +1,43 @@
+package com.IFPI.CLINICA.Javafx;
+
+import com.IFPI.CLINICA.ClinicaOdontoApplication;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
+
+public class MainApp extends Application {
+
+    private static ConfigurableApplicationContext springContext;
+
+    @Override
+    public void init() {
+        springContext = new SpringApplicationBuilder(ClinicaOdontoApplication.class).run();
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/view/login.fxml")
+        );
+
+        loader.setControllerFactory(springContext::getBean);
+
+        Parent root = loader.load();
+
+        stage.setScene(new Scene(root));
+        stage.setTitle("Sistema Odontológico");
+        stage.show();
+    }
+
+    @Override
+    public void stop() {
+        springContext.close();
+        Platform.exit();
+    }
+}
+

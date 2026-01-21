@@ -3,38 +3,34 @@ package com.IFPI.CLINICA.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "tbPaciente")
 public class Paciente {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Setter
     @Column(nullable = false)
     private Integer cpf;
 
-    @Getter
-    @Setter
     @Column(nullable = false, length = 100)
     private String nome;
 
-    @Getter
-    @Setter
     @JsonProperty("dataNascimento")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate dataNascimento;
 
-    @Getter
-    @Setter
     private String contato;
 
     @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)

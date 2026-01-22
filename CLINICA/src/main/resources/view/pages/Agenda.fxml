@@ -1,82 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.LinearGradient?>
-<?import javafx.scene.paint.Stop?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+        <?import javafx.geometry.Insets?>
+        <?import javafx.scene.Cursor?>
+        <?import javafx.scene.control.Button?>
+        <?import javafx.scene.control.DatePicker?>
+        <?import javafx.scene.control.Label?>
+        <?import javafx.scene.control.ScrollPane?>
+        <?import javafx.scene.image.Image?>
+        <?import javafx.scene.image.ImageView?>
+        <?import javafx.scene.layout.BorderPane?>
+        <?import javafx.scene.layout.GridPane?>
+        <?import javafx.scene.layout.HBox?>
+        <?import javafx.scene.layout.Region?>
+        <?import javafx.scene.layout.VBox?>
+        <?import javafx.scene.shape.Circle?>
+        <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="720.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-    <children>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#e7e7e7" height="353.0" layoutX="-1.0" layoutY="47.0" smooth="false" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="720.0" />
-        <Rectangle arcHeight="5.0" arcWidth="5.0" height="47.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="720.0">
-            <fill>
-                <LinearGradient endX="1.0" endY="1.0">
-                    <stops>
-                        <Stop>
-                            <color>
-                                <Color green="0.2862745225429535" blue="0.1725490242242813" />
-                            </color>
-                        </Stop>
-                        <Stop offset="0.006729475100942127">
-                            <color>
-                                <Color green="0.2862745225429535" blue="0.1725490242242813" />
-                            </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                            <color>
-                                <Color red="0.25882354378700256" green="0.8549019694328308" blue="0.6235294342041016" />
-                            </color>
-                        </Stop>
-                    </stops>
-                </LinearGradient>
-            </fill>
-        </Rectangle>
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="353.0" layoutY="47.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="84.0" />
-        <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="353.0" layoutX="618.0" layoutY="47.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="102.0" />
-        <Text fill="#004b2b" layoutX="89.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Agenda" wrappingWidth="102.0">
-            <font>
-                <Font name="Arial" size="19.0" />
-            </font>
-        </Text>
-        <ScrollPane fitToHeight="true" fitToWidth="true" layoutX="89.0" layoutY="88.0" prefHeight="310.0" prefWidth="520.0">
-            <content>
-                <GridPane gridLinesVisible="true">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="-Infinity" minHeight="60.0" prefHeight="80.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-            </content>
-        </ScrollPane>
-    </children>
-</AnchorPane>
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.IFPI.CLINICA.Controller.PaginaInicialAgendaController">
+
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10" style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+
+            <Label prefHeight="52.0" prefWidth="101.0" text="SGO" textFill="#e6f1eb">
+                <font>
+                    <Font name="Arial" size="44.0" />
+                </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
+                <image>
+                    <Image url="@imagem_2026-01-21_140410504-Photoroom.png" />
+                </image>
+            </ImageView>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Logado como" textFill="#e6f1eb" />
+
+            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                <image>
+                    <Image url="@/user.png" />
+                </image>
+            </ImageView>
+        </HBox>
+    </top>
+
+
+    <left>
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <HBox prefHeight="32.0" prefWidth="70.0">
+                <children>
+
+                    <Label text="MENU">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+
+            <Button style="-fx-background-color: transparent;" text="Agenda">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Pacientes">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Registro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Financeiro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+        </VBox>
+    </left>
+
+
+    <right>
+        <VBox prefHeight="358.0" prefWidth="159.0" spacing="15" style="-fx-background-color: white;">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+
+
+            <VBox spacing="8">
+                <Label text="Procedimentos">
+                    <font>
+                        <Font size="16" />
+                    </font>
+                </Label>
+
+                <HBox spacing="5">
+                    <Circle fill="#e7e9e4" radius="6" />
+                    <Label text="Consulta" />
+                </HBox>
+                <HBox spacing="5">
+                    <Circle fill="#09c6d9" radius="6" />
+                    <Label text="Limpeza" />
+                </HBox>
+                <HBox spacing="5">
+                    <Circle fill="#f6944d" radius="6" />
+                    <Label text="Extração" />
+                </HBox>
+                <HBox spacing="5">
+                    <Circle fill="#b99aff" radius="6" />
+                    <Label text="Implante" />
+                </HBox>
+                <HBox spacing="5">
+                    <Circle fill="#c43c3e" radius="6" />
+                    <Label text="Prótese" />
+                </HBox>
+                <HBox spacing="5">
+                    <children>
+                        <Circle fill="#e1aded" radius="6" />
+                        <Label text="Mont. de aparelho" />
+                    </children>
+                </HBox>
+                <HBox spacing="5">
+                    <children>
+                        <Circle fill="#35bc84" radius="6" />
+                        <Label text="Manut. de aparelho" />
+                    </children>
+                </HBox>
+                <HBox spacing="5">
+                    <children>
+                        <Circle fill="#c4fe6b" radius="6" />
+                        <Label text="Restauração" />
+                    </children>
+                </HBox>
+            </VBox>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+
+            <VBox spacing="8">
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Editar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Cancelar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+            </VBox>
+        </VBox>
+    </right>
+
+    
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Agenda" textFill="#0b4d32">
+                    <font>
+                        <Font size="20" />
+                    </font>
+                </Label>
+
+                <Region HBox.hgrow="ALWAYS" />
+
+                <DatePicker promptText="Data" />
+            </HBox>
+
+            <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                <content>
+                    <GridPane fx:id="agendaGrid" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS" />
+                </content>
+            </ScrollPane>
+
+        </VBox>
+    </center>
+
+</BorderPane>

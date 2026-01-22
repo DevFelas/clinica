@@ -22,15 +22,14 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/view/login.fxml")
+                getClass().getResource("/view/pages/Login.fxml")
         );
-
         loader.setControllerFactory(springContext::getBean);
-
         Parent root = loader.load();
 
         stage.setScene(new Scene(root));
-        stage.setTitle("Sistema Odontológico");
+        stage.setTitle("SGO - Sistema de Agendamento");
+        stage.setMaximized(true); // Abre a janela ocupando todo o espaço disponível
         stage.show();
     }
 

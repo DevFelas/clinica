@@ -1,0 +1,16 @@
+.button-login {
+    -fx-background-color: #2cb784;
+    -fx-background-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 22px;
+}
+
+.button-login:hover {
+    -fx-background-color: #14523c;
+    -fx-font-size: 22px;
+}
+
+.button-login:pressed {
+    -fx-background-color: #14523c;
+}

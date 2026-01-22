@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #50cc9e, #063e27);" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="com.IFPI.CLINICA.Controller.LoginController" stylesheets="@../css/style.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="900.0" style="-fx-background-color: linear-gradient(to bottom right, #50cc9e, #063e27);" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1">
     <children>
         <HBox alignment="CENTER" layoutX="330.0" layoutY="169.0" prefHeight="100.0" prefWidth="200.0" spacing="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -31,7 +31,7 @@
                                 </Label>
                                 <ImageView fitHeight="100.0" fitWidth="120.0" pickOnBounds="true" preserveRatio="true">
                                     <image>
-                                        <Image url="@imagem_2026-01-21_140410504-Photoroom.png" />
+                                        <Image url="@../static_files/imagem_2026-01-21_140410504-Photoroom.png" />
                                     </image>
                                 </ImageView>
                             </children>
@@ -58,17 +58,22 @@
                                         <Font name="System Bold" size="36.0" />
                                     </font>
                                 </Label>
-                                <TextField promptText="Usuário" style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #cccccc; -fx-background-color: white;">
+                                <TextField fx:id="campoLogin" promptText="Usuário"
+                                           style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #cccccc; -fx-background-color: white;">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
                                 </TextField>
-                                <PasswordField promptText="Senha" style="-fx-background-radius: 50;; -fx-border-radius: 50; -fx-border-color: #cccccc; -fx-background-color: white;;">
+                                <PasswordField fx:id="campoSenha" promptText="Senha"
+                                               style="-fx-background-radius: 50; -fx-border-radius: 50; -fx-border-color: #cccccc; -fx-background-color: white;">
                                     <font>
                                         <Font size="20.0" />
                                     </font>
                                 </PasswordField>
-                                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="260.0" style="-fx-background-color: #2cb784;; -fx-background-radius: 50;; -fx-text-fill: white;; -fx-font-weight: bold;;" text="Entrar">
+                                <Button onAction="#handleLogin" mnemonicParsing="false" prefHeight="50.0" prefWidth="260.0"
+                                        style="-fx-background-color: #2cb784; -fx-background-radius: 50; -fx-text-fill: white; -fx-font-weight: bold;"
+                                        styleClass="button-login"
+                                        text="Entrar">
                                     <font>
                                         <Font size="22.0" />
                                     </font>

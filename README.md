@@ -1,4 +1,4 @@
-## ▶️ Como executar a aplicação
+## Como executar a aplicação
 
 Para iniciar a aplicação, siga os passos abaixo:
 

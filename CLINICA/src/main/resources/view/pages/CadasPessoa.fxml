@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10" style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+
+            <Label prefHeight="52.0" prefWidth="101.0" text="SGO" textFill="#e6f1eb">
+                <font>
+                    <Font name="Arial" size="44.0" />
+                </font>
+            </Label>
+         <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
+            <image>
+               <Image url="@imagem_2026-01-21_140410504-Photoroom.png" />
+            </image>
+         </ImageView>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Logado como" textFill="#e6f1eb" />
+
+            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                <image>
+                    <Image url="@user.png" />
+                </image>
+            </ImageView>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+         <HBox prefHeight="32.0" prefWidth="70.0">
+            <children>
+      
+                  <Label text="MENU">
+                      <font>
+                          <Font size="18" />
+                      </font>
+                  </Label>
+            </children>
+         </HBox>
+
+            <Button style="-fx-background-color: transparent;" text="Agenda">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Pacientes">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Registro">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Financeiro">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+        </VBox>
+    </left>
+   <center>
+      <HBox prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #ffffff;" BorderPane.alignment="CENTER">
+         <children>
+            <Region prefHeight="358.0" prefWidth="18.0" style="-fx-background-color: #F3F5F4;" />
+            <VBox maxWidth="500.0" prefHeight="380.0" prefWidth="63.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Region prefHeight="20.0" prefWidth="2000.0" style="-fx-background-color: #F3F5F4;" />
+                  <Label maxWidth="Infinity" style="-fx-font-style: b;" text="Cadastrar Paciente" wrapText="true">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <Region prefHeight="358.0" prefWidth="18.0" style="-fx-background-color: #F3F5F4;" />
+                        <Label maxWidth="Infinity" prefWidth="0.0" text="Nome:" wrapText="true">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <TextField promptText="Nome do paciente" style="-fx-background-radius: 90;">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TextField>
+                        <Label maxWidth="Infinity" prefWidth="0.0" text="CPF:" wrapText="true">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <TextField promptText="CPF do paciente" style="-fx-background-radius: 90;">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TextField>
+                        <Label maxWidth="Infinity" prefWidth="0.0" text="Data de nascimento:" wrapText="true">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <DatePicker promptText="Data de nascimento do paciente" VBox.vgrow="ALWAYS" />
+                        <Label maxWidth="Infinity" prefWidth="0.0" text="Contato:" wrapText="true">
+                           <font>
+                              <Font size="25.0" />
+                           </font>
+                        </Label>
+                        <TextField promptText="Telefone ou email" style="-fx-background-radius: 90;">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </VBox>
+                  <Region prefHeight="30.0" prefWidth="30.0" />
+                  <Button minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Cadastrar" textFill="#ecfffb" VBox.vgrow="ALWAYS">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox fillWidth="false" prefHeight="200.0" prefWidth="8.0">
+               <children>
+                  <Region prefHeight="20.0" prefWidth="18.0" style="-fx-background-color: #F3F5F4;" />
+                  <Region prefHeight="358.0" prefWidth="3.0" style="-fx-background-color: #e7e7e7;">
+                     <effect>
+                        <DropShadow offsetX="-0.5" radius="5.5" width="3.0" />
+                     </effect>
+                  </Region>
+               </children>
+            </VBox>
+            <VBox maxWidth="500.0" prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Region prefHeight="20.0" prefWidth="2000.0" style="-fx-background-color: #F3F5F4;" />
+                  <Region prefHeight="25.0" prefWidth="90.0" />
+                  <Label maxWidth="Infinity" prefWidth="0.0" text="Endereço">
+                     <font>
+                        <Font size="25.0" />
+                     </font>
+                  </Label>
+                  <Label maxWidth="Infinity" prefWidth="0.0" text="Rua:">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TextField promptText="Digite a rua" style="-fx-background-radius: 90;">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+                  <Label maxWidth="Infinity" prefWidth="0.0" text="Bairro">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TextField promptText="Digite o bairro" style="-fx-background-radius: 90;">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+                  <Label maxWidth="Infinity" prefWidth="0.0" text="Cidade">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TextField promptText="Digite a cidade" style="-fx-background-radius: 90;">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+                  <Label maxWidth="Infinity" prefWidth="0.0" text="Número residencial">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </Label>
+                  <TextField promptText="Digite o número" style="-fx-background-radius: 90;">
+                     <font>
+                        <Font size="20.0" />
+                     </font>
+                  </TextField>
+               </children>
+            </VBox>
+            <VBox maxWidth="Infinity" prefHeight="20.0" prefWidth="10.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Region prefHeight="20.0" prefWidth="500.0" style="-fx-background-color: #F3F5F4;" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </center>
+
+</BorderPane>

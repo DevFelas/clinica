@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.IFPI.CLINICA.Controller.PagTodosPacieController">
+
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10" style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+
+            <Label prefHeight="52.0" prefWidth="101.0" text="SGO" textFill="#e6f1eb">
+                <font>
+                    <Font name="Arial" size="44.0" />
+                </font>
+            </Label>
+         <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
+            <image>
+               <Image url="@/view/static_files/imagem_2026-01-21_140410504-Photoroom.png" />
+            </image>
+         </ImageView>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Logado como" textFill="#e6f1eb" />
+
+            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                <image>
+                    <Image url="@/view/static_files/user.png" />
+                </image>
+            </ImageView>
+        </HBox>
+    </top>
+
+
+    <left>
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+         <HBox prefHeight="32.0" prefWidth="70.0">
+            <children>
+      
+                  <Label text="MENU">
+                      <font>
+                          <Font size="18" />
+                      </font>
+                  </Label>
+            </children>
+         </HBox>
+
+            <Button style="-fx-background-color: transparent;" text="Agenda">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Pacientes">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Registro">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Financeiro">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+        </VBox>
+    </left>
+
+
+    <right>
+        <VBox prefHeight="358.0" prefWidth="159.0" spacing="15" style="-fx-background-color: white;">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+
+
+            <VBox spacing="8" />
+
+            <Region VBox.vgrow="ALWAYS" />
+
+
+            <VBox spacing="8">
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Cadastrar" textFill="#ecfffb">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Editar" textFill="#ecfffb">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Remover" textFill="#ecfffb">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            </VBox>
+        </VBox>
+    </right>
+
+
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Pacientes" textFill="#0b4d32">
+                    <font>
+                        <Font size="20" />
+                    </font>
+                </Label>
+
+                <Region HBox.hgrow="ALWAYS" />
+            <TextField promptText="Procure um paciente" style="-fx-background-color: white; -fx-background-radius: 50;" HBox.hgrow="ALWAYS" />
+            </HBox>
+         <TableView fx:id="tabelaPacientes" VBox.vgrow="ALWAYS" >
+           <columns>
+             <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
+             <TableColumn fx:id="colCpf" prefWidth="75.0" text="CPF" />
+               <TableColumn fx:id="colContato" prefWidth="75.0" text="Contato" />
+           </columns>
+         </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>

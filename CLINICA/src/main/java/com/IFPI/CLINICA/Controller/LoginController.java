@@ -2,8 +2,11 @@ package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Repository.UsuarioRepository;
+import com.IFPI.CLINICA.Util.Navigator;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -33,6 +36,9 @@ public class LoginController {
 
     @Autowired
     private UsuarioRepository repository; // O Spring injeta a conexão com o banco aqui
+
+    @Autowired
+    private Navigator navigator;
 
     @FXML
     private void handleLogin() {

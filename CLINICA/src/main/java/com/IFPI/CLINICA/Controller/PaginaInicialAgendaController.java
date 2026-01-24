@@ -2,9 +2,11 @@ package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Agendamento;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
@@ -13,6 +15,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
+import javafx.event.ActionEvent;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -30,6 +33,9 @@ public class PaginaInicialAgendaController implements Initializable {
     @Autowired
     private AgendamentoRepository agendamentoRepository;
 
+    @Autowired
+    private Navigator navigator;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         semanaInicio = LocalDate.now().with(DayOfWeek.MONDAY); // Pega a segunda-feira da semana atual
@@ -38,6 +44,82 @@ public class PaginaInicialAgendaController implements Initializable {
         montarAgenda();
         carregarAgendamentos();
     }
+
+    // PAGINAÇÃO DO MENU LATERAL
+
+    // Botão para ir para tela da Agenda
+    @FXML
+    private void irParaAgenda(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Agenda.fxml"
+        );
+    }
+
+    // Botão para ir para tela de Pacintes
+    @FXML
+    private void irParaPacientes(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/TodosPacientes.fxml"
+        );
+    }
+
+    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
+//    @FXML
+//    private void irParaRegistro(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/Registro.fxml"
+//        );
+//    }
+
+    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
+//    @FXML
+//    private void irParaFinaneiro(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/Financeiro.fxml"
+//        );
+//    }
+
+    // BOTÕES DA LATERAL ESQUERDA
+
+    // Botão para ir para tela novo agendamento//@FXML
+//    private void irParaNovoAgendamento(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/CadasPessoa.fxml"
+//        );
+//    }
+
+    // Botão para ir para tela Editar
+//    @FXML
+//    private void irParaEditar(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/CadasPessoa.fxml"
+//        );
+//    }
+
+    // Botão para ir para tela Cancelar
+    @FXML
+//    private void irParaCancelar(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/CadasPessoa.fxml"
+//        );
+//    }
+
+    // Botão para ir para tela Detalhar
+//    @FXML
+//    private void irParaDetalhar(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/CadasPessoa.fxml"
+//        );
+//    }
+
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
@@ -296,6 +378,5 @@ public class PaginaInicialAgendaController implements Initializable {
     private String corPorProcedimento(Agendamento ag) {
         return ag.getProcedimento().getCorHex();
     }
-
 
 }

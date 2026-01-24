@@ -1,18 +1,36 @@
 package com.IFPI.CLINICA.Controller;
 
+import com.IFPI.CLINICA.Model.EnderecoPaciente;
+import com.IFPI.CLINICA.Model.Paciente;
+import com.IFPI.CLINICA.Service.PacienteService;
+import com.IFPI.CLINICA.Util.Navigator;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.awt.event.ActionEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Component
 public class PagCadasPessoaController implements Initializable {
+
+    @Autowired
+    private PacienteService service;
+
+    @Autowired
+    private Navigator navigator;
 
     @FXML
     private TextField txtNome;
@@ -41,6 +59,44 @@ public class PagCadasPessoaController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
+
+    // PAGINAÇÃO DO MENU LATERAL
+
+    // Botão para ir para tela da Agenda
+    @FXML
+    private void irParaAgenda(javafx.event.ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Agenda.fxml"
+        );
+    }
+
+    // Botão para ir para tela de Pacintes
+    @FXML
+    private void irParaPacientes(javafx.event.ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/TodosPacientes.fxml"
+        );
+    }
+
+    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
+//    @FXML
+//    private void irParaRegistro(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/Registro.fxml"
+//        );
+//    }
+
+    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
+//    @FXML
+//    private void irParaFinaneiro(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/Financeiro.fxml"
+//        );
+//    }
 
 
     @FXML
@@ -74,6 +130,7 @@ public class PagCadasPessoaController implements Initializable {
         }
 
         // 3. Criar objeto Paciente (exemplo)
+
         Paciente paciente = new Paciente(
                 nome,
                 cpf,
@@ -84,6 +141,8 @@ public class PagCadasPessoaController implements Initializable {
                 cidade,
                 numero
         );
+
+        service.cadastrar(paciente);
 
         // 4. Por enquanto, só imprime no console
         System.out.println("Paciente cadastrado:");

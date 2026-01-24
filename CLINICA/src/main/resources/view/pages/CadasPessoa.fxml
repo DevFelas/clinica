@@ -59,11 +59,11 @@
             </children>
          </HBox>
 
-            <Button style="-fx-background-color: transparent;" text="Agenda">
+            <Button onAction="#irParaAgenda" style="-fx-background-color: transparent;" text="Agenda">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
-            <Button style="-fx-background-color: transparent;" text="Pacientes">
+            <Button onAction="#irParaPacientes" style="-fx-background-color: transparent;" text="Pacientes">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
@@ -141,7 +141,7 @@
                      </children>
                   </VBox>
                   <Region prefHeight="30.0" prefWidth="30.0" />
-                  <Button minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Cadastrar" textFill="#ecfffb" VBox.vgrow="ALWAYS">
+                  <Button onAction="#cadastrarPaciente" text="Cadastrar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;"  textFill="#ecfffb" VBox.vgrow="ALWAYS">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

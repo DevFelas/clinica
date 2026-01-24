@@ -17,12 +17,23 @@ import java.util.List;
 @Table(name = "tbPaciente")
 public class Paciente {
 
+    public Paciente( String nome, String cpf, LocalDate dataNascimento, String contato, String rua, String bairro, String cidade, String numero) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.dataNascimento = dataNascimento;
+        this.contato = contato;
+        this.rua = rua;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.numero = numero;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false)
-    private Integer cpf;
+    private String cpf;
 
     @Column(nullable = false, length = 100)
     private String nome;
@@ -32,8 +43,8 @@ public class Paciente {
     private LocalDate dataNascimento;
 
     private String contato;
-
-    @OneToMany(mappedBy = "paciente", cascade = CascadeType.ALL)
-    private List<EnderecoPaciente> enderecos;
-
+    private String rua;
+    private String bairro;
+    private String cidade;
+    private String numero;
 }

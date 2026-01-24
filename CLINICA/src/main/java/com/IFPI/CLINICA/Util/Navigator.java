@@ -20,9 +20,16 @@ public class Navigator {
             Parent root = fxmlLoaderService.load(fxmlPath);
 
             Stage stage = (Stage) origem.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.setMaximized(true);
-            stage.show();
+
+            Scene scene = stage.getScene();
+            if (scene == null) {
+                scene = new Scene(root);
+                stage.setScene(scene);
+                stage.setMaximized(true);
+            }
+            else {
+                scene.setRoot(root);
+            }
 
 
         } catch (Exception e) {

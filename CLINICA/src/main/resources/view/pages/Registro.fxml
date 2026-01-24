@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.IFPI.CLINICA.Controller.PaginaInicialAgendaController">
+
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10" style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+
+
+            <Label prefHeight="52.0" prefWidth="101.0" text="SGO" textFill="WHITE">
+                <font>
+                    <Font name="Arial" size="44.0" />
+                </font>
+            </Label>
+            <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
+                <image>
+                    <Image url="@imagem_2026-01-21_140410504-Photoroom.png" />
+                </image>
+            </ImageView>
+
+            <Region HBox.hgrow="ALWAYS" />
+
+            <Label text="Logado como" textFill="#e6f1eb" />
+
+            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                <image>
+                    <Image url="@../static_files/user.png" />
+                </image>
+            </ImageView>
+        </HBox>
+    </top>
+
+
+    <left>
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <HBox prefHeight="32.0" prefWidth="70.0">
+                <children>
+
+                    <Label text="MENU">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+
+            <Button style="-fx-background-color: transparent;" text="Agenda">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Pacientes">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Registro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button style="-fx-background-color: transparent;" text="Financeiro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+        </VBox>
+    </left>
+
+
+    <right>
+        <VBox prefHeight="358.0" prefWidth="159.0" spacing="15" style="-fx-background-color: white;">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+
+            <VBox spacing="8">
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Editar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Cancelar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+
+                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor></Button>
+            </VBox>
+        </VBox>
+    </right>
+
+
+    <center>
+        <VBox spacing="10" style="-fx-background-color: #D3D3D3;">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </padding>
+
+            <Label text="Registro" textFill="#2b4623">
+                <font>
+                    <Font name="System Bold" size="32.0" />
+                </font>
+                <padding>
+                    <Insets bottom="10.0" left="20.0" right="20.0" top="10.0" />
+                </padding>
+            </Label>
+
+            <VBox spacing="10" style="-fx-background-color: WHITE; -fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #CCCCCC;" VBox.vgrow="ALWAYS">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                </padding>
+
+                <children>
+                    <HBox alignment="CENTER_LEFT" spacing="10.0">
+                        <children>
+                            <Label text="Filtrar por:" />
+                            <TextField promptText="Pesquisar..." style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #CCCCCC; -fx-background-color: white;" HBox.hgrow="ALWAYS" />
+                            <ComboBox prefWidth="150.0" promptText="Procedimentos" style="-fx-background-color: white; -fx-border-radius: 20; -fx-border-color: #cccccc; -fx-background-radius: 20;" />
+                            <DatePicker prefWidth="130.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #CCCCCC; -fx-background-color: white;" />
+                            <Label text="até" />
+                            <DatePicker prefWidth="130.0" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: #CCCCCC; -fx-background-color: WHITE;" />
+                        </children>
+                        <VBox.margin>
+                            <Insets bottom="10.0" />
+                        </VBox.margin>
+                    </HBox>
+
+                    <HBox alignment="CENTER_LEFT" style="-fx-border-color: transparent transparent #E0E0E0 transparent; -fx-border-width: 0 0 1 0;">
+                        <children>
+                            <Label prefWidth="250.0" text="Paciente" textFill="#757575" font="$x1">
+                                <font><Font name="System Bold" size="12.0" fx:id="x1" /></font>
+                            </Label>
+                            <Label prefWidth="200.0" text="Procedimento" textFill="#757575" font="$x1" />
+                            <Label prefWidth="120.0" text="Horário" textFill="#757575" font="$x1" />
+                            <Label prefWidth="120.0" text="Data" textFill="#757575" font="$x1" />
+                            <Label prefWidth="120.0" text="Status" textFill="#757575" font="$x1" />
+                        </children>
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" />
+                        </padding>
+                    </HBox>
+
+                    <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color: transparent; -fx-background: white;" VBox.vgrow="ALWAYS">
+                        <content>
+                            <VBox fx:id="listaAtendimentos" spacing="5.0" style="-fx-background-color: white;" />
+                        </content>
+                    </ScrollPane>
+                </children>
+            </VBox>
+        </VBox>
+    </center>
+</BorderPane>
+

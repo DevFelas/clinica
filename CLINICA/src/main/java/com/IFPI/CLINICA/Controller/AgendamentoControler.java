@@ -3,6 +3,7 @@ package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Model.Agendamento;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +16,13 @@ public class AgendamentoControler {
 
     public AgendamentoControler(AgendamentoService service){
         this.service = service;
+    }
+
+    @PostMapping
+    public Agendamento marcar(@RequestBody Agendamento agendamento) {
+        System.out.println("CHEGOU NO CONTROLLER");
+        System.out.println("Agendamento: " + agendamento);
+        return service.marcarAgendamento(agendamento);
     }
 
     @GetMapping

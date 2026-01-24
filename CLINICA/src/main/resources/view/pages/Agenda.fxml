@@ -31,7 +31,7 @@
             </Label>
             <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
                 <image>
-                    <Image url="@imagem_2026-01-21_140410504-Photoroom.png" />
+                    <Image url="@../static_files/imagem_2026-01-21_140410504-Photoroom.png" />
                 </image>
             </ImageView>
 
@@ -41,7 +41,7 @@
 
             <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                 <image>
-                    <Image url="@/user.png" />
+                    <Image url="@../static_files/user.png" />
                 </image>
             </ImageView>
         </HBox>

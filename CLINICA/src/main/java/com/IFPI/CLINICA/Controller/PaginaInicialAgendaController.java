@@ -1,5 +1,11 @@
 package com.IFPI.CLINICA.Controller;
 
+import com.IFPI.CLINICA.Model.Agendamento;
+import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -8,6 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +27,16 @@ public class PaginaInicialAgendaController implements Initializable {
     @FXML
     private GridPane agendaGrid;
 
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        semanaInicio = LocalDate.now().with(DayOfWeek.MONDAY); // Pega a segunda-feira da semana atual
+        semanaFim = semanaInicio.plusDays(6); //incrementa 6 dias
+
         montarAgenda();
+        carregarAgendamentos();
     }
 
     private void montarAgenda() {
@@ -30,24 +45,42 @@ public class PaginaInicialAgendaController implements Initializable {
         agendaGrid.getRowConstraints().clear();
         agendaGrid.setGridLinesVisible(false);
 
-        String[] dias = {"", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
+        String[] dias = {"08:00", "Segunda\n 19/01", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
 
         for (int col = 0; col < dias.length; col++) {
+
             Label label = new Label(dias[col]);
             label.setPrefHeight(40);
             label.setMaxWidth(Double.MAX_VALUE);
-            label.setAlignment(Pos.CENTER);
 
-            label.setStyle("""
-                -fx-background-color: #A5D6C1;
-                -fx-text-fill: white;
-                -fx-font-weight: bold;
-                -fx-border-color: #D6EAF8;
-                -fx-border-width: 0 1 1 0;
-            """);
+            if (col == 0) {
+                // Cabeçalho da coluna de horários
+                label.setAlignment(Pos.BOTTOM_RIGHT);
+                label.setPadding(new Insets(0, 10, 0, 0));
+
+                label.setStyle("""
+                    -fx-padding: 2 10 0 0;
+                    -fx-background-color: #F2F3F4;
+                    -fx-border-color: #fff;
+                    -fx-border-width: 0 0 0 0;
+                    -fx-font-size: 10px;
+                        """);
+            } else {
+                // Cabeçalho dos dias
+                label.setAlignment(Pos.CENTER);
+
+                label.setStyle("""
+                    -fx-background-color: #A5D6C1;
+                    -fx-text-fill: white;
+                    -fx-font-weight: bold;
+                    -fx-border-color: #D6EAF8;
+                    -fx-border-width: 0 1 1 0;
+                """);
+            }
 
             agendaGrid.add(label, col, 0);
         }
+
 
 
         List<String> horarios = gerarHorarios();
@@ -57,18 +90,28 @@ public class PaginaInicialAgendaController implements Initializable {
         for (String hora : horarios) {
 
             Label horaLabel = new Label(hora);
+
+            horaLabel.setMinHeight(40);
+            horaLabel.setPrefHeight(40);
+            horaLabel.setMaxHeight(40);
+
+            horaLabel.setAlignment(Pos.BOTTOM_RIGHT);
+
             horaLabel.setPrefWidth(80);
             horaLabel.setMaxWidth(Double.MAX_VALUE);
-            horaLabel.setAlignment(Pos.CENTER_RIGHT);
 
             horaLabel.setStyle("""
-                -fx-padding: 0 10 0 0;
+                -fx-padding: 2 10 0 0;
                 -fx-background-color: #F2F3F4;
-                -fx-border-color: #D5D8DC;
-                -fx-border-width: 0 1 1 0;
+                -fx-border-color: #fff;
+                -fx-border-width: 0 0 0 0;
+                -fx-font-size: 10px;
             """);
 
             agendaGrid.add(horaLabel, 0, row);
+            GridPane.setValignment(horaLabel, VPos.BOTTOM);
+            GridPane.setHalignment(horaLabel, HPos.RIGHT);
+
 
             for (int col = 1; col <= 6; col++) {
                 Pane cell = new Pane();
@@ -76,6 +119,8 @@ public class PaginaInicialAgendaController implements Initializable {
                 cell.setPrefHeight(40);
 
                 cell.setStyle("""
+                    -fx-background-color: transparent;
+                    -fx-font-size: 10px;
                     -fx-background-color: white;
                     -fx-border-color: #D5D8DC;
                     -fx-border-width: 0 1 1 0;
@@ -94,22 +139,22 @@ public class PaginaInicialAgendaController implements Initializable {
         List<String> horarios = new ArrayList<>();
 
 
-        LocalTime time = LocalTime.of(8, 0);
-        LocalTime fimManha = LocalTime.of(12, 0);
+        LocalTime time = LocalTime.of(8, 30);
+        LocalTime fimDia = LocalTime.of(18, 0);
 
-        while (!time.isAfter(fimManha)) {
+        while (!time.isAfter(fimDia)) {
             horarios.add(time.toString());
             time = time.plusMinutes(30);
         }
 
         // Tarde: 14:00 até 17:00
-        time = LocalTime.of(14, 0);
-        LocalTime fimTarde = LocalTime.of(17, 0);
+        //time = LocalTime.of(14, 0);
+        //LocalTime fimTarde = LocalTime.of(18, 0);
 
-        while (!time.isAfter(fimTarde)) {
-            horarios.add(time.toString());
-            time = time.plusMinutes(30);
-        }
+//        while (!time.isAfter(fimTarde)) {
+//            horarios.add(time.toString());
+//            time = time.plusMinutes(30);
+//        }
 
         return horarios;
     }
@@ -119,7 +164,7 @@ public class PaginaInicialAgendaController implements Initializable {
 
 
         ColumnConstraints colHora = new ColumnConstraints();
-        colHora.setPrefWidth(80);
+        colHora.setPrefWidth(40);
         colHora.setMinWidth(80);
         agendaGrid.getColumnConstraints().add(colHora);
 
@@ -140,4 +185,117 @@ public class PaginaInicialAgendaController implements Initializable {
             agendaGrid.getRowConstraints().add(row);
         }
     }
+
+    private LocalDate semanaInicio;
+    private LocalDate semanaFim;
+
+    private void carregarAgendamentos() {
+
+        List<Agendamento> agendamentos = agendamentoRepository.findByDataBetween(
+                semanaInicio,
+                semanaFim
+        );
+
+        for (Agendamento ag : agendamentos) {
+            renderizarAgendamento(ag);
+        }
+
+    }
+
+    private int calcularColuna(Agendamento ag) {
+        // Segunda = 1 ... Domingo = 7
+        return ag.getData().getDayOfWeek().getValue();
+    }
+
+    private int calcularLinha(LocalTime hora) {
+
+        LocalTime inicio = LocalTime.of(8, 0);
+
+        int minutos = (hora.getHour() * 60 + hora.getMinute() - inicio.getHour() * 60);
+
+        return (minutos / 30) + 1;
+    }
+
+    private int calcularRowSpan(Agendamento ag) {
+
+        int minutos = ag.getProcedimento()
+                .getTempo_previsto()
+                .toLocalTime()
+                .getHour() * 60
+                + ag.getProcedimento()
+                .getTempo_previsto()
+                .toLocalTime()
+                .getMinute();
+
+        return (int) Math.ceil(minutos / 30.0);
+    }
+
+    private Pane criarBloco(Agendamento ag) {
+
+        VBox box = new VBox(5);
+        box.setPadding(new Insets(5));
+        box.setAlignment(Pos.CENTER);
+
+        box.setMaxWidth(Double.MAX_VALUE);
+        box.setMaxHeight(Double.MAX_VALUE);
+
+        box.setStyle("""
+        -fx-background-radius: 8;
+        -fx-border-radius: 8;
+        -fx-background-color:
+        """ + corPorProcedimento(ag) + ";");
+
+        LocalTime fim = calcularHoraFim(ag);
+
+        Label horario = new Label(
+                ag.getHora() + " - " + fim
+        );
+
+        Label nome = new Label(
+                ag.getPaciente().getNome()
+        );
+        nome.setStyle("-fx-font-weight: bold;");
+
+        Label proc = new Label(
+                ag.getProcedimento().getNome()
+        );
+
+        box.getChildren().addAll(horario, nome, proc);
+
+        return box;
+
+    }
+
+
+    private LocalTime calcularHoraFim(Agendamento ag) {
+
+        int minutos =
+                ag.getProcedimento()
+                        .getTempo_previsto()
+                        .toLocalTime()
+                        .getHour() * 60
+                + ag.getProcedimento()
+                        .getTempo_previsto()
+                        .toLocalTime()
+                        .getMinute();
+
+        return ag.getHora().plusMinutes(minutos);
+
+    }
+
+    private void renderizarAgendamento(Agendamento ag) {
+        int coluna = calcularColuna(ag);
+        int linha = calcularLinha(ag.getHora());
+        int rowSpan = calcularRowSpan(ag);
+
+        Pane bloco = criarBloco(ag);
+
+        agendaGrid.add(bloco, coluna, linha,1, rowSpan);
+    }
+
+    private String corPorProcedimento(Agendamento ag) {
+        return ag.getProcedimento().getCorHex();
+    }
+
+
 }

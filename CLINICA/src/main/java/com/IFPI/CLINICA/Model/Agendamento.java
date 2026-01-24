@@ -1,5 +1,6 @@
 package com.IFPI.CLINICA.Model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -22,13 +23,13 @@ public class Agendamento {
     @Column(nullable = false)
     private LocalTime hora;
 
-    @ManyToOne
-    @JoinColumn(name = "Profissional", nullable = false)
-    private Profissional profissional;
-
-    @ManyToOne
-    @JoinColumn(name = "Atendente", nullable = false)
-    private Atendente atendente;
+//    @ManyToOne
+//    @JoinColumn(name = "Profissional", nullable = false)
+//    private Profissional profissional;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "Atendente", nullable = false)
+//    private Atendente atendente;
 
 
 
@@ -50,11 +51,11 @@ public class Agendamento {
     public LocalTime getHora() { return hora; }
     public void setHora(LocalTime hora) { this.hora = hora; }
 
-    public Profissional getProfissional() { return profissional; }
-    public void setProfissional(Profissional profissional) { this.profissional = profissional; }
-
-    public Atendente getAtendente() { return atendente; }
-    public void setAtendente(Atendente atendente) { this.atendente = atendente; }
+//    public Profissional getProfissional() { return profissional; }
+//    public void setProfissional(Profissional profissional) { this.profissional = profissional; }
+//
+//    public Atendente getAtendente() { return atendente; }
+//    public void setAtendente(Atendente atendente) { this.atendente = atendente; }
 
     public Paciente getPaciente() { return paciente; }
     public void setPaciente(Paciente paciente) { this.paciente = paciente; }

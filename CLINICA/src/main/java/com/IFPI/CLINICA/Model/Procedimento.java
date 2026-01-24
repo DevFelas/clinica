@@ -28,6 +28,9 @@ public class Procedimento {
     @Column(nullable = false)
     private Time tempo_previsto;
 
+    @Column(nullable = false)
+    private String corHex; // ex: #09c6d9
+
     @OneToMany(mappedBy = "procedimento")
     private List<Agendamento> agendamentos;
 }

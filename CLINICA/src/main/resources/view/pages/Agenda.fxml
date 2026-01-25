@@ -70,7 +70,7 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button style="-fx-background-color: transparent;" text="Registro">
+            <Button onAction="#irParaRegistro" style="-fx-background-color: transparent;" text="Registro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>

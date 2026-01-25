@@ -16,8 +16,8 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import javafx.event.ActionEvent;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -64,7 +64,7 @@ public class PagCadasPessoaController implements Initializable {
 
     // Botão para ir para tela da Agenda
     @FXML
-    private void irParaAgenda(javafx.event.ActionEvent event) {
+    private void irParaAgenda(ActionEvent event) {
         navigator.trocarPagina(
                 (Node) event.getSource(),
                 "/view/pages/Agenda.fxml"
@@ -73,21 +73,21 @@ public class PagCadasPessoaController implements Initializable {
 
     // Botão para ir para tela de Pacintes
     @FXML
-    private void irParaPacientes(javafx.event.ActionEvent event) {
+    private void irParaPacientes(ActionEvent event) {
         navigator.trocarPagina(
                 (Node) event.getSource(),
                 "/view/pages/TodosPacientes.fxml"
         );
     }
 
-    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
-//    @FXML
-//    private void irParaRegistro(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/Registro.fxml"
-//        );
-//    }
+    // Botão para ir para tela de Registro
+    @FXML
+    private void irParaRegistro(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Registro.fxml"
+        );
+    }
 
     // Botão para ir para tela Financeiro (Descomentar quando a tela existir
 //    @FXML

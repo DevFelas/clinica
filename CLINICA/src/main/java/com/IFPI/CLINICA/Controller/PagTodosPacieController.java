@@ -59,13 +59,13 @@ public class PagTodosPacieController {
     }
 
     // Botão para ir para tela de Registro (Descomentar quando a tela existir)
-//    @FXML
-//    private void irParaRegistro(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/Registro.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaRegistro(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Registro.fxml"
+        );
+    }
 
     // Botão para ir para tela Financeiro (Descomentar quando a tela existir
 //    @FXML

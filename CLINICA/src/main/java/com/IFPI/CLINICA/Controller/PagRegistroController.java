@@ -119,6 +119,21 @@ public class PagRegistroController {
     @FXML
     public void initialize() {
 
+        // Placeholder para o campo do filtro
+        campoPesquisa.setPromptText("Digite o nome do paciente");
+
+        // Placeholder para caso não exiba nenhum registro
+        tabelaAgendamentos.setPlaceholder(
+                new Label("Nenhum agendamento encontrado")
+        );
+
+        // Impedir que as colunas sejam arrastadas
+        tabelaAgendamentos.getColumns()
+                .forEach(col -> col.setReorderable(false));
+
+
+        tabelaAgendamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         // Ajuste automático das colunas
         tabelaAgendamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 

@@ -141,14 +141,22 @@
                 </Label>
 
                 <Region HBox.hgrow="ALWAYS" />
-            <TextField promptText="Procure um paciente" style="-fx-background-color: white; -fx-background-radius: 50;" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="campoBusca" promptText="Procure um paciente" style="-fx-background-color: white; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50;" HBox.hgrow="ALWAYS" />
             </HBox>
-         <TableView fx:id="tabelaPacientes" VBox.vgrow="ALWAYS" >
+         <TableView fx:id="tabelaPacientes" VBox.vgrow="ALWAYS">
            <columns>
              <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
              <TableColumn fx:id="colCpf" prefWidth="75.0" text="CPF" />
                <TableColumn fx:id="colContato" prefWidth="75.0" text="Contato" />
+               <TableColumn fx:id="colNasc" prefWidth="75.0" text="Data de Nascimento" />
+               <TableColumn fx:id="colCidade" prefWidth="75.0" text="Cidade" />
+               <TableColumn fx:id="colBairro" prefWidth="75.0" text="Bairro" />
+               <TableColumn fx:id="colRua" prefWidth="75.0" text="Rua" />
+               <TableColumn fx:id="colNum" prefWidth="75.0" text="Número" />
            </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
          </TableView>
 
         </VBox>

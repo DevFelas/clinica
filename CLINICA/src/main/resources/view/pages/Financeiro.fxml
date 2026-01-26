@@ -43,7 +43,7 @@
                 <VBox spacing="2" alignment="CENTER_RIGHT">
                     <Label text="Logado como" textFill="#e6f1eb"
                            style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
-                    <Label fx:id="labelCargo" text="ADMINISTRADOR" textFill="#e6f1eb"
+                    <Label fx:id="textUsuario" textFill="#e6f1eb"
                            style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
                 </VBox>
                 <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">

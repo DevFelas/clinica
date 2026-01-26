@@ -20,7 +20,6 @@ public class AgendamentoControler {
 
     @PostMapping
     public Agendamento marcar(@RequestBody Agendamento agendamento) {
-        System.out.println("CHEGOU NO CONTROLLER");
         System.out.println("Agendamento: " + agendamento);
         return service.marcarAgendamento(agendamento);
     }

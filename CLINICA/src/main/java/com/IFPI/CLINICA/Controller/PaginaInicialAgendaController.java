@@ -75,23 +75,24 @@ public class PaginaInicialAgendaController implements Initializable {
     }
 
     // Botão para ir para tela Financeiro (Descomentar quando a tela existir
-//    @FXML
-//    private void irParaFinaneiro(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/Financeiro.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaFinanceiro(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Financeiro.fxml"
+        );
+    }
 
     // BOTÕES DA LATERAL ESQUERDA
 
-    // Botão para ir para tela novo agendamento//@FXML
-//    private void irParaNovoAgendamento(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/CadasPessoa.fxml"
-//        );
-//    }
+    // Botão para ir para tela novo agendamento//
+    @FXML
+    private void irParaNovoAgendamento(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/agendamento.fxml"
+        );
+    }
 
     // Botão para ir para tela Editar
 //    @FXML

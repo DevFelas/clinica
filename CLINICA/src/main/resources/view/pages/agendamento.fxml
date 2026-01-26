@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/25"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.IFPI.CLINICA.Controller.PagAgendamentoController">
+
+    <!-- ===================== -->
+    <!-- TOPO PADRÃO COM CARGO DINÂMICO -->
+    <!-- ===================== -->
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10"
+              style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="10"/>
+            </padding>
+
+            <!-- Texto SGO primeiro (padrão observado) -->
+            <Label prefHeight="52.0" prefWidth="101.0" text="SGO" textFill="#e6f1eb">
+                <font>
+                    <Font name="Arial" size="44.0"/>
+                </font>
+            </Label>
+
+            <!-- Logo depois do SGO (padrão observado) -->
+            <ImageView fitHeight="45.0" fitWidth="37.0" preserveRatio="true">
+                <image>
+                    <Image url="@/view/static_files/imagem_2026-01-21_140410504-Photoroom.png"/>
+                </image>
+            </ImageView>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- USUÁRIO COM CARGO DINÂMICO -->
+            <!-- Container para alinhar à direita -->
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <!-- Caixa vertical para texto do usuário -->
+                <VBox spacing="2" alignment="CENTER_RIGHT">
+                    <!-- "Logado como" - Fonte menor -->
+                    <Label text="Logado como" textFill="#e6f1eb"
+                           style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
+
+                    <!-- CARGO DINÂMICO - Fonte maior em MAIÚSCULO -->
+                    <!--labelCargo.setText("RECEPCIONISTA"); // ou "DENTISTA", "ADMIN", etc.-->
+                    <Label fx:id="labelCargo" text="RECEPCIONISTA" textFill="#e6f1eb"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
+                </VBox>
+
+                <!-- Ícone do usuário -->
+                <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                    <image>
+                        <Image url="@/view/static_files/user.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!--interface lateral-->
+
+    <left>
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+            <padding><Insets bottom="10" left="10" right="10" top="10" /></padding>
+            <HBox prefHeight="32.0" prefWidth="70.0">
+                <children>
+
+                    <Label text="MENU">
+                        <font>
+                            <Font size="18" />
+                        </font>
+                    </Label>
+                </children>
+            </HBox>
+
+            <Button onAction="#irParaAgenda" style="-fx-background-color: transparent;" text="Agenda">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button onAction="#irParaPacientes" style="-fx-background-color: transparent;" text="Pacientes">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button onAction="#irParaRegistro" style="-fx-background-color: transparent;" text="Registro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+
+            <Region VBox.vgrow="ALWAYS" />
+
+            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+        </VBox>
+    </left>
+
+
+    <!-- CONTEÚDO CENTRAL -->
+    <center>
+        <HBox spacing="15">
+            <Separator orientation="VERTICAL"/>
+
+            <VBox spacing="15">
+                <padding>
+                    <Insets top="30" right="30" bottom="30" left="30"/>
+                </padding>
+
+                <Label text="Novo agendamento" textFill="#0b4d32">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+
+                <Label text="Paciente:"/>
+                <TextField fx:id="cpfField" promptText="CPF do Paciente"/>
+
+                <Label text="Paciente ainda não foi cadastrado?" textFill="#36bc89"/>
+
+                <Button text="Cadastrar"
+                        style="-fx-background-color: #36bc89;
+                               -fx-background-radius: 30;"
+                        textFill="white"/>
+
+                <!-- COMBOBOX COM TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO -->
+                <ComboBox fx:id="procedimentoCombo" promptText="Procedimento"/>
+
+                <HBox spacing="10">
+                    <DatePicker fx:id="dataPicker" promptText="Data"/>
+                    <ComboBox fx:id="horarioCombo" promptText="Horário"/>
+                </HBox>
+
+                <Button text="Agendar"
+                        onAction="#onAgendar"
+                        style="-fx-background-color: #36bc89;
+                               -fx-background-radius: 30;"
+                        textFill="white"/>
+            </VBox>
+        </HBox>
+    </center>
+
+</BorderPane>

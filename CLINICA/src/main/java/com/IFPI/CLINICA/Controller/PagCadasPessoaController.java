@@ -1,24 +1,18 @@
 package com.IFPI.CLINICA.Controller;
 
-import com.IFPI.CLINICA.Model.EnderecoPaciente;
 import com.IFPI.CLINICA.Model.Paciente;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
@@ -90,13 +84,13 @@ public class PagCadasPessoaController implements Initializable {
     }
 
     // Botão para ir para tela Financeiro (Descomentar quando a tela existir
-//    @FXML
-//    private void irParaFinaneiro(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/Financeiro.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaFinanceiro(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Financeiro.fxml"
+        );
+    }
 
 
     @FXML

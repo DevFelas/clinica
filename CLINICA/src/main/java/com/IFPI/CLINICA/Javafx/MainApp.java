@@ -22,7 +22,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/view/pages/Registro.fxml")
+                getClass().getResource("/view/pages/Login.fxml")
         );
         loader.setControllerFactory(springContext::getBean);
         Parent root = loader.load();

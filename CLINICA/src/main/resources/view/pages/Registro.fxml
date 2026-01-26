@@ -76,7 +76,7 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button style="-fx-background-color: transparent;" text="Financeiro">
+            <Button onAction="#irParaFinaneiro" style="-fx-background-color: transparent;" text="Financeiro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>

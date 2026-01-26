@@ -74,7 +74,7 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button style="-fx-background-color: transparent;" text="Financeiro">
+            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
@@ -148,7 +148,7 @@
 
 
             <VBox spacing="8">
-                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
+                <Button onAction="#irParaNovoAgendamento" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor></Button>

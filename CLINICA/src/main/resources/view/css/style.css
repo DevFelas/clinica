@@ -1,16 +1,132 @@
-.button-login {
-    -fx-background-color: #2cb784;
-    -fx-background-radius: 50;
+.root {
+    -fx-font-family: "Segoe UI";
+}
+
+/* TOPO */
+.top-bar {
+    -fx-padding: 15;
+    -fx-background-color: linear-gradient(to right, #0b5d3a, #3bbf8a);
+}
+
+.logo {
+    -fx-text-fill: white;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.user {
     -fx-text-fill: white;
     -fx-font-weight: bold;
-    -fx-font-size: 22px;
 }
 
-.button-login:hover {
-    -fx-background-color: #14523c;
-    -fx-font-size: 22px;
+/* MENU */
+.menu {
+    -fx-background-color: #f4f4f4;
+    -fx-padding: 15;
+    -fx-pref-width: 180;
 }
 
-.button-login:pressed {
-    -fx-background-color: #14523c;
+.menu-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 18px; /* maior que antes */
+}
+
+/* Todos os itens do menu terão a seta ▶ antes do texto */
+.menu-item, .logout {
+    -fx-background-color: transparent;
+    -fx-alignment: CENTER_LEFT;
+    -fx-text-fill: black;
+    -fx-padding: 8 12;
+}
+
+.menu-item::before {
+    content: "▶ "; /* seta antes do texto */
+    -fx-text-fill: black; /* preto por padrão */
+}
+
+.menu-item.active {
+    -fx-text-fill: #10c17b; /* verde quando ativo */
+}
+
+.menu-item.active::before {
+    -fx-text-fill: #10c17b; /* seta verde quando ativo */
+}
+
+.menu-item:hover {
+    -fx-background-color: #e0f5eb;
+}
+
+/* Botão logout sem seta, mas ainda segue o estilo */
+.logout {
+    -fx-border-color: red;
+    -fx-text-fill: red;
+    -fx-background-color: transparent;
+}
+
+/* CONTEÚDO */
+.title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+}
+
+.label-paciente {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.cpf-textfield {
+    -fx-pref-width: 180px;
+    -fx-min-width: 180px;
+    -fx-max-width: 180px;
+    -fx-pref-height: 32px;
+    -fx-min-height: 32px;
+    -fx-max-height: 32px;
+    -fx-background-color: white;
+    -fx-border-color: gray;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-padding: 0 10;
+    -fx-font-size: 14px;
+}
+
+.procedimento {
+    -fx-pref-width: 400px;
+    -fx-background-color: white;
+    -fx-border-color: gray;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10;
+}
+
+.data, .horario {
+    -fx-pref-width: 195px;
+    -fx-background-color: white;
+    -fx-border-color: gray;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-padding: 5 10;
+}
+
+.primary {
+    -fx-background-color: #10c17b;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-padding: 12 10;
+    -fx-pref-width: 400px;
+    -fx-font-size: 16px;
+}
+
+.secondary {
+    -fx-background-color: #10c17b;
+    -fx-text-fill: white;
+    -fx-background-radius: 25;
+    -fx-padding: 8 20;
+    -fx-font-size: 14px;
+}
+
+/* Texto verde */
+.texto-verde {
+    -fx-text-fill: #10c17b;
 }

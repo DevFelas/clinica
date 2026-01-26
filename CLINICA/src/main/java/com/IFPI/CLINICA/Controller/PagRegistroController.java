@@ -108,13 +108,13 @@ public class PagRegistroController {
     }
 
     // Botão para ir para tela Financeiro (Descomentar quando a tela existir
-//    @FXML
-//    private void irParaFinaneiro(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/Financeiro.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaFinaneiro(ActionEvent event) {
+        navigator.trocarPagina(
+                (Node) event.getSource(),
+                "/view/pages/Financeiro.fxml"
+        );
+    }
 
     @FXML
     public void initialize() {

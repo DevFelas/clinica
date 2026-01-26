@@ -163,11 +163,11 @@
                     <cursor>
                         <Cursor fx:constant="HAND" />
                     </cursor></Button>
-
-                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
+                <Button onAction="#irParaDetalhar" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
                     <cursor>
                         <Cursor fx:constant="HAND" />
-                    </cursor></Button>
+                    </cursor>
+                </Button>
             </VBox>
         </VBox>
     </right>

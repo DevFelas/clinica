@@ -8,12 +8,19 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.event.ActionEvent;
 import java.net.URL;
@@ -29,6 +36,9 @@ public class PaginaInicialAgendaController implements Initializable {
 
     @FXML
     private GridPane agendaGrid;
+
+    @Autowired
+    private ConfigurableApplicationContext springContext;
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
@@ -104,7 +114,7 @@ public class PaginaInicialAgendaController implements Initializable {
 //    }
 
     // Botão para ir para tela Cancelar
-    @FXML
+    //@FXML
 //    private void irParaCancelar(ActionEvent event) {
 //        navigator.trocarPagina(
 //                (Node) event.getSource(),
@@ -113,14 +123,27 @@ public class PaginaInicialAgendaController implements Initializable {
 //    }
 
     // Botão para ir para tela Detalhar
-//    @FXML
-//    private void irParaDetalhar(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/CadasPessoa.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaDetalhar(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/pages/DetalharAgendamento.fxml"));
+            loader.setControllerFactory(springContext::getBean);
+            javafx.scene.Parent root = loader.load();
 
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setTitle("Detalhes do Agendamento");
+
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.showAndWait();
+
+        } catch (java.io.IOException e) {
+            System.err.println("Erro ao carregar a modal: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();

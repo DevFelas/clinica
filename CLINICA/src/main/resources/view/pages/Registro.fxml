@@ -39,19 +39,13 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <HBox alignment="CENTER_RIGHT" spacing="8">
-                <VBox spacing="2" alignment="CENTER_RIGHT">
-                    <Label text="Logado como" textFill="#e6f1eb"
-                           style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
-                    <Label fx:id="textUsuario" textFill="#e6f1eb"
-                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
-                </VBox>
-                <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
-                    <image>
-                        <Image url="@/view/static_files/user.png"/>
-                    </image>
-                </ImageView>
-            </HBox>
+            <Label text="Logado como" textFill="#e6f1eb" />
+
+            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                <image>
+                    <Image url="@../static_files/user.png" />
+                </image>
+            </ImageView>
         </HBox>
     </top>
 
@@ -82,7 +76,7 @@
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button onAction="#irParaFinaneiro" style="-fx-background-color: transparent;" text="Financeiro">
+            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
@@ -106,7 +100,7 @@
             <Region VBox.vgrow="ALWAYS" />
 
 
-            <VBox spacing="8" visible="false" managed="false">
+            <VBox spacing="8">
                 <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
                     <cursor>
                         <Cursor fx:constant="HAND" />
@@ -160,15 +154,7 @@
                     <DatePicker fx:id="dataInicio" prefWidth="130"/>
                     <Label text="até"/>
                     <DatePicker fx:id="dataFim" prefWidth="130"/>
-                    <Button
-                            fx:id="btnLimparFiltros"
-                            text="Limpar filtros"
-                            onAction="#limparFiltros"/>
                 </HBox>
-
-                <Label fx:id="lblTotal"
-                       text="0 registros encontrados"
-                       style="-fx-text-fill: #555;" />
 
                 <!-- TABELA -->
                 <TableView fx:id="tabelaAgendamentos" VBox.vgrow="ALWAYS">

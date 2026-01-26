@@ -1,11 +1,6 @@
 package com.IFPI.CLINICA.Controller;
 
-import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Repository.AgendamentoRepository;
-import com.IFPI.CLINICA.Repository.PacienteRepository;
-import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Util.Navigator;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,10 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -27,52 +18,43 @@ public class PagAgendamentoController implements Initializable {
     @Autowired
     private Navigator navigator;
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private ProcedimentoRepository procedimentoRepository;
-
-    @Autowired
-    private PacienteRepository pacienteRepository;
-
     @FXML
     private TextField cpfField;
 
     @FXML
-    private ComboBox<Procedimento> procedimentoCombo;
+    private ComboBox<String> procedimentoCombo;
 
     @FXML
-    private ComboBox<LocalTime> horarioCombo;
+    private ComboBox<String> horarioCombo;
 
     @FXML
     private DatePicker dataPicker;
 
-    private Paciente pacienteEncontrado;
-
-    private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
-    private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
-    private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // ADICIONE TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO
-        procedimentoCombo.setItems(
-                FXCollections.observableArrayList(
-                        procedimentoRepository.findAll()
-                )
+        procedimentoCombo.getItems().addAll(
+                "Consulta",
+                "Limpeza",
+                "Exodontia",
+                "Prótese",
+                "Implante",
+                "Manutenção de Aparelho",
+                "Montagem de aparelho",
+                "Restauração"
         );
 
-        // Hor├írios dispon├¡veis (mantive os originais, mas pode expandir se quiser)
-        dataPicker.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
-        procedimentoCombo.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
-
-
+        // Horários disponíveis (mantive os originais, mas pode expandir se quiser)
+        horarioCombo.getItems().addAll(
+                "08:00",
+                "09:00",
+                "10:00"
+        );
     }
 
-    // PAGINA├ç├âO DO MENU LATERAL
+    // PAGINAÇÃO DO MENU LATERAL
 
-    // Bot├úo para ir para tela da Agenda
+    // Botão para ir para tela da Agenda
     @FXML
     private void irParaAgenda(ActionEvent event) {
         navigator.trocarPagina(
@@ -80,16 +62,8 @@ public class PagAgendamentoController implements Initializable {
                 "/view/pages/Agenda.fxml"
         );
     }
-    // Outro botão sem um event para que possa ser chamado aqui no proprio código
-    @FXML
-    private void irParaAgenda() {
-        navigator.trocarPagina(
-                cpfField,
-                "/view/pages/Agenda.fxml"
-        );
-    }
 
-    // Bot├úo para ir para tela de Pacintes
+    // Botão para ir para tela de Pacintes
     @FXML
     private void irParaPacientes(ActionEvent event) {
         navigator.trocarPagina(
@@ -98,7 +72,7 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Bot├úo para ir para tela de Registro (Descomentar quando a tela existir)
+    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
     @FXML
     private void irParaRegistro(ActionEvent event) {
         navigator.trocarPagina(
@@ -107,7 +81,7 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Bot├úo para ir para tela Financeiro (Descomentar quando a tela existir
+    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
     @FXML
     private void irParaFinanceiro(ActionEvent event) {
         navigator.trocarPagina(
@@ -116,49 +90,17 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Botão para cadastrar um novo paciente
-    @FXML
-    private void irParaCadPaciente(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/CadasPessoa.fxml"
-        );
-    }
-
     @FXML
     private void onAgendar() {
-
-        if (!validarFormulario()){
+        if (!validarFormulario()) {
             return;
         }
-
-        String cpf = cpfField.getText().replaceAll("\\D", "");
-
-        pacienteEncontrado =
-                pacienteRepository.findByCpf(cpf)
-                        .orElse(null);
-
-        if (pacienteEncontrado == null) {
-            mostrarAlerta("Paciente n├úo encontrado para o CPF informado.");
-            return;
-        }
-
-        Agendamento agendamento = new Agendamento();
-        agendamento.setStatus(StatusAgendamento.AGENDADA);
-        agendamento.setPaciente(pacienteEncontrado);
-        agendamento.setProcedimento(procedimentoCombo.getValue());
-        agendamento.setData(dataPicker.getValue());
-        agendamento.setHora(horarioCombo.getValue());
-
-        agendamentoRepository.save(agendamento);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
+        alert.setTitle("Agendamento");
         alert.setHeaderText(null);
-        alert.setContentText("Agendamento realizado com sucesso!");
+        alert.setContentText("Agendamento validado com sucesso.");
         alert.showAndWait();
-
-        irParaAgenda();
     }
 
     private boolean validarFormulario() {
@@ -172,7 +114,7 @@ public class PagAgendamentoController implements Initializable {
         cpf = cpf.replaceAll("\\D", "");
 
         if (!cpf.matches("\\d{11}")) {
-            mostrarAlerta("CPF inv├ílido. Deve conter 11 n├║meros.");
+            mostrarAlerta("CPF inválido. Deve conter 11 números.");
             return false;
         }
 
@@ -187,7 +129,7 @@ public class PagAgendamentoController implements Initializable {
         }
 
         if (horarioCombo.getValue() == null) {
-            mostrarAlerta("Selecione um hor├írio.");
+            mostrarAlerta("Selecione um horário.");
             return false;
         }
 
@@ -196,182 +138,9 @@ public class PagAgendamentoController implements Initializable {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Valida├º├úo");
+        alert.setTitle("Validação");
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
-
-    private List<LocalTime> gerarHorariosBase() {
-
-        List<LocalTime> horarios = new ArrayList<>();
-
-        LocalTime inicio = LocalTime.of(8, 0);
-        LocalTime fim = LocalTime.of(18, 0);
-
-        while (inicio.isBefore(fim)) {
-            horarios.add(inicio);
-            inicio = inicio.plusMinutes(30);
-        }
-
-        return horarios;
-    }
-
-    private boolean temConflito(LocalTime inicioNovo, LocalTime fimNovo, Agendamento existente ) {
-        LocalTime inicioExistente = existente.getHora();
-        LocalTime fimExistente = calcularHoraFim(existente);
-
-        return inicioNovo.isBefore(fimExistente) && fimNovo.isAfter(inicioExistente);
-    }
-
-    private void atualizarHorarios() {
-
-        LocalDate data = dataPicker.getValue();
-        Procedimento proc = procedimentoCombo.getValue();
-
-        if (data == null || proc == null) {
-            horarioCombo.getItems().clear();
-            return;
-        }
-
-        int duracao =
-                proc.getTempo_previsto()
-                        .toLocalTime()
-                        .getHour() * 60
-                        +
-                        proc.getTempo_previsto()
-                                .toLocalTime()
-                                .getMinute();
-
-        List<LocalTime> todos = gerarHorariosBase();
-
-        horarioCombo.setItems(
-                FXCollections.observableArrayList(todos)
-        );
-
-        horarioCombo.setCellFactory(cb -> new ListCell<>() {
-            @Override
-            protected void updateItem(LocalTime item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                    setDisable(false);
-                } else {
-                    setText(item.toString());
-
-                    boolean disponivel =
-                            horarioEstaDisponivel(item, data, duracao);
-
-                    setDisable(!disponivel);
-
-                    if (!disponivel) {
-                        setStyle("-fx-text-fill: gray;");
-                    } else {
-                        setStyle("");
-                    }
-                }
-            }
-        });
-
-        // Para o bot├úo do ComboBox
-        horarioCombo.setButtonCell(new ListCell<>() {
-            @Override
-            protected void updateItem(LocalTime item, boolean empty) {
-                super.updateItem(item, empty);
-                setText(empty || item == null ? "" : item.toString());
-            }
-        });
-    }
-
-
-    private LocalTime calcularHoraFim(Agendamento ag) {
-
-        int minutos =
-                ag.getProcedimento()
-                        .getTempo_previsto()
-                        .toLocalTime()
-                        .getHour() * 60
-                        +   ag.getProcedimento()
-                        .getTempo_previsto()
-                        .toLocalTime()
-                        .getMinute();
-
-        return ag.getHora().plusMinutes(minutos);
-    }
-
-    private boolean horarioEstaDisponivel(
-            LocalTime inicio,
-            LocalDate data,
-            int duracaoMinutos
-    ) {
-        LocalTime fim = inicio.plusMinutes(duracaoMinutos);
-
-        if (fim.isAfter(EXPEDIENTE_FIM)) {
-            return false;
-        }
-
-        // horário de almoço
-        boolean conflitaComAlmoco = inicio.isBefore(ALMOCO_FIM) && fim.isAfter(ALMOCO_INICIO);
-
-        if (conflitaComAlmoco) {
-            return false;
-        }
-
-        List<Agendamento> agendados = agendamentoRepository.findByData(data);
-
-        for (Agendamento ag : agendados) {
-            if (temConflito(inicio, fim, ag)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    @FXML
-    private void buscarPacientePorCpf() {
-
-        String cpf = cpfField.getText();
-
-        if (cpf == null || cpf.isBlank()) {
-            mostrarAlerta("Informe o CPF.");
-            return;
-        }
-
-        cpf = cpf.replaceAll("\\D", "");
-
-        if (!cpf.matches("\\d{11}")) {
-            mostrarAlerta("CPF inválido.");
-            return;
-        }
-
-        pacienteRepository.findByCpf(cpf).ifPresentOrElse(
-                usuario -> {
-                    // AQUI voc├¬ usa os dados do paciente
-                    System.out.println("Paciente encontrado: " + usuario.getNome());
-
-                    // Exemplo se tivesse campos:
-                    // nomeField.setText(usuario.getNome());
-                    // telefoneField.setText(usuario.getTelefone());
-                },
-                () -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Paciente n├úo encontrado");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Paciente n├úo cadastrado. Deseja cadastrar agora?");
-
-                    alert.showAndWait().ifPresent(resposta -> {
-                        if (resposta == ButtonType.OK) {
-                            navigator.trocarPagina(
-                                    cpfField,
-                                    "/view/pages/Registro.fxml"
-                            );
-                        }
-                    });
-                }
-        );
-    }
-
-
 }

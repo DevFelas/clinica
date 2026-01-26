@@ -7,8 +7,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Integer>{
+
+    List<Agendamento> findByData(LocalDate data);
+
     List<Agendamento> findByDataBetween(
             LocalDate inicio,
             LocalDate fim
     );
+
 }

@@ -35,13 +35,19 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <Label text="Logado como" textFill="#e6f1eb" />
-
-            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
-                <image>
-                    <Image url="@/view/static_files/user.png" />
-                </image>
-            </ImageView>
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <VBox spacing="2" alignment="CENTER_RIGHT">
+                    <Label text="Logado como" textFill="#e6f1eb"
+                           style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
+                    <Label fx:id="textUsuario" textFill="#e6f1eb"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
+                </VBox>
+                <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                    <image>
+                        <Image url="@/view/static_files/user.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
         </HBox>
     </top>
 

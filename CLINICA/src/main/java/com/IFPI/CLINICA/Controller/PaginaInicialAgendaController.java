@@ -1,44 +1,39 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Agendamento;
+import com.IFPI.CLINICA.Model.Perfil;
+import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.event.ActionEvent;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Component
-public class PaginaInicialAgendaController implements Initializable {
-
-    @FXML
-    private GridPane agendaGrid;
-
-    @Autowired
-    private ConfigurableApplicationContext springContext;
+public class PaginaInicialAgendaController implements Initializable{
 
     @Autowired
     private AgendamentoRepository agendamentoRepository;
@@ -46,13 +41,48 @@ public class PaginaInicialAgendaController implements Initializable {
     @Autowired
     private Navigator navigator;
 
+    @FXML
+    private GridPane agendaGrid;
+
+    @FXML
+    private Button btnFinanceiro;
+
+    @FXML
+    private Label textUsuario;
+
+    @FXML
+    private DatePicker datePicker;
+
+    private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
+    private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
+
         semanaInicio = LocalDate.now().with(DayOfWeek.MONDAY); // Pega a segunda-feira da semana atual
         semanaFim = semanaInicio.plusDays(6); //incrementa 6 dias
 
+
         montarAgenda();
+        renderizarAlmoco();
         carregarAgendamentos();
+
+        datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
+            if (newDate != null) {
+                atualizarSemana(newDate);
+            }
+        });
     }
 
     // PAGINAÇÃO DO MENU LATERAL
@@ -84,7 +114,7 @@ public class PaginaInicialAgendaController implements Initializable {
         );
     }
 
-    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
+    // Botão para ir para tela Financeiro
     @FXML
     private void irParaFinanceiro(ActionEvent event) {
         navigator.trocarPagina(
@@ -100,7 +130,7 @@ public class PaginaInicialAgendaController implements Initializable {
     private void irParaNovoAgendamento(ActionEvent event) {
         navigator.trocarPagina(
                 (Node) event.getSource(),
-                "/view/pages/agendamento.fxml"
+                "/view/pages/Agendamento.fxml"
         );
     }
 
@@ -123,27 +153,14 @@ public class PaginaInicialAgendaController implements Initializable {
 //    }
 
     // Botão para ir para tela Detalhar
-    @FXML
-    private void irParaDetalhar(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/pages/DetalharAgendamento.fxml"));
-            loader.setControllerFactory(springContext::getBean);
-            javafx.scene.Parent root = loader.load();
+//    @FXML
+//    private void irParaDetalhar(ActionEvent event) {
+//        navigator.trocarPagina(
+//                (Node) event.getSource(),
+//                "/view/pages/CadasPessoa.fxml"
+//        );
+//    }
 
-            javafx.stage.Stage stage = new javafx.stage.Stage();
-            stage.setScene(new javafx.scene.Scene(root));
-            stage.setTitle("Detalhes do Agendamento");
-
-            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.centerOnScreen();
-            stage.showAndWait();
-
-        } catch (java.io.IOException e) {
-            System.err.println("Erro ao carregar a modal: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
@@ -151,7 +168,17 @@ public class PaginaInicialAgendaController implements Initializable {
         agendaGrid.getRowConstraints().clear();
         agendaGrid.setGridLinesVisible(false);
 
-        String[] dias = {"08:00", "Segunda\n 19/01", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"};
+        String[] dias = new String[7];
+        dias[0] = "08:00";
+
+        for (int i = 1; i <= 6; i++) {
+            LocalDate dia = semanaInicio.plusDays(i - 1);
+            dias[i] = dia.getDayOfWeek().getDisplayName(
+                    TextStyle.FULL,
+                    new Locale("pt", "BR")
+            ) + "\n" + dia.format(DateTimeFormatter.ofPattern("dd/MM"));
+        }
+
 
         for (int col = 0; col < dias.length; col++) {
 
@@ -197,9 +224,9 @@ public class PaginaInicialAgendaController implements Initializable {
 
             Label horaLabel = new Label(hora);
 
-            horaLabel.setMinHeight(40);
-            horaLabel.setPrefHeight(40);
-            horaLabel.setMaxHeight(40);
+            horaLabel.setMinHeight(80);
+            horaLabel.setPrefHeight(80);
+            horaLabel.setMaxHeight(80);
 
             horaLabel.setAlignment(Pos.BOTTOM_RIGHT);
 
@@ -221,8 +248,8 @@ public class PaginaInicialAgendaController implements Initializable {
 
             for (int col = 1; col <= 6; col++) {
                 Pane cell = new Pane();
-                cell.setMinHeight(40);
-                cell.setPrefHeight(40);
+                cell.setMinHeight(80);
+                cell.setPrefHeight(80);
 
                 cell.setStyle("""
                     -fx-background-color: transparent;
@@ -253,7 +280,7 @@ public class PaginaInicialAgendaController implements Initializable {
             time = time.plusMinutes(30);
         }
 
-        // Tarde: 14:00 até 17:00
+        // Tarde: 14:00 at├® 17:00
         //time = LocalTime.of(14, 0);
         //LocalTime fimTarde = LocalTime.of(18, 0);
 
@@ -268,13 +295,16 @@ public class PaginaInicialAgendaController implements Initializable {
 
     private void configurarColunasELinhas(int totalRows) {
 
+        agendaGrid.getRowConstraints().clear();
+        agendaGrid.getColumnConstraints().clear();
 
+        // ===== COLUNA DE HORÁRIO =====
         ColumnConstraints colHora = new ColumnConstraints();
-        colHora.setPrefWidth(40);
+        colHora.setPrefWidth(80);
         colHora.setMinWidth(80);
         agendaGrid.getColumnConstraints().add(colHora);
 
-
+        // ===== COLUNAS DOS DIAS =====
         for (int i = 1; i <= 6; i++) {
             ColumnConstraints col = new ColumnConstraints();
             col.setHgrow(Priority.ALWAYS);
@@ -282,15 +312,24 @@ public class PaginaInicialAgendaController implements Initializable {
             agendaGrid.getColumnConstraints().add(col);
         }
 
+        // ===== LINHA DO CABEÇALHO =====
+        RowConstraints header = new RowConstraints();
+        header.setMinHeight(40);
+        header.setPrefHeight(40);
+        header.setMaxHeight(40);
+        header.setVgrow(Priority.NEVER);
+        agendaGrid.getRowConstraints().add(header);
 
-        for (int i = 0; i < totalRows; i++) {
+        // ===== DEMAIS LINHAS DOS HORÁRIOS =====
+        for (int i = 1; i < totalRows; i++) {
             RowConstraints row = new RowConstraints();
-            row.setPrefHeight(40);
-            row.setMinHeight(40);
+            row.setMinHeight(80);
+            row.setPrefHeight(80);
             row.setVgrow(Priority.NEVER);
             agendaGrid.getRowConstraints().add(row);
         }
     }
+
 
     private LocalDate semanaInicio;
     private LocalDate semanaFim;
@@ -348,6 +387,8 @@ public class PaginaInicialAgendaController implements Initializable {
         box.setStyle("""
         -fx-background-radius: 8;
         -fx-border-radius: 8;
+        -fx-border-color: black;
+        -fx-border-width: 0.5;  
         -fx-background-color:
         """ + corPorProcedimento(ag) + ";");
 
@@ -380,7 +421,7 @@ public class PaginaInicialAgendaController implements Initializable {
                         .getTempo_previsto()
                         .toLocalTime()
                         .getHour() * 60
-                + ag.getProcedimento()
+                        + ag.getProcedimento()
                         .getTempo_previsto()
                         .toLocalTime()
                         .getMinute();
@@ -402,5 +443,67 @@ public class PaginaInicialAgendaController implements Initializable {
     private String corPorProcedimento(Agendamento ag) {
         return ag.getProcedimento().getCorHex();
     }
+
+    private void atualizarSemana(LocalDate dataSelecionada) {
+
+        // Calcula a segunda-feira da semana selecionada
+        semanaInicio = dataSelecionada.with(DayOfWeek.MONDAY);
+        semanaFim = semanaInicio.plusDays(6);
+
+        // Limpa e recria a agenda
+        montarAgenda();
+        renderizarAlmoco();
+        carregarAgendamentos();
+    }
+
+    private boolean isHorarioAlmoco(LocalTime horario) {
+        return !horario.isBefore(ALMOCO_INICIO) && horario.isBefore(ALMOCO_FIM);
+    }
+
+    private StackPane criarBlocoAlmoco() {
+
+        Label label = new Label("Horário de almoço");
+        label.setStyle("""
+        -fx-text-fill: #6c757d;
+        -fx-font-weight: bold;
+        """);
+
+        StackPane bloco = new StackPane(label);
+        bloco.setPrefSize(150, 50);
+
+        bloco.setStyle("""
+        -fx-background-color: #c3c3c3;
+        -fx-background-radius: 2;
+        -fx-border-radius: 2;
+        """);
+
+        return bloco;
+    }
+
+    private void renderizarAlmoco() {
+
+        // cada linha = 30 minutos
+        LocalTime inicioAgenda = LocalTime.of(8, 0);
+
+        int linhaInicio = calcularLinha(ALMOCO_INICIO); // 12:00
+        int rowSpan = 4; // 12:00 até 14:00 (4 blocos de 30 min)
+
+        for (int col = 1; col <= 6; col++) {
+
+            StackPane blocoAlmoco = criarBlocoAlmoco();
+
+            // impede interação
+            blocoAlmoco.setDisable(true);
+
+            agendaGrid.add(
+                    blocoAlmoco,
+                    col,
+                    linhaInicio,
+                    1,
+                    rowSpan
+            );
+        }
+    }
+
 
 }

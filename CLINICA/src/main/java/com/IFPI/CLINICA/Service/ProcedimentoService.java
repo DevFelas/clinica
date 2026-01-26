@@ -13,6 +13,10 @@ public class ProcedimentoService {
     public ProcedimentoService(ProcedimentoRepository repository) {
         this.repository = repository;
     }
+    
+    public List<Procedimento> listarProcedimentos() {
+        return repository.findAll();
+    }
 
     //CREATE
     public void salvarProcedimento(Procedimento procedimento){

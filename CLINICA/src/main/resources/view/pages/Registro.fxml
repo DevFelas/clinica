@@ -100,7 +100,7 @@
             <Region VBox.vgrow="ALWAYS" />
 
 
-            <VBox spacing="8">
+            <VBox spacing="8" visible="false" managed="false">
                 <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Nova consulta" textFill="#ecfffb">
                     <cursor>
                         <Cursor fx:constant="HAND" />
@@ -154,7 +154,15 @@
                     <DatePicker fx:id="dataInicio" prefWidth="130"/>
                     <Label text="até"/>
                     <DatePicker fx:id="dataFim" prefWidth="130"/>
+                    <Button
+                            fx:id="btnLimparFiltros"
+                            text="Limpar filtros"
+                            onAction="#limparFiltros"/>
                 </HBox>
+
+                <Label fx:id="lblTotal"
+                       text="0 registros encontrados"
+                       style="-fx-text-fill: #555;" />
 
                 <!-- TABELA -->
                 <TableView fx:id="tabelaAgendamentos" VBox.vgrow="ALWAYS">

@@ -2,11 +2,15 @@ package com.IFPI.CLINICA.Service;
 
 import com.IFPI.CLINICA.Model.Procedimento;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
+
 
 @Service
 public class ProcedimentoService {
 
+    @Autowired
     private final ProcedimentoRepository repository;
 
     //injeção de dependências

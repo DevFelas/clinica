@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.IFPI.CLINICA.Controller.FinanceiroController">
 
     <!-- ===================== -->
@@ -43,7 +42,7 @@
                 <VBox spacing="2" alignment="CENTER_RIGHT">
                     <Label text="Logado como" textFill="#e6f1eb"
                            style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
-                    <Label fx:id="textUsuario" textFill="#e6f1eb"
+                    <Label fx:id="labelCargo" text="ADMINISTRADOR" textFill="#e6f1eb"
                            style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
                 </VBox>
                 <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
@@ -59,10 +58,12 @@
     <!-- MENU LATERAL -->
     <!-- ===================== -->
     <left>
-        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10" style="-fx-background-color: white;">
+        <VBox prefHeight="358.0" prefWidth="124.0" spacing="10"
+              style="-fx-background-color: white;">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="10"/>
             </padding>
+
             <HBox prefHeight="32.0" prefWidth="70.0">
                 <children>
                     <Label text="MENU">
@@ -78,17 +79,24 @@
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
+
             <Button onAction="#irParaPacientes" style="-fx-background-color: transparent;" text="Pacientes">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
+
             <Button onAction="#irParaRegistro" style="-fx-background-color: transparent;" text="Registro">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
             </Button>
+<<<<<<< HEAD
             <Button fx:id="btnFinanceiro" onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+=======
+
+            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -98,7 +106,7 @@
 
             <Button prefHeight="26.0" prefWidth="77.0" onAction="#sair"
                     style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;"
-                    text="Sair" textFill="#d82123">
+                    text="Sair" textFill="#d82123" onAction="#onSair">
                 <cursor>
                     <Cursor fx:constant="HAND"/>
                 </cursor>
@@ -119,30 +127,27 @@
             <HBox spacing="15">
                 <!-- Resumo financeiro -->
                 <VBox spacing="8" prefWidth="200"
-                      style="-fx-border-color: #ccc; -fx-border-radius: 10;
-                             -fx-padding: 12; -fx-background-color: #f9f9f9;">
+                      style="-fx-border-color: #ccc; -fx-border-radius: 10; -fx-padding: 12; -fx-background-color: #f9f9f9;">
                     <Label text="Total de receitas" style="-fx-text-fill: #666;"/>
-                    <TextField fx:id="totalReceitasField" text="R$ 1.950,00"
-                               style="-fx-text-fill: #00a859; -fx-font-weight: bold; -fx-font-size: 18;
-                                     -fx-background-color: transparent; -fx-border-color: transparent;"/>
+                    <TextField fx:id="totalReceitasField" text="R$ 1.950,00" editable="false"
+                               style="-fx-text-fill: #00a859; -fx-font-weight: bold; -fx-font-size: 18; -fx-background-color: transparent; -fx-border-color: transparent;"/>
 
                     <Label text="Lucro" style="-fx-text-fill: #666;"/>
-                    <TextField fx:id="lucroField" text="R$ 750,00"
-                               style="-fx-text-fill: #00a859; -fx-font-weight: bold; -fx-font-size: 18;
-                                     -fx-background-color: transparent; -fx-border-color: transparent;"/>
+                    <TextField fx:id="lucroField" text="R$ 750,00" editable="false"
+                               style="-fx-text-fill: #00a859; -fx-font-weight: bold; -fx-font-size: 18; -fx-background-color: transparent; -fx-border-color: transparent;"/>
 
                     <Label text="Total de despesas" style="-fx-text-fill: #666;"/>
-                    <TextField fx:id="totalDespesasField" text="R$ 1.200,00"
-                               style="-fx-text-fill: #d82123; -fx-font-weight: bold; -fx-font-size: 18;
-                                     -fx-background-color: transparent; -fx-border-color: transparent;"/>
+                    <TextField fx:id="totalDespesasField" text="R$ 1.200,00" editable="false"
+                               style="-fx-text-fill: #d82123; -fx-font-weight: bold; -fx-font-size: 18; -fx-background-color: transparent; -fx-border-color: transparent;"/>
                 </VBox>
 
                 <!-- Procedimentos compacto -->
                 <VBox spacing="8" prefWidth="250"
-                      style="-fx-border-color: #ccc; -fx-border-radius: 10;
-                             -fx-padding: 12; -fx-background-color: #f9f9f9;">
+                      style="-fx-border-color: #ccc; -fx-border-radius: 10; -fx-padding: 12; -fx-background-color: #f9f9f9;">
                     <Label text="Procedimentos e Valores">
-                        <font><Font name="System Bold" size="14"/></font>
+                        <font>
+                            <Font name="System Bold" size="14"/>
+                        </font>
                     </Label>
 
                     <Separator/>
@@ -151,14 +156,61 @@
                         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
                             <content>
                                 <VBox spacing="4">
-                                    <HBox><Label text="Consulta"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="consultaField" text="R$ 100,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Limpeza"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="limpezaField" text="R$ 100,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Exodontia"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="exodontiaField" text="R$ 250,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Prótese"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="proteseField" text="R$ 800,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Implante"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="implanteField" text="R$ 1.500,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Manutenção"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="manutencaoField" text="R$ 80,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Montagem"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="montagemField" text="R$ 500,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Restauração"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="restauracaoField" text="R$ 150,00" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
+                                    <HBox>
+                                        <Label text="Consulta"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="consultaField" text="R$ 100,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Limpeza"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="limpezaField" text="R$ 100,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Exodontia"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="exodontiaField" text="R$ 250,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Prótese"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="proteseField" text="R$ 800,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Implante"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="implanteField" text="R$ 1.500,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Manutenção"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="manutencaoField" text="R$ 80,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Montagem"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="montagemField" text="R$ 500,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
+
+                                    <HBox>
+                                        <Label text="Restauração"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="restauracaoField" text="R$ 150,00" editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/>
+                                    </HBox>
                                 </VBox>
                             </content>
                         </ScrollPane>
@@ -166,10 +218,12 @@
 
                     <Separator/>
 
-                    <Button text="Salvar Alterações"
+                    <Button text="Salvar Alterações" onAction="#onSalvarAlteracoes"
                             style="-fx-background-color: #36bc89; -fx-background-radius: 20; -fx-font-size: 12;"
                             textFill="white" maxWidth="Infinity">
-                        <cursor><Cursor fx:constant="HAND"/></cursor>
+                        <cursor>
+                            <Cursor fx:constant="HAND"/>
+                        </cursor>
                     </Button>
                 </VBox>
             </HBox>
@@ -184,8 +238,7 @@
 
             <!-- Tabela com altura controlada -->
             <TableView fx:id="tabelaFinanceiro" prefHeight="250"
-                       style="-fx-border-color: #ccc; -fx-border-radius: 10;
-                             -fx-background-color: white;">
+                       style="-fx-border-color: #ccc; -fx-border-radius: 10; -fx-background-color: white;">
                 <columns>
                     <TableColumn fx:id="colData" prefWidth="90" text="Data"/>
                     <TableColumn fx:id="colPaciente" prefWidth="180" text="Paciente / Descrição"/>
@@ -193,11 +246,44 @@
                     <TableColumn fx:id="colValor" prefWidth="80" text="Valor"/>
                     <TableColumn fx:id="colTipo" prefWidth="80" text="Tipo"/>
                     <TableColumn fx:id="colStatus" prefWidth="80" text="Status"/>
+                    <TableColumn fx:id="colAcoes" prefWidth="120" text="Ações"/>
                 </columns>
+
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
                 </columnResizePolicy>
             </TableView>
+
+            <!-- Painel de informações detalhadas -->
+            <VBox spacing="5" style="-fx-border-color: #ddd; -fx-border-radius: 5; -fx-padding: 10;">
+                <Label text="Detalhes da Transação Selecionada" style="-fx-font-weight: bold;"/>
+
+                <GridPane hgap="10" vgap="5">
+                    <columnConstraints>
+                        <ColumnConstraints prefWidth="100"/>
+                        <ColumnConstraints prefWidth="200"/>
+                        <ColumnConstraints prefWidth="100"/>
+                        <ColumnConstraints prefWidth="200"/>
+                    </columnConstraints>
+
+                    <children>
+                        <Label text="Paciente:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label fx:id="infoNome" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="CPF:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                        <Label fx:id="infoCpf" text="-" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                        <Label text="Procedimento:" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <Label fx:id="infoProcedimento" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                        <Label text="Data:" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                        <Label fx:id="infoDataProc" text="-" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                        <Label text="Valor:" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label fx:id="infoValor" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                        <Label text="Status:" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                        <Label fx:id="infoStatus" text="-" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                    </children>
+                </GridPane>
+            </VBox>
         </VBox>
     </center>
 
@@ -212,45 +298,52 @@
             <Region VBox.vgrow="ALWAYS"/>
 
             <!-- Container dos botões fixo no inferior -->
-            <VBox spacing="8" alignment="BOTTOM_LEFT"
-                  style="-fx-padding: 0 10 15 10;">
-
+            <VBox spacing="8" alignment="BOTTOM_LEFT" style="-fx-padding: 0 10 15 10;">
                 <Label text="Ações Financeiras" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
                 <Separator/>
 
-                <Button text="Nova Receita"
+                <Button text="Nova Receita" onAction="#onNovaReceita"
                         style="-fx-background-color: #36bc89; -fx-background-radius: 20;"
                         textFill="white" maxWidth="Infinity">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </Button>
 
-                <Button text="Nova Despesa"
+                <Button text="Nova Despesa" onAction="#onNovaDespesa"
                         style="-fx-background-color: #36bc89; -fx-background-radius: 20;"
                         textFill="white" maxWidth="Infinity">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </Button>
 
-                <Button text="Novo Procedimento"
+                <Button text="Novo Procedimento" onAction="#onNovoProcedimento"
                         style="-fx-background-color: #36bc89; -fx-background-radius: 20;"
                         textFill="white" maxWidth="Infinity">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </Button>
 
                 <Separator/>
-
                 <Label text="Relatórios" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
                 <Separator/>
 
-                <Button text="Relatório Mensal"
+                <Button text="Relatório Mensal" onAction="#onRelatorioMensal"
                         style="-fx-background-color: #36bc89; -fx-background-radius: 20;"
                         textFill="white" maxWidth="Infinity">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </Button>
 
-                <Button text="Exportar PDF"
+                <Button text="Exportar PDF" onAction="#onExportarPDF"
                         style="-fx-background-color: #36bc89; -fx-background-radius: 20;"
                         textFill="white" maxWidth="Infinity">
-                    <cursor><Cursor fx:constant="HAND"/></cursor>
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
                 </Button>
             </VBox>
         </VBox>

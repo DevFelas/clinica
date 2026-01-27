@@ -1,12 +1,11 @@
 package com.IFPI.CLINICA.Controller;
 
-import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Repository.AgendamentoRepository;
-import com.IFPI.CLINICA.Repository.PacienteRepository;
-import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Util.Navigator;
+<<<<<<< HEAD
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.FXCollections;
+=======
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,10 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
@@ -28,27 +23,19 @@ public class PagAgendamentoController implements Initializable {
     @Autowired
     private Navigator navigator;
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private ProcedimentoRepository procedimentoRepository;
-
-    @Autowired
-    private PacienteRepository pacienteRepository;
-
     @FXML
     private TextField cpfField;
 
     @FXML
-    private ComboBox<Procedimento> procedimentoCombo;
+    private ComboBox<String> procedimentoCombo;
 
     @FXML
-    private ComboBox<LocalTime> horarioCombo;
+    private ComboBox<String> horarioCombo;
 
     @FXML
     private DatePicker dataPicker;
 
+<<<<<<< HEAD
     private Paciente pacienteEncontrado;
 
     @FXML
@@ -61,6 +48,8 @@ public class PagAgendamentoController implements Initializable {
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
     private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
 
+=======
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -76,17 +65,30 @@ public class PagAgendamentoController implements Initializable {
         }
 
         // ADICIONE TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO
-        procedimentoCombo.setItems(
-                FXCollections.observableArrayList(
-                        procedimentoRepository.findAll()
-                )
+        procedimentoCombo.getItems().addAll(
+                "Consulta",
+                "Limpeza",
+                "Exodontia",
+                "Prótese",
+                "Implante",
+                "Manutenção de Aparelho",
+                "Montagem de aparelho",
+                "Restauração"
         );
 
         // Horários disponíveis (mantive os originais, mas pode expandir se quiser)
+<<<<<<< HEAD
         dataPicker.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
         procedimentoCombo.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
 
 
+=======
+        horarioCombo.getItems().addAll(
+                "08:00",
+                "09:00",
+                "10:00"
+        );
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
     }
 
     // PAGINAÇÃO DO MENU LATERAL
@@ -99,16 +101,8 @@ public class PagAgendamentoController implements Initializable {
                 "/view/pages/Agenda.fxml"
         );
     }
-    // Outro botão sem um event para que possa ser chamado aqui no proprio código
-    @FXML
-    private void irParaAgenda() {
-        navigator.trocarPagina(
-                cpfField,
-                "/view/pages/Agenda.fxml"
-        );
-    }
 
-    // Bot├úo para ir para tela de Pacintes
+    // Botão para ir para tela de Pacintes
     @FXML
     private void irParaPacientes(ActionEvent event) {
         navigator.trocarPagina(
@@ -117,7 +111,7 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Bot├úo para ir para tela de Registro (Descomentar quando a tela existir)
+    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
     @FXML
     private void irParaRegistro(ActionEvent event) {
         navigator.trocarPagina(
@@ -126,7 +120,7 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Bot├úo para ir para tela Financeiro (Descomentar quando a tela existir
+    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
     @FXML
     private void irParaFinanceiro(ActionEvent event) {
         navigator.trocarPagina(
@@ -135,49 +129,17 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Botão para cadastrar um novo paciente
-    @FXML
-    private void irParaCadPaciente(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/CadasPessoa.fxml"
-        );
-    }
-
     @FXML
     private void onAgendar() {
-
-        if (!validarFormulario()){
+        if (!validarFormulario()) {
             return;
         }
-
-        String cpf = cpfField.getText().replaceAll("\\D", "");
-
-        pacienteEncontrado =
-                pacienteRepository.findByCpf(cpf)
-                        .orElse(null);
-
-        if (pacienteEncontrado == null) {
-            mostrarAlerta("Paciente n├úo encontrado para o CPF informado.");
-            return;
-        }
-
-        Agendamento agendamento = new Agendamento();
-        agendamento.setStatus(StatusAgendamento.AGENDADA);
-        agendamento.setPaciente(pacienteEncontrado);
-        agendamento.setProcedimento(procedimentoCombo.getValue());
-        agendamento.setData(dataPicker.getValue());
-        agendamento.setHora(horarioCombo.getValue());
-
-        agendamentoRepository.save(agendamento);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Sucesso");
+        alert.setTitle("Agendamento");
         alert.setHeaderText(null);
-        alert.setContentText("Agendamento realizado com sucesso!");
+        alert.setContentText("Agendamento validado com sucesso.");
         alert.showAndWait();
-
-        irParaAgenda();
     }
 
     private boolean validarFormulario() {
@@ -191,7 +153,7 @@ public class PagAgendamentoController implements Initializable {
         cpf = cpf.replaceAll("\\D", "");
 
         if (!cpf.matches("\\d{11}")) {
-            mostrarAlerta("CPF inv├ílido. Deve conter 11 n├║meros.");
+            mostrarAlerta("CPF inválido. Deve conter 11 números.");
             return false;
         }
 
@@ -206,7 +168,7 @@ public class PagAgendamentoController implements Initializable {
         }
 
         if (horarioCombo.getValue() == null) {
-            mostrarAlerta("Selecione um hor├írio.");
+            mostrarAlerta("Selecione um horário.");
             return false;
         }
 
@@ -215,11 +177,12 @@ public class PagAgendamentoController implements Initializable {
 
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Valida├º├úo");
+        alert.setTitle("Validação");
         alert.setHeaderText(null);
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+<<<<<<< HEAD
 
     private List<LocalTime> gerarHorariosBase() {
 
@@ -417,3 +380,6 @@ public class PagAgendamentoController implements Initializable {
     }
 
 }
+=======
+}
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2

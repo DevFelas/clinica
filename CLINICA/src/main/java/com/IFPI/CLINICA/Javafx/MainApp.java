@@ -29,8 +29,29 @@ public class MainApp extends Application {
 
         stage.setScene(new Scene(root));
         stage.setTitle("SGO - Sistema de Agendamento");
-        stage.setMaximized(true); // Abre a janela ocupando todo o espaço disponível
+        stage.setMaximized(true);
         stage.show();
+
+        // Inicializar dados de exemplo após a aplicação iniciar
+        inicializarDadosExemplo();
+    }
+
+    private void inicializarDadosExemplo() {
+        try {
+            // Aguardar um pouco para o Spring terminar de inicializar todos os beans
+            Platform.runLater(() -> {
+                try {
+                    // Aqui você pode inicializar dados de exemplo se necessário
+                    // Por exemplo, criar alguns procedimentos padrão ou transações
+                    System.out.println("Aplicação iniciada com sucesso!");
+                    System.out.println("Financeiro está pronto para uso.");
+                } catch (Exception e) {
+                    System.out.println("Erro ao inicializar dados: " + e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -39,4 +60,3 @@ public class MainApp extends Application {
         Platform.exit();
     }
 }
-

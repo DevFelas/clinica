@@ -1,13 +1,20 @@
 package com.IFPI.CLINICA.Controller;
 
+<<<<<<< HEAD
 import com.IFPI.CLINICA.Model.*;
+=======
+import com.IFPI.CLINICA.Model.Agendamento;
+import com.IFPI.CLINICA.Model.Paciente;
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.PacienteService;
-import com.IFPI.CLINICA.Service.ProcedimentoService;
 import com.IFPI.CLINICA.Util.Navigator;
+<<<<<<< HEAD
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
+=======
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,9 +23,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.FXCollections;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,26 +34,17 @@ import java.time.LocalDate;
 @Component
 public class PagRegistroController {
 
-    private ObservableList<Agendamento> listaAgendamentos;
-    private FilteredList<Agendamento> listaFiltrada;
-
-    @Autowired
-    private ProcedimentoService procedimentoService;
-
-    @FXML
-    private ComboBox<Procedimento> comboProcedimentos;
-
     @Autowired
     private Navigator navigator;
 
     @Autowired
     private PacienteService service;
 
-    @Autowired
-    private AgendamentoService agendamentoService;
-
     @FXML
     private TextField campoPesquisa;
+
+    @FXML
+    private ComboBox<String> comboProcedimentos;
 
     @FXML
     private DatePicker dataInicio;
@@ -71,9 +66,6 @@ public class PagRegistroController {
 
     @FXML
     private Button btnSair;
-
-    @FXML
-    private Label lblTotal;
 
     @FXML
     private TableView<Agendamento> tabelaAgendamentos;
@@ -129,44 +121,11 @@ public class PagRegistroController {
         );
     }
 
-    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
     @FXML
-    private void irParaFinaneiro(ActionEvent event) {
+    private void irParaFinanceiro(ActionEvent event) {
         navigator.trocarPagina(
                 (Node) event.getSource(),
                 "/view/pages/Financeiro.fxml"
-        );
-    }
-
-    // Botão para limpar filtros
-    @FXML
-    private void limparFiltros() {
-        campoPesquisa.clear();
-        comboProcedimentos.getSelectionModel().clearSelection();
-        dataInicio.setValue(null);
-        dataFim.setValue(null);
-        listaFiltrada.setPredicate(p -> true);
-    }
-
-    @FXML
-    private void filtrarPorProcedimento() {
-        Procedimento proc = comboProcedimentos.getValue();
-
-        if (proc == null) {
-            System.out.println("Nenhum procedimento selecionado");
-            return;
-        }
-
-        System.out.println(proc.getNome());
-    }
-
-
-    @FXML
-    private Label lblTotalRegistros;
-
-    private void atualizarContador() {
-        lblTotalRegistros.setText(
-                "Total: " + listaFiltrada.size() + " registros"
         );
     }
 
@@ -174,6 +133,7 @@ public class PagRegistroController {
     @FXML
     public void initialize() {
 
+<<<<<<< HEAD
         Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
 
         if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
@@ -227,6 +187,8 @@ public class PagRegistroController {
 
         tabelaAgendamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
+=======
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
         // Ajuste automático das colunas
         tabelaAgendamentos.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
@@ -237,14 +199,14 @@ public class PagRegistroController {
                 )
         );
 
+
         colProcedimento.setCellValueFactory(
-                cellData -> new SimpleStringProperty(
-                        cellData.getValue().getProcedimento().getNome()
-                )
+                new PropertyValueFactory<>("procedimento")
         );
 
-        colHorario.setCellValueFactory( new PropertyValueFactory<>("horario") );
-
+        colHorario.setCellValueFactory(
+                new PropertyValueFactory<>("horario")
+        );
 
         colData.setCellValueFactory(
                 new PropertyValueFactory<>("data")
@@ -254,14 +216,9 @@ public class PagRegistroController {
                 new PropertyValueFactory<>("status")
         );
 
-        carregarAgendamentos();
-        carregarProcedimentos();
 
-        configurarComboBoxProcedimento();
-        configurarFiltroNome();
-        configurarFiltroProcedimento();
-        configurarFiltroData();
     }
+<<<<<<< HEAD
 
     // Esse método será chamado toda vez que algo mudar
     private void aplicarFiltros() {
@@ -405,4 +362,6 @@ public class PagRegistroController {
         });
     }
 
+=======
+>>>>>>> 4e4bf16dc8fc12a20f0fdabc70203932c733c2b2
 }

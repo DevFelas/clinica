@@ -1,26 +1,31 @@
 package com.IFPI.CLINICA.Controller;
 
-import com.IFPI.CLINICA.Model.Agendamento;
-import com.IFPI.CLINICA.Model.Perfil;
-import com.IFPI.CLINICA.Model.Usuario;
+import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import com.IFPI.CLINICA.Repository.PacienteRepository;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
 import javafx.scene.layout.*;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.event.ActionEvent;
+
+import java.io.IOException;
 import java.net.URL;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -39,6 +44,9 @@ public class PaginaInicialAgendaController implements Initializable{
     private AgendamentoRepository agendamentoRepository;
 
     @Autowired
+    private ConfigurableApplicationContext springContext;
+
+    @Autowired
     private Navigator navigator;
 
     @FXML
@@ -48,10 +56,24 @@ public class PaginaInicialAgendaController implements Initializable{
     private Button btnFinanceiro;
 
     @FXML
+    private Button btnEditar;
+
+    @FXML
+    private Button btnCancelar;
+
+    @FXML
+    private Button btnDetalhar;
+
+
+    @FXML
     private Label textUsuario;
 
     @FXML
     private DatePicker datePicker;
+
+    private Agendamento agendamentoSelecionado;
+
+    private Pane blocoSelecionado;
 
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
@@ -83,6 +105,11 @@ public class PaginaInicialAgendaController implements Initializable{
                 atualizarSemana(newDate);
             }
         });
+
+        // desabilita botões até selecionar um agendamento
+        btnEditar.setDisable(true);
+        btnCancelar.setDisable(true);
+        btnDetalhar.setDisable(true);
     }
 
     // PAGINAÇÃO DO MENU LATERAL
@@ -135,32 +162,114 @@ public class PaginaInicialAgendaController implements Initializable{
     }
 
     // Botão para ir para tela Editar
-//    @FXML
-//    private void irParaEditar(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/CadasPessoa.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaEditar(ActionEvent event) {
 
-    // Botão para ir para tela Cancelar
-    //@FXML
-//    private void irParaCancelar(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/CadasPessoa.fxml"
-//        );
-//    }
+        if (agendamentoSelecionado == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/pages/DetalharAgendamento.fxml")
+            );
+            loader.setControllerFactory(springContext::getBean);
+
+            Parent root = loader.load();
+
+            ModalDetalhesController controller = loader.getController();
+            controller.configurar(
+                    agendamentoSelecionado,
+                    ModoTelaAgendamento.EDICAO
+            );
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Detalhes do Agendamento");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+
+            stage.showAndWait();
+
+            carregarAgendamentos();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     // Botão para ir para tela Detalhar
-//    @FXML
-//    private void irParaDetalhar(ActionEvent event) {
-//        navigator.trocarPagina(
-//                (Node) event.getSource(),
-//                "/view/pages/CadasPessoa.fxml"
-//        );
-//    }
+    @FXML
+    private void irParaDetalhar(ActionEvent event) {
 
+        if (agendamentoSelecionado == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/view/pages/DetalharAgendamento.fxml")
+            );
+            loader.setControllerFactory(springContext::getBean);
+
+            Parent root = loader.load();
+
+            ModalDetalhesController controller = loader.getController();
+            controller.configurar(
+                    agendamentoSelecionado,
+                    ModoTelaAgendamento.DETALHE
+            );
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Detalhes do Agendamento");
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.centerOnScreen();
+            stage.showAndWait();
+
+            if (controller.isAlterou()) {
+                carregarAgendamentos();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Botão para ir para tela Cancelar
+    @FXML
+    private void cancelarAgendamento() {
+
+
+        // Confirmação antes de cancelar
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Cancelar Agendamento");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Tem certeza que deseja cancelar este agendamento?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+            if (resposta == ButtonType.OK) {
+
+                // Muda o status para CANCELADA
+                agendamentoSelecionado.setStatus(com.IFPI.CLINICA.Model.StatusAgendamento.CANCELADA);
+
+                // Salva no banco
+                agendamentoRepository.save(agendamentoSelecionado);
+
+                // Remove visualmente da agenda
+                agendaGrid.getChildren().removeIf(node -> {
+                    if ("AGENDAMENTO".equals(node.getUserData())) {
+                        Pane bloco = (Pane) node;
+                        // compara paciente, hora e data para identificar o bloco
+                        return blocoSelecionado != null && bloco == blocoSelecionado;
+                    }
+                    return false;
+                });
+
+                // limpa seleção
+                agendamentoSelecionado = null;
+                blocoSelecionado = null;
+            }
+        });
+    }
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
@@ -336,12 +445,19 @@ public class PaginaInicialAgendaController implements Initializable{
 
     private void carregarAgendamentos() {
 
+        agendaGrid.getChildren().removeIf(node -> "AGENDAMENTO".equals(node.getUserData()));
+
         List<Agendamento> agendamentos = agendamentoRepository.findByDataBetween(
                 semanaInicio,
                 semanaFim
         );
 
         for (Agendamento ag : agendamentos) {
+            // NÃO renderiza cancelados
+            if (ag.getStatus() == StatusAgendamento.CANCELADA) {
+                continue;
+            }
+            // Renderiza AGENDADA e REALIZADA
             renderizarAgendamento(ag);
         }
 
@@ -377,41 +493,63 @@ public class PaginaInicialAgendaController implements Initializable{
 
     private Pane criarBloco(Agendamento ag) {
 
+        // Conteúdo principal
         VBox box = new VBox(5);
         box.setPadding(new Insets(5));
         box.setAlignment(Pos.CENTER);
-
         box.setMaxWidth(Double.MAX_VALUE);
         box.setMaxHeight(Double.MAX_VALUE);
+
+        String corBase = corPorProcedimento(ag);
+
+        // escurece se REALIZADA
+        String corFinal = ag.getStatus() == StatusAgendamento.REALIZADA
+                ? escurecerCor(corBase, 0.75)
+                : corBase;
 
         box.setStyle("""
         -fx-background-radius: 8;
         -fx-border-radius: 8;
         -fx-border-color: black;
-        -fx-border-width: 0.5;  
-        -fx-background-color:
-        """ + corPorProcedimento(ag) + ";");
+        -fx-border-width: 0.5;
+        -fx-background-color: %s;
+    """.formatted(corFinal));
+
+        box.setUserData("AGENDAMENTO");
 
         LocalTime fim = calcularHoraFim(ag);
 
-        Label horario = new Label(
-                ag.getHora() + " - " + fim
-        );
-
-        Label nome = new Label(
-                ag.getPaciente().getNome()
-        );
+        Label horario = new Label(ag.getHora() + " - " + fim);
+        Label nome = new Label(ag.getPaciente().getNome());
         nome.setStyle("-fx-font-weight: bold;");
-
-        Label proc = new Label(
-                ag.getProcedimento().getNome()
-        );
+        Label proc = new Label(ag.getProcedimento().getNome());
 
         box.getChildren().addAll(horario, nome, proc);
 
-        return box;
+        // Ícone de check (só se REALIZADA)
+        Label check = new Label("✔");
+        check.setStyle("""
+        -fx-text-fill: #2e7d32;
+        -fx-font-size: 14px;
+        -fx-font-weight: bold;
+    """);
+        check.setVisible(ag.getStatus() == StatusAgendamento.REALIZADA);
 
+        StackPane.setAlignment(check, Pos.TOP_RIGHT);
+        StackPane.setMargin(check, new Insets(4));
+
+        StackPane container = new StackPane(box, check);
+
+        // só permite seleção se NÃO for realizada
+        if (ag.getStatus() == StatusAgendamento.AGENDADA) {
+            container.setOnMouseClicked(e -> selecionarAgendamento(ag, box));
+        } else {
+            container.setDisable(true);
+        }
+
+        return container;
     }
+
 
 
     private LocalTime calcularHoraFim(Agendamento ag) {
@@ -504,6 +642,71 @@ public class PaginaInicialAgendaController implements Initializable{
             );
         }
     }
+
+    private void selecionarAgendamento(Agendamento ag, Pane box) {
+
+        // remove destaque do anterior
+        if (blocoSelecionado != null) {
+            blocoSelecionado.setStyle(
+                    blocoSelecionado.getStyle()
+                            .replace("-fx-border-color: white;", "-fx-border-color: black;")
+                            .replace("-fx-border-width: 2;", "-fx-border-width: 0.5;")
+
+            );
+        }
+
+        // destaca o novo
+        box.setStyle(box.getStyle() + """
+        -fx-border-width: 2;
+        -fx-border-color: #000000;
+    """);
+
+        agendamentoSelecionado = ag;
+        blocoSelecionado = box;
+
+        // habilita botões
+        btnEditar.setDisable(false);
+        btnCancelar.setDisable(false);
+        btnDetalhar.setDisable(false);
+    }
+
+    private String escurecerCor(String hex, double fator) {
+
+        int r = Integer.valueOf(hex.substring(1, 3), 16);
+        int g = Integer.valueOf(hex.substring(3, 5), 16);
+        int b = Integer.valueOf(hex.substring(5, 7), 16);
+
+        r = (int) (r * fator);
+        g = (int) (g * fator);
+        b = (int) (b * fator);
+
+        return String.format("#%02x%02x%02x", r, g, b);
+    }
+
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
+
 
 
 }

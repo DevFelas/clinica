@@ -1,16 +1,17 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Paciente;
+import com.IFPI.CLINICA.Model.Perfil;
+import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Util.Navigator;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -57,6 +58,12 @@ public class PagTodosPacieController {
     private TextField campoBusca;
 
     private ObservableList<Paciente> listaPacientes = FXCollections.observableArrayList();
+
+    @FXML
+    private Button btnFinanceiro;
+
+    @FXML
+    private Label textUsuario;
 
     // PAGINAÇÃO DO MENU LATERAL
 
@@ -110,6 +117,16 @@ public class PagTodosPacieController {
 
     @FXML
     public void initialize() {
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
 
         tabelaPacientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
@@ -161,4 +178,29 @@ public class PagTodosPacieController {
 
         tabelaPacientes.setItems(listaFiltrada);
     }
+
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
+
 }

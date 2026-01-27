@@ -1,6 +1,9 @@
 package com.IFPI.CLINICA.Controller;
 
+import com.IFPI.CLINICA.Model.Perfil;
+import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Util.Navigator;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -54,8 +57,26 @@ public class FinanceiroController implements Initializable {
     @FXML private Label infoValor;
     @FXML private Label infoStatus;
 
+    @FXML
+    private Button btnFinanceiro;
+
+    @FXML
+    private Label textUsuario;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
+
         // Configurar a tabela para ser editável
         tabelaFinanceiro.setEditable(true);
 
@@ -134,4 +155,29 @@ public class FinanceiroController implements Initializable {
         System.out.println("Alterações salvas!");
         // Aqui você implementaria a lógica para salvar no banco de dados
     }
+
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
+
 }

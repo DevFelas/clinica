@@ -77,14 +77,14 @@
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
-            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+            <Button fx:id="btnFinanceiro" onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
 
             <Region VBox.vgrow="ALWAYS" />
 
-            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+            <Button onAction="#sair" prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>

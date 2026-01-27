@@ -1,25 +1,125 @@
 package com.IFPI.CLINICA.Controller;
 
+import com.IFPI.CLINICA.Model.*;
+import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
+import javafx.collections.FXCollections;
+import javafx.scene.control.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class ModalDetalhesController {
 
-    @FXML private TextField txtNome;
-    @FXML private TextField txtContato;
-    @FXML private TextField txtCpf;
-    @FXML private TextField txtHorario;
-    @FXML private TextField txtProcedimento;
-    @FXML private TextField txtValor;
+    @Autowired
+    private AgendamentoRepository agendamentoRepository;
+
+    @Autowired
+    private ProcedimentoRepository procedimentoRepository;
+
+
+    private Agendamento agendamento;
+    private ModoTelaAgendamento modo;
 
     @FXML
-    public void initialize() {
-        System.out.println("Modal de detalhes carregada com sucesso!");
+    private TextField txtPaciente;
+
+    @FXML
+    private TextField txtContato;
+
+    @FXML
+    private TextField txtCpf;
+
+    @FXML
+    private DatePicker datePicker;
+
+    @FXML
+    private ComboBox<Procedimento> cbProcedimento;
+
+    @FXML
+    private ComboBox<LocalTime> cbHorario;
+
+    @FXML
+    private TextField txtValor;
+
+
+    private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
+    private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
+    private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
+
+    @FXML
+    private Button btnSalvar;
+
+    @FXML
+    private Button btnRealizado;
+
+    private boolean alterou = false;
+
+    public boolean isAlterou() {
+        return alterou;
+    }
+
+
+    public void configurar(Agendamento agendamento, ModoTelaAgendamento modo) {
+        this.agendamento = agendamento;
+        this.modo = modo;
+
+        preencherCampos();
+        cbProcedimento.valueProperty()
+                .addListener((obs, o, n) -> atualizarHorariosModal());
+
+        datePicker.valueProperty()
+                .addListener((obs, o, n) -> atualizarHorariosModal());
+
+        cbProcedimento.setItems(
+                FXCollections.observableArrayList(
+                        procedimentoRepository.findAll()
+                )
+        );
+        cbProcedimento.valueProperty().addListener((obs, oldProc, newProc) -> {
+            if (newProc != null) {
+                txtValor.setText(
+                        String.format("R$ %.2f", newProc.getValor())
+                );
+            } else {
+                txtValor.clear();
+            }
+        });
+        atualizarHorariosModal();
+        configurarModo();
+    }
+
+    private void preencherCampos() {
+        txtPaciente.setText(agendamento.getPaciente().getNome());
+        txtCpf.setText(agendamento.getPaciente().getCpf());
+        txtContato.setText(agendamento.getPaciente().getContato());
+
+        datePicker.setValue(agendamento.getData());
+        cbProcedimento.setValue(agendamento.getProcedimento());
+        txtValor.setText(
+                String.format("R$ %.2f", agendamento.getProcedimento().getValor())
+        );
+    }
+
+    private void configurarModo() {
+        boolean edicao = modo == ModoTelaAgendamento.EDICAO;
+
+        btnSalvar.setVisible(edicao);
+        txtPaciente.setDisable(true);
+        txtCpf.setDisable(true);
+        txtContato.setDisable(true);
+        datePicker.setDisable(!edicao);
+        cbHorario.setDisable(!edicao);
+        cbProcedimento.setDisable(!edicao);
     }
 
     @FXML
@@ -27,4 +127,182 @@ public class ModalDetalhesController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
     }
+
+    private void fecharModal() {
+        Stage stage = (Stage) btnSalvar.getScene().getWindow();
+        stage.close();
+    }
+
+    private List<LocalTime> gerarHorariosBase() {
+
+        List<LocalTime> horarios = new ArrayList<>();
+
+        LocalTime inicio = LocalTime.of(8, 0);
+        LocalTime fim = LocalTime.of(18, 0);
+
+        while (inicio.isBefore(fim)) {
+            horarios.add(inicio);
+            inicio = inicio.plusMinutes(30);
+        }
+
+        return horarios;
+    }
+
+    private LocalTime calcularHoraFim(LocalTime inicio, Procedimento proc) {
+
+        int minutos =
+                proc.getTempo_previsto()
+                        .toLocalTime()
+                        .getHour() * 60
+                        +
+                        proc.getTempo_previsto()
+                                .toLocalTime()
+                                .getMinute();
+
+        return inicio.plusMinutes(minutos);
+    }
+
+    private boolean temConflito(
+            LocalTime inicioNovo,
+            LocalTime fimNovo,
+            Agendamento existente
+    ) {
+
+        // 🔥 ignora o próprio agendamento (modo edição)
+        if (modo == ModoTelaAgendamento.EDICAO &&
+                existente.getId().equals(agendamento.getId())) {
+            return false;
+        }
+
+        LocalTime inicioExistente = existente.getHora();
+        LocalTime fimExistente =
+                calcularHoraFim(inicioExistente, existente.getProcedimento());
+
+        return inicioNovo.isBefore(fimExistente) &&
+                fimNovo.isAfter(inicioExistente);
+    }
+
+    private void atualizarHorariosModal() {
+
+        LocalDate data = datePicker.getValue();
+        Procedimento proc = cbProcedimento.getValue();
+
+        if (data == null || proc == null) {
+            cbHorario.getItems().clear();
+            return;
+        }
+
+        List<LocalTime> horarios = gerarHorariosBase();
+
+        cbHorario.setItems(FXCollections.observableArrayList(horarios));
+
+        cbHorario.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null) {
+                    setText(null);
+                    setDisable(false);
+                } else {
+                    setText(item.toString());
+
+                    boolean disponivel =
+                            horarioDisponivelModal(item, data, proc);
+
+                    setDisable(!disponivel);
+
+                    if (!disponivel) {
+                        setStyle("-fx-text-fill: gray;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
+        cbHorario.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(LocalTime item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? "" : item.toString());
+            }
+        });
+
+
+        cbHorario.setValue(agendamento.getHora());
+
+    }
+
+    private boolean horarioDisponivelModal(
+            LocalTime inicio,
+            LocalDate data,
+            Procedimento proc
+    ) {
+
+        LocalTime fim = calcularHoraFim(inicio, proc);
+
+        // expediente
+        if (fim.isAfter(EXPEDIENTE_FIM)) {
+            return false;
+        }
+
+        // almoço
+        boolean conflitaAlmoco =
+                inicio.isBefore(ALMOCO_FIM) && fim.isAfter(ALMOCO_INICIO);
+
+        if (conflitaAlmoco) {
+            return false;
+        }
+
+        List<Agendamento> agendados =
+                agendamentoRepository.findByData(data);
+
+        for (Agendamento ag : agendados) {
+            if (temConflito(inicio, fim, ag)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @FXML
+    private void salvar() {
+
+        agendamento.setData(datePicker.getValue());
+        agendamento.setHora(cbHorario.getValue());
+        agendamento.setProcedimento(cbProcedimento.getValue());
+
+        agendamentoRepository.save(agendamento);
+
+        Stage stage = (Stage) txtPaciente.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    private void concluir() {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Concluir Agendamento");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja marcar este agendamento como CONCLUÍDO?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+            if (resposta == ButtonType.OK) {
+
+                agendamento.setStatus(
+                        com.IFPI.CLINICA.Model.StatusAgendamento.REALIZADA
+                );
+
+                agendamentoRepository.save(agendamento);
+                alterou = true;
+
+                // fecha o modal
+                Stage stage = (Stage) btnSalvar.getScene().getWindow();
+                stage.close();
+            }
+        });
+    }
+
 }

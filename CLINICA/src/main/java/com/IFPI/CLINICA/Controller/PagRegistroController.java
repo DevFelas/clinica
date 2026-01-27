@@ -1,12 +1,11 @@
 package com.IFPI.CLINICA.Controller;
 
-import com.IFPI.CLINICA.Model.Agendamento;
-import com.IFPI.CLINICA.Model.Paciente;
-import com.IFPI.CLINICA.Model.Procedimento;
+import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
 import com.IFPI.CLINICA.Util.Navigator;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
 import javafx.beans.property.SimpleStringProperty;
@@ -94,7 +93,11 @@ public class PagRegistroController {
     @FXML
     private TableColumn<Agendamento, String> colStatus;
 
+    @FXML
+    private Button btnFinanceiro;
 
+    @FXML
+    private Label textUsuario;
 
 
     // PAGINAÇÃO DO MENU LATERAL
@@ -170,6 +173,17 @@ public class PagRegistroController {
 
     @FXML
     public void initialize() {
+
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
 
         // Placeholder para o campo do filtro
         campoPesquisa.setPromptText("Digite o nome do paciente");
@@ -367,5 +381,28 @@ public class PagRegistroController {
         });
     }
 
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
 
 }

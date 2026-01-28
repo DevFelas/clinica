@@ -1,6 +1,13 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.*;
+import com.IFPI.CLINICA.Model.Agendamento;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import javafx.beans.property.SimpleStringProperty;
+import com.IFPI.CLINICA.Model.Paciente;
+import com.IFPI.CLINICA.Model.Procedimento;
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
@@ -243,7 +250,16 @@ public class PagRegistroController {
                 )
         );
 
-        colHorario.setCellValueFactory( new PropertyValueFactory<>("horario") );
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        colHorario.setCellValueFactory(cellData -> {
+            LocalTime hora = cellData.getValue().getHora();
+
+            return new SimpleStringProperty(
+                    hora != null ? hora.format(formatter) : ""
+            );
+        });
+
 
 
         colData.setCellValueFactory(

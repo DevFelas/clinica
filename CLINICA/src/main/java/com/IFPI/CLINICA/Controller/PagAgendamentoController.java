@@ -5,6 +5,7 @@ import com.IFPI.CLINICA.Repository.AgendamentoRepository;
 import com.IFPI.CLINICA.Repository.PacienteRepository;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Util.Navigator;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -50,12 +51,30 @@ public class PagAgendamentoController implements Initializable {
 
     private Paciente pacienteEncontrado;
 
+    @FXML
+    private Button btnFinanceiro;
+
+    @FXML
+    private Label textUsuario;
+
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
     private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
+
         // ADICIONE TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO
         procedimentoCombo.setItems(
                 FXCollections.observableArrayList(
@@ -63,16 +82,16 @@ public class PagAgendamentoController implements Initializable {
                 )
         );
 
-        // Hor├írios dispon├¡veis (mantive os originais, mas pode expandir se quiser)
+        // Horários disponíveis (mantive os originais, mas pode expandir se quiser)
         dataPicker.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
         procedimentoCombo.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
 
 
     }
 
-    // PAGINA├ç├âO DO MENU LATERAL
+    // PAGINAÇÃO DO MENU LATERAL
 
-    // Bot├úo para ir para tela da Agenda
+    // Botão para ir para tela da Agenda
     @FXML
     private void irParaAgenda(ActionEvent event) {
         navigator.trocarPagina(
@@ -318,7 +337,15 @@ public class PagAgendamentoController implements Initializable {
             return false;
         }
 
-        List<Agendamento> agendados = agendamentoRepository.findByData(data);
+        List<Agendamento> agendados =
+                agendamentoRepository.findByDataAndStatusIn(
+                        data,
+                        List.of(
+                                StatusAgendamento.AGENDADA,
+                                StatusAgendamento.REALIZADA
+                        )
+                );
+
 
         for (Agendamento ag : agendados) {
             if (temConflito(inicio, fim, ag)) {
@@ -348,7 +375,7 @@ public class PagAgendamentoController implements Initializable {
 
         pacienteRepository.findByCpf(cpf).ifPresentOrElse(
                 usuario -> {
-                    // AQUI voc├¬ usa os dados do paciente
+                    // AQUI você usa os dados do paciente
                     System.out.println("Paciente encontrado: " + usuario.getNome());
 
                     // Exemplo se tivesse campos:
@@ -357,9 +384,9 @@ public class PagAgendamentoController implements Initializable {
                 },
                 () -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Paciente n├úo encontrado");
+                    alert.setTitle("Paciente não encontrado");
                     alert.setHeaderText(null);
-                    alert.setContentText("Paciente n├úo cadastrado. Deseja cadastrar agora?");
+                    alert.setContentText("Paciente não cadastrado. Deseja cadastrar agora?");
 
                     alert.showAndWait().ifPresent(resposta -> {
                         if (resposta == ButtonType.OK) {
@@ -373,5 +400,28 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
 
 }

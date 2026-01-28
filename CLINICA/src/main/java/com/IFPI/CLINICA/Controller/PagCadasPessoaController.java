@@ -1,14 +1,15 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Paciente;
+import com.IFPI.CLINICA.Model.Perfil;
+import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Util.Navigator;
+import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.event.ActionEvent;
@@ -50,8 +51,24 @@ public class PagCadasPessoaController implements Initializable {
     @FXML
     private TextField txtNumero;
 
+    @FXML
+    private Button btnFinanceiro;
+
+    @FXML
+    private Label textUsuario;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            btnFinanceiro.setVisible(false);
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
+        }
     }
 
     // PAGINAÇÃO DO MENU LATERAL
@@ -174,4 +191,29 @@ public class PagCadasPessoaController implements Initializable {
         alert.setContentText(mensagem);
         alert.showAndWait();
     }
+
+    @FXML
+    private void sair(ActionEvent event) {
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Sair do sistema");
+        confirm.setHeaderText(null);
+        confirm.setContentText("Deseja realmente sair do sistema?");
+
+        confirm.showAndWait().ifPresent(resposta -> {
+
+            if (resposta == ButtonType.OK) {
+
+                // limpa sessão
+                SessaoUsuario.getInstance().limparSessao();
+
+                // volta para login
+                navigator.trocarPagina(
+                        (Node) event.getSource(),
+                        "/view/pages/Login.fxml"
+                );
+            }
+        });
+    }
+
 }

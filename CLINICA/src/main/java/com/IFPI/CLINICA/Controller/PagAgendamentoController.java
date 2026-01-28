@@ -337,7 +337,15 @@ public class PagAgendamentoController implements Initializable {
             return false;
         }
 
-        List<Agendamento> agendados = agendamentoRepository.findByData(data);
+        List<Agendamento> agendados =
+                agendamentoRepository.findByDataAndStatusIn(
+                        data,
+                        List.of(
+                                StatusAgendamento.AGENDADA,
+                                StatusAgendamento.REALIZADA
+                        )
+                );
+
 
         for (Agendamento ag : agendados) {
             if (temConflito(inicio, fim, ag)) {
@@ -367,7 +375,7 @@ public class PagAgendamentoController implements Initializable {
 
         pacienteRepository.findByCpf(cpf).ifPresentOrElse(
                 usuario -> {
-                    // AQUI voc├¬ usa os dados do paciente
+                    // AQUI você usa os dados do paciente
                     System.out.println("Paciente encontrado: " + usuario.getNome());
 
                     // Exemplo se tivesse campos:
@@ -376,9 +384,9 @@ public class PagAgendamentoController implements Initializable {
                 },
                 () -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Paciente n├úo encontrado");
+                    alert.setTitle("Paciente não encontrado");
                     alert.setHeaderText(null);
-                    alert.setContentText("Paciente n├úo cadastrado. Deseja cadastrar agora?");
+                    alert.setContentText("Paciente não cadastrado. Deseja cadastrar agora?");
 
                     alert.showAndWait().ifPresent(resposta -> {
                         if (resposta == ButtonType.OK) {

@@ -190,7 +190,10 @@ public class PaginaInicialAgendaController implements Initializable{
 
             stage.showAndWait();
 
-            carregarAgendamentos();
+            // ATUALIZA SÓ SE ALTEROU
+            if (controller.isAlterou()) {
+                atualizarAgenda();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -226,7 +229,7 @@ public class PaginaInicialAgendaController implements Initializable{
             stage.showAndWait();
 
             if (controller.isAlterou()) {
-                carregarAgendamentos();
+                atualizarAgenda();
             }
 
         } catch (IOException e) {
@@ -238,8 +241,8 @@ public class PaginaInicialAgendaController implements Initializable{
     @FXML
     private void cancelarAgendamento() {
 
+        if (agendamentoSelecionado == null) return;
 
-        // Confirmação antes de cancelar
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Cancelar Agendamento");
         confirm.setHeaderText(null);
@@ -248,28 +251,14 @@ public class PaginaInicialAgendaController implements Initializable{
         confirm.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
 
-                // Muda o status para CANCELADA
-                agendamentoSelecionado.setStatus(com.IFPI.CLINICA.Model.StatusAgendamento.CANCELADA);
-
-                // Salva no banco
+                agendamentoSelecionado.setStatus(StatusAgendamento.CANCELADA);
                 agendamentoRepository.save(agendamentoSelecionado);
 
-                // Remove visualmente da agenda
-                agendaGrid.getChildren().removeIf(node -> {
-                    if ("AGENDAMENTO".equals(node.getUserData())) {
-                        Pane bloco = (Pane) node;
-                        // compara paciente, hora e data para identificar o bloco
-                        return blocoSelecionado != null && bloco == blocoSelecionado;
-                    }
-                    return false;
-                });
-
-                // limpa seleção
-                agendamentoSelecionado = null;
-                blocoSelecionado = null;
+                atualizarAgenda();
             }
         });
     }
+
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
@@ -376,6 +365,21 @@ public class PaginaInicialAgendaController implements Initializable{
 
         configurarColunasELinhas(row);
     }
+
+    private void atualizarAgenda() {
+
+        montarAgenda();
+        renderizarAlmoco();
+        carregarAgendamentos();
+
+        agendamentoSelecionado = null;
+        blocoSelecionado = null;
+
+        btnEditar.setDisable(true);
+        btnCancelar.setDisable(true);
+        btnDetalhar.setDisable(true);
+    }
+
 
     private List<String> gerarHorarios() {
         List<String> horarios = new ArrayList<>();

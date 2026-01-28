@@ -114,6 +114,7 @@ public class ModalDetalhesController {
         boolean edicao = modo == ModoTelaAgendamento.EDICAO;
 
         btnSalvar.setVisible(edicao);
+        btnRealizado.setVisible(!edicao);
         txtPaciente.setDisable(true);
         txtCpf.setDisable(true);
         txtContato.setDisable(true);
@@ -275,6 +276,8 @@ public class ModalDetalhesController {
         agendamento.setProcedimento(cbProcedimento.getValue());
 
         agendamentoRepository.save(agendamento);
+
+        alterou = true;
 
         Stage stage = (Stage) txtPaciente.getScene().getWindow();
         stage.close();

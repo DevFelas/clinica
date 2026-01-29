@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -30,6 +31,12 @@ public class MainApp extends Application {
         stage.setScene(new Scene(root));
         stage.setTitle("SGO - Sistema de Agendamento");
         stage.setMaximized(true); // Abre a janela ocupando todo o espaço disponível
+        stage.show();
+
+        Image icone = new Image(getClass().getResourceAsStream("/view/static_files/sgo.png"));
+        stage.getIcons().add(icone);
+
+        stage.setTitle("SGO - Sistema de Agendamento");
         stage.show();
     }
 

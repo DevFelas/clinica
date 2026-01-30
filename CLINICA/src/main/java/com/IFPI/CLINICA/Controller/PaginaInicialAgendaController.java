@@ -3,6 +3,7 @@ package com.IFPI.CLINICA.Controller;
 import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
 import com.IFPI.CLINICA.Repository.PacienteRepository;
+import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
@@ -10,6 +11,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.shape.Circle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import javafx.fxml.FXML;
@@ -47,6 +49,9 @@ public class PaginaInicialAgendaController implements Initializable{
     private ConfigurableApplicationContext springContext;
 
     @Autowired
+    private ProcedimentoRepository procedimentoRepository;
+
+    @Autowired
     private Navigator navigator;
 
     @FXML
@@ -75,6 +80,9 @@ public class PaginaInicialAgendaController implements Initializable{
 
     private Pane blocoSelecionado;
 
+    @FXML
+    private VBox boxProcedimentos;
+
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
 
@@ -99,6 +107,8 @@ public class PaginaInicialAgendaController implements Initializable{
         montarAgenda();
         renderizarAlmoco();
         carregarAgendamentos();
+
+        carregarLegendaProcedimentos();
 
         datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
             if (newDate != null) {
@@ -687,6 +697,27 @@ public class PaginaInicialAgendaController implements Initializable{
         return String.format("#%02x%02x%02x", r, g, b);
     }
 
+
+    private void carregarLegendaProcedimentos() {
+
+        boxProcedimentos.getChildren().clear();
+
+        List<Procedimento> procedimentos = procedimentoRepository.findAll();
+
+        for (Procedimento proc : procedimentos) {
+
+            Circle cor = new Circle(6);
+            cor.setFill(javafx.scene.paint.Color.web(proc.getCorHex()));
+
+            Label nome = new Label(proc.getNome());
+
+            HBox item = new HBox(6, cor, nome);
+            item.setAlignment(Pos.CENTER_LEFT);
+
+            boxProcedimentos.getChildren().add(item);
+        }
+    }
+
     @FXML
     private void sair(ActionEvent event) {
 
@@ -710,7 +741,5 @@ public class PaginaInicialAgendaController implements Initializable{
             }
         });
     }
-
-
 
 }

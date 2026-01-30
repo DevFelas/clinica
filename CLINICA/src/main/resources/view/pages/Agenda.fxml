@@ -106,49 +106,13 @@
             <VBox spacing="8">
                 <Label text="Procedimentos">
                     <font>
-                        <Font size="16" />
+                        <Font size="16"/>
                     </font>
                 </Label>
 
-                <HBox spacing="5">
-                    <Circle fill="#e7e9e4" radius="6" />
-                    <Label text="Consulta" />
-                </HBox>
-                <HBox spacing="5">
-                    <Circle fill="#09c6d9" radius="6" />
-                    <Label text="Limpeza" />
-                </HBox>
-                <HBox spacing="5">
-                    <Circle fill="#f6944d" radius="6" />
-                    <Label text="Extra├º├úo" />
-                </HBox>
-                <HBox spacing="5">
-                    <Circle fill="#b99aff" radius="6" />
-                    <Label text="Implante" />
-                </HBox>
-                <HBox spacing="5">
-                    <Circle fill="#c43c3e" radius="6" />
-                    <Label text="Pr├│tese" />
-                </HBox>
-                <HBox spacing="5">
-                    <children>
-                        <Circle fill="#e1aded" radius="6" />
-                        <Label text="Mont. de aparelho" />
-                    </children>
-                </HBox>
-                <HBox spacing="5">
-                    <children>
-                        <Circle fill="#35bc84" radius="6" />
-                        <Label text="Manut. de aparelho" />
-                    </children>
-                </HBox>
-                <HBox spacing="5">
-                    <children>
-                        <Circle fill="#c4fe6b" radius="6" />
-                        <Label text="Restaura├º├úo" />
-                    </children>
-                </HBox>
+                <VBox fx:id="boxProcedimentos" spacing="6"/>
             </VBox>
+
 
             <Region VBox.vgrow="ALWAYS" />
 

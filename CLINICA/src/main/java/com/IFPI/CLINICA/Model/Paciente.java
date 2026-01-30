@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -51,5 +52,4 @@ public class Paciente {
     private String bairro;
     private String cidade;
     private String numero;
-
 }

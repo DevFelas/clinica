@@ -51,12 +51,6 @@ public class Agendamento {
     public LocalTime getHora() { return hora; }
     public void setHora(LocalTime hora) { this.hora = hora; }
 
-//    public Profissional getProfissional() { return profissional; }
-//    public void setProfissional(Profissional profissional) { this.profissional = profissional; }
-//
-//    public Atendente getAtendente() { return atendente; }
-//    public void setAtendente(Atendente atendente) { this.atendente = atendente; }
-
     public Paciente getPaciente() { return paciente; }
     public void setPaciente(Paciente paciente) { this.paciente = paciente; }
 

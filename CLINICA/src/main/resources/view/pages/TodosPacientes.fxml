@@ -36,13 +36,19 @@
 
             <Region HBox.hgrow="ALWAYS" />
 
-            <Label text="Logado como" textFill="#e6f1eb" />
-
-            <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
-                <image>
-                    <Image url="@/view/static_files/user.png" />
-                </image>
-            </ImageView>
+            <HBox alignment="CENTER_RIGHT" spacing="8">
+                <VBox spacing="2" alignment="CENTER_RIGHT">
+                    <Label text="Logado como" textFill="#e6f1eb"
+                           style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
+                    <Label fx:id="textUsuario" textFill="#e6f1eb"
+                           style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
+                </VBox>
+                <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
+                    <image>
+                        <Image url="@/view/static_files/user.png"/>
+                    </image>
+                </ImageView>
+            </HBox>
         </HBox>
     </top>
 
@@ -73,14 +79,14 @@
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
-            <Button onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+            <Button fx:id="btnFinanceiro" onAction="#irParaFinaneiro" style="-fx-background-color: transparent;" text="Financeiro">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
 
             <Region VBox.vgrow="ALWAYS" />
 
-            <Button prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
+            <Button onAction="#sair" prefHeight="26.0" prefWidth="77.0" style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;" text="Sair" textFill="#d82123">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
@@ -141,14 +147,22 @@
                 </Label>
 
                 <Region HBox.hgrow="ALWAYS" />
-            <TextField promptText="Procure um paciente" style="-fx-background-color: white; -fx-background-radius: 50;" HBox.hgrow="ALWAYS" />
+            <TextField fx:id="campoBusca" promptText="Procure um paciente" style="-fx-background-color: white; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50;" HBox.hgrow="ALWAYS" />
             </HBox>
-         <TableView fx:id="tabelaPacientes" VBox.vgrow="ALWAYS" >
+         <TableView fx:id="tabelaPacientes" VBox.vgrow="ALWAYS">
            <columns>
              <TableColumn fx:id="colNome" prefWidth="75.0" text="Nome" />
              <TableColumn fx:id="colCpf" prefWidth="75.0" text="CPF" />
                <TableColumn fx:id="colContato" prefWidth="75.0" text="Contato" />
+               <TableColumn fx:id="colNasc" prefWidth="75.0" text="Data de Nascimento" />
+               <TableColumn fx:id="colCidade" prefWidth="75.0" text="Cidade" />
+               <TableColumn fx:id="colBairro" prefWidth="75.0" text="Bairro" />
+               <TableColumn fx:id="colRua" prefWidth="75.0" text="Rua" />
+               <TableColumn fx:id="colNum" prefWidth="75.0" text="Número" />
            </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
          </TableView>
 
         </VBox>

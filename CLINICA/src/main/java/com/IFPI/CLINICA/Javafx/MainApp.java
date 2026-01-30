@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -29,29 +30,14 @@ public class MainApp extends Application {
 
         stage.setScene(new Scene(root));
         stage.setTitle("SGO - Sistema de Agendamento");
-        stage.setMaximized(true);
+        stage.setMaximized(true); // Abre a janela ocupando todo o espaço disponível
         stage.show();
 
-        // Inicializar dados de exemplo após a aplicação iniciar
-        inicializarDadosExemplo();
-    }
+        Image icone = new Image(getClass().getResourceAsStream("/view/static_files/sgo.png"));
+        stage.getIcons().add(icone);
 
-    private void inicializarDadosExemplo() {
-        try {
-            // Aguardar um pouco para o Spring terminar de inicializar todos os beans
-            Platform.runLater(() -> {
-                try {
-                    // Aqui você pode inicializar dados de exemplo se necessário
-                    // Por exemplo, criar alguns procedimentos padrão ou transações
-                    System.out.println("Aplicação iniciada com sucesso!");
-                    System.out.println("Financeiro está pronto para uso.");
-                } catch (Exception e) {
-                    System.out.println("Erro ao inicializar dados: " + e.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        stage.setTitle("SGO - Sistema de Agendamento");
+        stage.show();
     }
 
     @Override
@@ -60,3 +46,4 @@ public class MainApp extends Application {
         Platform.exit();
     }
 }
+

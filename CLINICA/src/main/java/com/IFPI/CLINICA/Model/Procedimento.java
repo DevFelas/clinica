@@ -33,4 +33,9 @@ public class Procedimento {
 
     @OneToMany(mappedBy = "procedimento")
     private List<Agendamento> agendamentos;
+
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

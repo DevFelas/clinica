@@ -81,6 +81,7 @@ public class FinanceiroController implements Initializable {
     @FXML private Label infoDataProc;
     @FXML private Label infoValor;
     @FXML private Label infoStatus;
+    @FXML private Label textUsuario;
 
     private ObservableList<TransacaoFinanceira> transacoes = FXCollections.observableArrayList();
     private NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -90,10 +91,14 @@ public class FinanceiroController implements Initializable {
         System.out.println("=== FINANCEIRO CONTROLLER INITIALIZE ===");
 
         // Configurar cargo do usuário
-        if (SessaoUsuario.getInstance().getUsuarioLogado() != null) {
-            Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-            labelCargo.setText(usuario.getPerfil().toString());
-            System.out.println("Usuário logado: " + usuario.getLogin() + " - Perfil: " + usuario.getPerfil());
+        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
+
+        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
+            textUsuario.setText("RECEPCIONISTA");
+        }
+
+        if (usuario.getPerfil() == Perfil.ADMIN) {
+            textUsuario.setText("ADMINISTRADOR");
         }
 
         // Configurar datas padrão (últimos 30 dias)

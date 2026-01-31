@@ -4,6 +4,8 @@ import com.IFPI.CLINICA.Model.Procedimento;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProcedimentoService {
 
@@ -50,5 +52,9 @@ public class ProcedimentoService {
                 .build();
 
         repository.saveAndFlush(procedimentoAtualizado);
+    }
+
+    public List<Procedimento> listarProcedimentos() {
+        return repository.findAll();
     }
 }

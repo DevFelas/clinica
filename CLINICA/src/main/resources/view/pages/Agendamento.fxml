@@ -38,22 +38,13 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- USUÁRIO COM CARGO DINÂMICO -->
-            <!-- Container para alinhar à direita -->
             <HBox alignment="CENTER_RIGHT" spacing="8">
-                <!-- Caixa vertical para texto do usuário -->
                 <VBox spacing="2" alignment="CENTER_RIGHT">
-                    <!-- "Logado como" - Fonte menor -->
                     <Label text="Logado como" textFill="#e6f1eb"
                            style="-fx-font-size: 12px; -fx-padding: 0 0 2 0;"/>
-
-                    <!-- CARGO DINÂMICO - Fonte maior em MAIÚSCULO -->
-                    <!--labelCargo.setText("RECEPCIONISTA"); // ou "DENTISTA", "ADMIN", etc.-->
-                    <Label fx:id="labelCargo" text="RECEPCIONISTA" textFill="#e6f1eb"
+                    <Label fx:id="textUsuario" textFill="#e6f1eb"
                            style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-transform: uppercase;"/>
                 </VBox>
-
-                <!-- Ícone do usuário -->
                 <ImageView fitHeight="35" fitWidth="35" preserveRatio="true">
                     <image>
                         <Image url="@/view/static_files/user.png"/>

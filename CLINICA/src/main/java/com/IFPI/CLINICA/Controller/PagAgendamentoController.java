@@ -108,7 +108,6 @@ public class PagAgendamentoController implements Initializable {
         );
     }
 
-    // Bot├úo para ir para tela de Pacintes
     @FXML
     private void irParaPacientes(ActionEvent event) {
         navigator.trocarPagina(
@@ -158,7 +157,7 @@ public class PagAgendamentoController implements Initializable {
                         .orElse(null);
 
         if (pacienteEncontrado == null) {
-            mostrarAlerta("Paciente n├úo encontrado para o CPF informado.");
+            mostrarAlerta("Paciente não encontrado para o CPF informado.");
             return;
         }
 

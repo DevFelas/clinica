@@ -97,7 +97,7 @@
             <VBox maxWidth="500.0" prefHeight="380.0" prefWidth="63.0" HBox.hgrow="ALWAYS">
                <children>
                   <Region prefHeight="20.0" prefWidth="2000.0" style="-fx-background-color: #F3F5F4;" />
-                  <Label maxWidth="Infinity" style="-fx-font-style: b;" text="Cadastrar Paciente" wrapText="true">
+                  <Label fx:id="tituloTela" maxWidth="Infinity" style="-fx-font-style: b;" text="Cadastrar Paciente" wrapText="true">
                      <font>
                         <Font name="System Bold" size="30.0" />
                      </font>
@@ -147,7 +147,7 @@
                      </children>
                   </VBox>
                   <Region prefHeight="30.0" prefWidth="30.0" />
-                  <Button onAction="#cadastrarPaciente" text="Cadastrar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;"  textFill="#ecfffb" VBox.vgrow="ALWAYS">
+                  <Button fx:id="btnCadastrar" onAction="#cadastrarPaciente" text="Cadastrar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;"  textFill="#ecfffb" VBox.vgrow="ALWAYS">
                      <cursor>
                         <Cursor fx:constant="HAND" />
                      </cursor>

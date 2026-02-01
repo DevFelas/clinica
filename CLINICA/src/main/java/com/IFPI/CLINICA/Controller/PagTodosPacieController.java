@@ -1,206 +1,117 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Paciente;
-import com.IFPI.CLINICA.Model.Perfil;
-import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Service.PacienteService;
+import com.IFPI.CLINICA.Util.DataShare;
 import com.IFPI.CLINICA.Util.Navigator;
-import com.IFPI.CLINICA.Util.SessaoUsuario;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import javafx.collections.transformation.FilteredList;
 
+import java.net.URL;
+import java.time.format.DateTimeFormatter; // IMPORTANTE PARA A DATA
+import java.util.List;
+import java.util.ResourceBundle;
 
 @Component
-public class PagTodosPacieController {
-
-    @Autowired
-    private Navigator navigator;
+public class PagTodosPacieController implements Initializable {
 
     @Autowired
     private PacienteService service;
 
-    @FXML
-    private TableView<Paciente> tabelaPacientes;
+    @Autowired
+    private Navigator navigator;
 
-    @FXML
-    private TableColumn<Paciente, String> colNome;
+    @FXML private Label textUsuario;
+    @FXML private TextField campoBusca;
+    @FXML private TableView<Paciente> tabelaPacientes;
 
-    @FXML
-    private TableColumn<Paciente, String> colCpf;
+    @FXML private TableColumn<Paciente, String> colNome;
+    @FXML private TableColumn<Paciente, String> colCpf;
+    @FXML private TableColumn<Paciente, String> colContato;
+    @FXML private TableColumn<Paciente, String> colNasc;
+    @FXML private TableColumn<Paciente, String> colCidade;
+    @FXML private TableColumn<Paciente, String> colBairro;
+    @FXML private TableColumn<Paciente, String> colRua;
+    @FXML private TableColumn<Paciente, String> colNum;
 
-    @FXML
-    private TableColumn<Paciente, String> colContato;
+    private final ObservableList<Paciente> listaPacientes = FXCollections.observableArrayList();
 
-    @FXML
-    private TableColumn<Paciente, String> colNasc;
-
-    @FXML
-    private TableColumn<Paciente, String> colCidade;
-
-    @FXML
-    private TableColumn<Paciente, String> colBairro;
-
-    @FXML
-    private TableColumn<Paciente, String> colRua;
-
-    @FXML
-    private TableColumn<Paciente, String> colNum;
-
-    @FXML
-    private TextField campoBusca;
-
-    private ObservableList<Paciente> listaPacientes = FXCollections.observableArrayList();
-
-    @FXML
-    private Button btnFinanceiro;
-
-    @FXML
-    private Label textUsuario;
-
-    // PAGINAÇÃO DO MENU LATERAL
-
-    // Botão para ir para tela da Agenda
-    @FXML
-    private void irParaAgenda(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Agenda.fxml"
-        );
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        configurarColunas();
+        atualizarTabela();
     }
 
-    // Botão para ir para tela de Pacintes
-    @FXML
-    private void irParaPacientes(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/TodosPacientes.fxml"
-        );
+    private void configurarColunas() {
+        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+
+        // CPF e Contato formatados (usando os métodos do seu Model)
+        colCpf.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCpfFormatado()));
+        colContato.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getContatoFormatado()));
+
+        // Formatação da data brasileira
+        DateTimeFormatter formatoBra = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        colNasc.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getDataNascimento() != null) {
+                String dataFormatada = cellData.getValue().getDataNascimento().format(formatoBra);
+                return new SimpleStringProperty(dataFormatada);
+            }
+            return new SimpleStringProperty("");
+        });
+
+
+        if (colCidade != null) colCidade.setCellValueFactory(new PropertyValueFactory<>("cidade"));
+        if (colBairro != null) colBairro.setCellValueFactory(new PropertyValueFactory<>("bairro"));
+        if (colRua != null) colRua.setCellValueFactory(new PropertyValueFactory<>("rua"));
+        if (colNum != null) colNum.setCellValueFactory(new PropertyValueFactory<>("numero"));
     }
 
-    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
-    @FXML
-    private void irParaRegistro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Registro.fxml"
-        );
+    public void atualizarTabela() {
+        List<Paciente> pacientes = service.listarPacientes();
+        listaPacientes.setAll(pacientes);
+        tabelaPacientes.setItems(listaPacientes);
     }
 
-    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
     @FXML
-    private void irParaFinaneiro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Financeiro.fxml"
-        );
+    private void editarPaciente(ActionEvent event) {
+        Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
+        if (selecionado != null) {
+            DataShare.setPacienteParaEditar(selecionado);
+            navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml");
+        }
     }
 
-
-    // Botões da lateral esquerda da tela
-
-    // Botão para cadastrar um novo paciente
     @FXML
     private void irParaCadPaciente(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/CadasPessoa.fxml"
-        );
+        DataShare.limpar();
+        navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml");
     }
 
     @FXML
-    public void initialize() {
-        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-
-        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
-            btnFinanceiro.setVisible(false);
-            textUsuario.setText("RECEPCIONISTA");
+    private void removerPaciente(ActionEvent event) {
+        Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
+        if (selecionado != null) {
+            service.remover(selecionado.getId());
+            atualizarTabela();
         }
-
-        if (usuario.getPerfil() == Perfil.ADMIN) {
-            textUsuario.setText("ADMINISTRADOR");
-        }
-
-        tabelaPacientes.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
-        colContato.setCellValueFactory(new PropertyValueFactory<>("contato"));
-        colNasc.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
-        colCidade.setCellValueFactory(new PropertyValueFactory<>("cidade"));
-        colBairro.setCellValueFactory(new PropertyValueFactory<>("bairro"));
-        colRua.setCellValueFactory(new PropertyValueFactory<>("rua"));
-        colNum.setCellValueFactory(new PropertyValueFactory<>("numero"));
-
-        listaPacientes.clear();
-
-        listaPacientes.addAll(
-//                new Paciente("Adelson Oliveira Rodrigues", "023.867.934-50", "+55 (89) 9411-7889", "11/01/1111", "Jacobina", "Aquele", "Aquela", "1"),
-//                new Paciente("Augusto Carvalho Santos", "001.667.108-70", "+55 (89) 9411-7789", "22/2/2222", ),
-//                new Paciente("Alice Celestino Filho", "213.888.647-11", "+55 (89) 9481-9869")
-                service.listar()
-        );
-
-        FilteredList<Paciente> listaFiltrada = new FilteredList<>(listaPacientes, p -> true);
-        campoBusca.textProperty().addListener((obs, valorAntigo, valorNovo) -> {
-
-            String filtro = valorNovo.toLowerCase();
-
-            listaFiltrada.setPredicate(paciente -> {
-
-                if (filtro == null || filtro.isEmpty()) {
-                    return true; // mostra todos
-                }
-
-                // Filtra por nome, cpf ou contato
-                if (paciente.getNome() != null && paciente.getNome().toLowerCase().contains(filtro)) {
-                    return true;
-                }
-
-                if (paciente.getCpf() != null && paciente.getCpf().toLowerCase().contains(filtro)) {
-                    return true;
-                }
-
-                if (paciente.getContato() != null && paciente.getContato().toLowerCase().contains(filtro)) {
-                    return true;
-                }
-
-                return false;
-            });
-        });
-
-
-        tabelaPacientes.setItems(listaFiltrada);
     }
 
-    @FXML
-    private void sair(ActionEvent event) {
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Sair do sistema");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Deseja realmente sair do sistema?");
-
-        confirm.showAndWait().ifPresent(resposta -> {
-
-            if (resposta == ButtonType.OK) {
-
-                // limpa sessão
-                SessaoUsuario.getInstance().limparSessao();
-
-                // volta para login
-                navigator.trocarPagina(
-                        (Node) event.getSource(),
-                        "/view/pages/Login.fxml"
-                );
-            }
-        });
-    }
-
+    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml"); }
+    @FXML private void irParaPacientes(ActionEvent event) { atualizarTabela(); }
+    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
+    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
+    @FXML private void sair(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Login.fxml"); }
 }

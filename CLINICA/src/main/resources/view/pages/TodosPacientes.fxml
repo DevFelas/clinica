@@ -79,7 +79,7 @@
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
-            <Button fx:id="btnFinanceiro" onAction="#irParaFinaneiro" style="-fx-background-color: transparent;" text="Financeiro">
+            <Button fx:id="btnFinanceiro" onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor></Button>
@@ -113,20 +113,16 @@
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
 
-                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Editar" textFill="#ecfffb">
+                <Button onAction="#editarPaciente" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Editar" textFill="#ecfffb">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
 
-                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Remover" textFill="#ecfffb">
+                <Button onAction="#removerPaciente" prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Remover" textFill="#ecfffb">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
 
-                <Button prefHeight="20.0" prefWidth="100.0" style="-fx-background-color: #36bc89; -fx-background-radius: 30;" text="Detalhar" textFill="#ecfffb">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Button>
             </VBox>
         </VBox>
     </right>

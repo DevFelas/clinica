@@ -52,4 +52,16 @@ public class Paciente {
     private String bairro;
     private String cidade;
     private String numero;
+
+    public String getCpfFormatado() {
+        if (this.cpf == null || this.cpf.length() != 11) return this.cpf;
+        return cpf.substring(0, 3) + "." + cpf.substring(3, 6) + "." +
+                cpf.substring(6, 9) + "-" + cpf.substring(9);
+    }
+
+    public String getContatoFormatado() {
+        if (this.contato == null || this.contato.length() != 11) return this.contato;
+        return "(" + contato.substring(0, 2) + ") " + contato.substring(2, 3) +
+                " " + contato.substring(3, 7) + "-" + contato.substring(7);
+    }
 }

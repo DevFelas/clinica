@@ -42,4 +42,5 @@ public class PacienteService {
         repository.deleteById(id);
     }
 
+    public List<Paciente> listarPacientes() { return repository.findAll(); }
 }

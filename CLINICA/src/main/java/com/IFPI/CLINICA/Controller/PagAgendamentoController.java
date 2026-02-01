@@ -140,7 +140,7 @@ public class PagAgendamentoController implements Initializable {
     private void irParaCadPaciente(ActionEvent event) {
         navigator.trocarPagina(
                 (Node) event.getSource(),
-                "/view/pages/CadasPessoa.fxml"
+                "/view/pages/CadastroPessoa.fxml"
         );
     }
 

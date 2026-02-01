@@ -167,17 +167,6 @@ public class PagRegistroController {
         System.out.println(proc.getNome());
     }
 
-
-    @FXML
-    private Label lblTotalRegistros;
-
-    private void atualizarContador() {
-        lblTotalRegistros.setText(
-                "Total: " + listaFiltrada.size() + " registros"
-        );
-    }
-
-
     @FXML
     public void initialize() {
 
@@ -277,6 +266,8 @@ public class PagRegistroController {
         configurarFiltroNome();
         configurarFiltroProcedimento();
         configurarFiltroData();
+
+        aplicarFiltros();
     }
 
     // Esse método será chamado toda vez que algo mudar
@@ -323,8 +314,11 @@ public class PagRegistroController {
             return true;
         });
 
-        lblTotal.setText(listaFiltrada.size() + " registros encontrados");
-        atualizarContador();
+        // Bug do contador corrigido
+        if (lblTotal != null) {
+            lblTotal.setText(listaFiltrada.size() + " registros encontrados");
+        }
+
     }
 
     private void configurarFiltroNome() {
@@ -418,6 +412,9 @@ public class PagRegistroController {
                         "/view/pages/Login.fxml"
                 );
             }
+
+            // Só por segurança, mas já funciona normalmente o contador sem isso
+            aplicarFiltros();
         });
     }
 

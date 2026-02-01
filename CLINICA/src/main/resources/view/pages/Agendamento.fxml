@@ -38,8 +38,6 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- USUÁRIO COM CARGO DINÂMICO -->
-            <!-- Container para alinhar à direita -->
             <HBox alignment="CENTER_RIGHT" spacing="8">
                 <VBox spacing="2" alignment="CENTER_RIGHT">
                     <Label text="Logado como" textFill="#e6f1eb"
@@ -123,7 +121,6 @@
                 <Button text="Cadastrar"
                         style="-fx-background-color: #36bc89;
                                -fx-background-radius: 30;"
-                        onAction="#irParaCadPaciente"
                         textFill="white"/>
 
                 <!-- COMBOBOX COM TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO -->

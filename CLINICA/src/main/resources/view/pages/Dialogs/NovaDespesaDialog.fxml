@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.IFPI.CLINICA.Controller.NovaDespesaDialogController">
+
+    <VBox spacing="10" style="-fx-padding: 20;">
+        <Label text="Nova Despesa" style="-fx-font-size: 16px; -fx-font-weight: bold;"/>
+
+        <GridPane hgap="10" vgap="10">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="100"/>
+                <ColumnConstraints prefWidth="200"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints prefHeight="30"/>
+                <RowConstraints prefHeight="30"/>
+                <RowConstraints prefHeight="30"/>
+                <RowConstraints prefHeight="30"/>
+                <RowConstraints prefHeight="30"/>
+            </rowConstraints>
+
+            <Label text="Data:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <DatePicker fx:id="dataField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+            <Label text="Descrição:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="descricaoField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+            <Label text="Categoria:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="categoriaCombo" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Valor:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="valorField" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Status:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="statusCombo" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+        </GridPane>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Cancelar" onAction="#cancelar" style="-fx-background-color: #d82123; -fx-text-fill: white;"/>
+            <Button text="Salvar" onAction="#salvar" style="-fx-background-color: #36bc89; -fx-text-fill: white;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

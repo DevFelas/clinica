@@ -2,6 +2,24 @@
     -fx-font-family: "Segoe UI";
 }
 
+.button-login {
+    -fx-background-color: #2cb784;
+    -fx-background-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 22px;
+    -fx-padding: 10 20 10 20;
+}
+
+.button-login:hover {
+    -fx-background-color: #26a374;
+    -fx-background-radius: 50;
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-padding: 10 20 10 20;
+}
+
+
 /* TOPO */
 .top-bar {
     -fx-padding: 15;

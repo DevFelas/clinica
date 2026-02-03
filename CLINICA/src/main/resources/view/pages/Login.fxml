@@ -71,7 +71,6 @@
                                     </font>
                                 </PasswordField>
                                 <Button fx:id="btnEntrar" onAction="#handleLogin" mnemonicParsing="false" prefHeight="50.0" prefWidth="260.0"
-                                        style="-fx-background-color: #2cb784; -fx-background-radius: 50; -fx-text-fill: white; -fx-font-weight: bold;"
                                         styleClass="button-login"
                                         text="Entrar">
                                     <font>

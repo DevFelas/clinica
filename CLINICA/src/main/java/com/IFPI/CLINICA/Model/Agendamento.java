@@ -5,38 +5,54 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * Entidade que representa o registro de agendamentos no sistema.
+ * Esta classe define a estrutura da tabela "tbAgendamento" no banco de dados,
+ * estabelecendo os relacionamentos entre pacientes, procedimentos e seus
+ * respectivos estados e horários.
+ */
 @Entity
 @Table(name = "tbAgendamento")
 public class Agendamento {
 
+    /**
+     * Identificador único do agendamento, gerado automaticamente pelo banco de dados.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * Estado atual do agendamento (ex: Confirmado, Cancelado), armazenado como String.
+     */
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private StatusAgendamento status;
 
+    /**
+     * Data agendada para a realização do procedimento.
+     */
     @Column(nullable = false)
     private LocalDate data;
 
+    /**
+     * Horário específico definido para o atendimento.
+     */
     @Column(nullable = false)
     private LocalTime hora;
 
-//    @ManyToOne
-//    @JoinColumn(name = "Profissional", nullable = false)
-//    private Profissional profissional;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "Atendente", nullable = false)
-//    private Atendente atendente;
-
-
-
+    /**
+     * Associação com a entidade Paciente.
+     * Indica que vários agendamentos podem pertencer a um único paciente.
+     */
     @ManyToOne
     @JoinColumn(name = "Paciente", nullable = false)
     private Paciente paciente;
 
+    /**
+     * Associação com a entidade Procedimento.
+     * Define qual serviço clínico será executado neste horário.
+     */
     @ManyToOne
     @JoinColumn(name = "Procedimento", nullable = false)
     private Procedimento procedimento;

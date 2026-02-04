@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.IFPI.CLINICA.Controller.PagCadasPessoaController">
+<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.IFPI.CLINICA.Controller.PagCadPacienteController">
 
    <top>
       <HBox alignment="CENTER_LEFT" prefHeight="50" spacing="10" style="-fx-background-color: linear-gradient(to right, #004b2b, #42dabf);">

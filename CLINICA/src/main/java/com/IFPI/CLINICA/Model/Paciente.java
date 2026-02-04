@@ -18,8 +18,7 @@ import java.util.List;
         name = "tbPaciente",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "cpf")
-        }
-)
+        })
 public class Paciente {
 
     public Paciente( String nome, String cpf, LocalDate dataNascimento, String contato, String rua, String bairro, String cidade, String numero) {

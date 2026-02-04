@@ -12,30 +12,20 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
 @Component
 public class LoginController {
 
-    @FXML
-    private TextField campoLogin;
+    @FXML private TextField campoLogin;
+    @FXML private PasswordField campoSenha;
+    @FXML private Button btnEntrar;
 
-    @FXML
-    private PasswordField campoSenha;
-
-    @FXML
-    private Button btnEntrar;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    @Autowired
-    private Navigator navigator;
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private Navigator navigator;
 
     @FXML
     private void handleLogin() {
-
         String login = campoLogin.getText();
         String senha = campoSenha.getText();
 
@@ -48,22 +38,15 @@ public class LoginController {
             return;
         }
 
-        Optional<Usuario> usuarioOpt =
-                usuarioRepository.findByLoginAndSenha(login, senha);
+        Optional<Usuario> usuarioOpt = usuarioRepository.findByLoginAndSenha(login, senha);
 
         if (usuarioOpt.isPresent()) {
-
             Usuario usuario = usuarioOpt.get();
-
             // Guarda o usuário logado na sessão
             SessaoUsuario.getInstance().setUsuarioLogado(usuario);
 
-            System.out.println(
-                    "Login realizado com sucesso. Usuário: " + usuario.getLogin()
-            );
-
+            System.out.println("Login realizado com sucesso. Usuário: " + usuario.getLogin());
             irParaAgenda(btnEntrar);
-
         } else {
             exibirAlerta(
                     Alert.AlertType.ERROR,
@@ -73,12 +56,7 @@ public class LoginController {
         }
     }
 
-    private void irParaAgenda(Node origem) {
-        navigator.trocarPagina(
-                origem,
-                "/view/pages/Agenda.fxml"
-        );
-    }
+    private void irParaAgenda(Node origem) { navigator.trocarPagina(origem, "/view/pages/Agenda.fxml"); }
 
     private void exibirAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         Alert alerta = new Alert(tipo);

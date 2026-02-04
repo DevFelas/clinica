@@ -1,9 +1,8 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Repository.AgendamentoRepository;
-import com.IFPI.CLINICA.Repository.PacienteRepository;
-import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
+import com.IFPI.CLINICA.Service.AgendamentoService;
+import com.IFPI.CLINICA.Service.ProcedimentoService;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
@@ -40,48 +39,25 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 @Component
-public class PaginaInicialAgendaController implements Initializable{
+public class PagAgendaController implements Initializable{
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
+    // ALTERAÇÃO PARA SERVICE AQUI:
+    @Autowired private AgendamentoService agendamentoService;
+    @Autowired private ProcedimentoService procedimentoService;
+    @Autowired private ConfigurableApplicationContext springContext;
+    @Autowired private Navigator navigator;
 
-    @Autowired
-    private ConfigurableApplicationContext springContext;
-
-    @Autowired
-    private ProcedimentoRepository procedimentoRepository;
-
-    @Autowired
-    private Navigator navigator;
-
-    @FXML
-    private GridPane agendaGrid;
-
-    @FXML
-    private Button btnFinanceiro;
-
-    @FXML
-    private Button btnEditar;
-
-    @FXML
-    private Button btnCancelar;
-
-    @FXML
-    private Button btnDetalhar;
-
-
-    @FXML
-    private Label textUsuario;
-
-    @FXML
-    private DatePicker datePicker;
+    @FXML private GridPane agendaGrid;
+    @FXML private Button btnFinanceiro;
+    @FXML private Button btnEditar;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnDetalhar;
+    @FXML private Label textUsuario;
+    @FXML private DatePicker datePicker;
+    @FXML private VBox boxProcedimentos;
 
     private Agendamento agendamentoSelecionado;
-
     private Pane blocoSelecionado;
-
-    @FXML
-    private VBox boxProcedimentos;
 
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
@@ -90,24 +66,18 @@ public class PaginaInicialAgendaController implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-
         if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
             btnFinanceiro.setVisible(false);
             textUsuario.setText("RECEPCIONISTA");
         }
-
-        if (usuario.getPerfil() == Perfil.ADMIN) {
-            textUsuario.setText("ADMINISTRADOR");
-        }
+        if (usuario.getPerfil() == Perfil.ADMIN) {textUsuario.setText("ADMINISTRADOR");}
 
         semanaInicio = LocalDate.now().with(DayOfWeek.MONDAY); // Pega a segunda-feira da semana atual
         semanaFim = semanaInicio.plusDays(6); //incrementa 6 dias
 
-
         montarAgenda();
         renderizarAlmoco();
         carregarAgendamentos();
-
         carregarLegendaProcedimentos();
 
         datePicker.valueProperty().addListener((obs, oldDate, newDate) -> {
@@ -115,81 +85,38 @@ public class PaginaInicialAgendaController implements Initializable{
                 atualizarSemana(newDate);
             }
         });
-
         // desabilita botões até selecionar um agendamento
         btnEditar.setDisable(true);
         btnCancelar.setDisable(true);
         btnDetalhar.setDisable(true);
     }
 
-    // PAGINAÇÃO DO MENU LATERAL
+    // +===============+ //
+    // PAGINAÇÃO DO MENU //
+    // +===============+ //
 
-    // Botão para ir para tela da Agenda
-    @FXML
-    private void irParaAgenda(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Agenda.fxml"
-        );
-    }
+    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agenda.fxml"); }
+    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/TodosPacientes.fxml"); }
+    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Registro.fxml"); }
+    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Financeiro.fxml"); }
 
-    // Botão para ir para tela de Pacintes
-    @FXML
-    private void irParaPacientes(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/TodosPacientes.fxml"
-        );
-    }
+    // +========================+ //
+    // BOTÕES DA LATERAL ESQUERDA //
+    // +========================+ //
 
-    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
-    @FXML
-    private void irParaRegistro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Registro.fxml"
-        );
-    }
+    @FXML private void irParaNovoAgendamento(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agendamento.fxml"); }
 
-    // Botão para ir para tela Financeiro
-    @FXML
-    private void irParaFinanceiro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Financeiro.fxml"
-        );
-    }
-
-    // BOTÕES DA LATERAL ESQUERDA
-
-    // Botão para ir para tela novo agendamento//
-    @FXML
-    private void irParaNovoAgendamento(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Agendamento.fxml"
-        );
-    }
-
-    // Botão para ir para tela Editar
     @FXML
     private void irParaEditar(ActionEvent event) {
-
         if (agendamentoSelecionado == null) return;
-
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/pages/DetalharAgendamento.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/pages/DetalharAgendamento.fxml"));
             loader.setControllerFactory(springContext::getBean);
 
             Parent root = loader.load();
 
             ModalDetalhesController controller = loader.getController();
-            controller.configurar(
-                    agendamentoSelecionado,
-                    ModoTelaAgendamento.EDICAO
-            );
+            controller.configurar(agendamentoSelecionado, ModoTelaAgendamento.EDICAO);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -201,34 +128,24 @@ public class PaginaInicialAgendaController implements Initializable{
             stage.showAndWait();
 
             // ATUALIZA SÓ SE ALTEROU
-            if (controller.isAlterou()) {
-                atualizarAgenda();
-            }
+            if (controller.isAlterou()) { atualizarAgenda(); }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Botão para ir para tela Detalhar
     @FXML
     private void irParaDetalhar(ActionEvent event) {
-
         if (agendamentoSelecionado == null) return;
-
         try {
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/view/pages/DetalharAgendamento.fxml")
-            );
+            FXMLLoader loader = new FXMLLoader( getClass().getResource("/view/pages/DetalharAgendamento.fxml") );
             loader.setControllerFactory(springContext::getBean);
 
             Parent root = loader.load();
 
             ModalDetalhesController controller = loader.getController();
-            controller.configurar(
-                    agendamentoSelecionado,
-                    ModoTelaAgendamento.DETALHE
-            );
+            controller.configurar( agendamentoSelecionado, ModoTelaAgendamento.DETALHE );
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -238,19 +155,15 @@ public class PaginaInicialAgendaController implements Initializable{
             stage.centerOnScreen();
             stage.showAndWait();
 
-            if (controller.isAlterou()) {
-                atualizarAgenda();
-            }
+            if (controller.isAlterou()) { atualizarAgenda(); }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Botão para ir para tela Cancelar
     @FXML
     private void cancelarAgendamento() {
-
         if (agendamentoSelecionado == null) return;
 
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -260,15 +173,20 @@ public class PaginaInicialAgendaController implements Initializable{
 
         confirm.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
-
-                agendamentoSelecionado.setStatus(StatusAgendamento.CANCELADA);
-                agendamentoRepository.save(agendamentoSelecionado);
-
+                // ALTERAÇÃO PARA SERVICE AQUI:
+                try {
+                    agendamentoService.cancelarAgendamento(agendamentoSelecionado.getId());
+                } catch (RuntimeException e) {
+                    new Alert(Alert.AlertType.ERROR, e.getMessage()).showAndWait();
+                }
                 atualizarAgenda();
             }
         });
     }
 
+    // +======================+ //
+    // COMPONENTES VISUAIS / UI //
+    // +======================+ //
 
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
@@ -403,7 +321,7 @@ public class PaginaInicialAgendaController implements Initializable{
             time = time.plusMinutes(30);
         }
 
-        // Tarde: 14:00 at├® 17:00
+        // Tarde: 14:00 at 17:00
         //time = LocalTime.of(14, 0);
         //LocalTime fimTarde = LocalTime.of(18, 0);
 
@@ -421,7 +339,7 @@ public class PaginaInicialAgendaController implements Initializable{
         agendaGrid.getRowConstraints().clear();
         agendaGrid.getColumnConstraints().clear();
 
-        // ===== COLUNA DE HORÁRIO =====
+        // ===== COLUNA DE HORARIO =====
         ColumnConstraints colHora = new ColumnConstraints();
         colHora.setPrefWidth(80);
         colHora.setMinWidth(80);
@@ -443,7 +361,7 @@ public class PaginaInicialAgendaController implements Initializable{
         header.setVgrow(Priority.NEVER);
         agendaGrid.getRowConstraints().add(header);
 
-        // ===== DEMAIS LINHAS DOS HORÁRIOS =====
+        // ===== DEMAIS LINHAS DOS HORARIOS =====
         for (int i = 1; i < totalRows; i++) {
             RowConstraints row = new RowConstraints();
             row.setMinHeight(80);
@@ -457,25 +375,25 @@ public class PaginaInicialAgendaController implements Initializable{
     private LocalDate semanaInicio;
     private LocalDate semanaFim;
 
+    // ALTERACAO PARA SERVICE AQUI:
     private void carregarAgendamentos() {
 
-        agendaGrid.getChildren().removeIf(node -> "AGENDAMENTO".equals(node.getUserData()));
+        agendaGrid.getChildren()
+                .removeIf(node -> "AGENDAMENTO".equals(node.getUserData()));
 
-        List<Agendamento> agendamentos = agendamentoRepository.findByDataBetween(
-                semanaInicio,
-                semanaFim
-        );
+        List<Agendamento> agendamentos =
+                agendamentoService.listarPorPeriodo(semanaInicio, semanaFim);
 
         for (Agendamento ag : agendamentos) {
-            // NÃO renderiza cancelados
+
             if (ag.getStatus() == StatusAgendamento.CANCELADA) {
                 continue;
             }
-            // Renderiza AGENDADA e REALIZADA
+
             renderizarAgendamento(ag);
         }
-
     }
+
 
     private int calcularColuna(Agendamento ag) {
         // Segunda = 1 ... Domingo = 7
@@ -540,7 +458,7 @@ public class PaginaInicialAgendaController implements Initializable{
 
         box.getChildren().addAll(horario, nome, proc);
 
-        // Ícone de check (só se REALIZADA)
+        // Icone de check (só se REALIZADA)
         Label check = new Label("✔");
         check.setStyle("""
         -fx-text-fill: #2e7d32;
@@ -702,7 +620,7 @@ public class PaginaInicialAgendaController implements Initializable{
 
         boxProcedimentos.getChildren().clear();
 
-        List<Procedimento> procedimentos = procedimentoRepository.findAll();
+        List<Procedimento> procedimentos = procedimentoService.listarProcedimentos();
 
         for (Procedimento proc : procedimentos) {
 
@@ -717,6 +635,10 @@ public class PaginaInicialAgendaController implements Initializable{
             boxProcedimentos.getChildren().add(item);
         }
     }
+
+    // +==+ //
+    // SAIR //
+    // +==+ //
 
     @FXML
     private void sair(ActionEvent event) {

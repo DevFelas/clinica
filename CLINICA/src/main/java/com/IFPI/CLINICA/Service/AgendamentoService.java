@@ -3,9 +3,11 @@ package com.IFPI.CLINICA.Service;
 
 import com.IFPI.CLINICA.Model.StatusAgendamento;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import com.IFPI.CLINICA.Model.Agendamento;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -33,6 +35,11 @@ public class AgendamentoService {
         return repository.findAll();
     }
 
+    //LISTAR AGENDAMENTO POR PERÍODO
+    public List<Agendamento> listarPorPeriodo(LocalDate inicio, LocalDate fim) {
+        return repository.findByDataBetween(inicio, fim);
+    }
+
     //BUSCAR POR ID
     public Agendamento buscarPorId(Integer id){
         try {
@@ -42,6 +49,14 @@ public class AgendamentoService {
             System.out.println("Erro ao buscar agendamento: " + e.getMessage());
             return null;
         }
+    }
+
+    public List<Agendamento> buscarPorData(LocalDate data) {
+        return repository.findByData(data);
+    }
+
+    public List<Agendamento> buscarPorDataEStatus(LocalDate data, List<StatusAgendamento> status) {
+        return repository.findByDataAndStatusIn(data, status);
     }
 
     //CANCELAR AGENDAMENTO

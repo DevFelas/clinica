@@ -25,29 +25,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class FinanceiroController implements Initializable {
 
-    @Autowired
-    private Navigator navigator;
-
-    @Autowired
-    private FinanceiroService financeiroService;
-
-    @Autowired
-    private ProcedimentoService procedimentoService;
-
-    @Autowired
-    private ApplicationContext springContext;
+    @Autowired private Navigator navigator;
+    @Autowired private FinanceiroService financeiroService;
+    @Autowired private ProcedimentoService procedimentoService;
+    @Autowired private ApplicationContext springContext;
 
     // Campos do resumo financeiro
     @FXML private TextField totalReceitasField;

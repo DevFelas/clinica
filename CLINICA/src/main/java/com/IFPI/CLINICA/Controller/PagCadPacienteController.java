@@ -20,7 +20,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Component
-public class PagCadasPessoaController implements Initializable {
+public class PagCadPacienteController implements Initializable {
 
     @Autowired
     private PacienteService service;

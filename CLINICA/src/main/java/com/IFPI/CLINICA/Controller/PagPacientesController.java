@@ -20,15 +20,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.time.format.DateTimeFormatter; // IMPORTANTE PARA A DATA
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
-public class PagTodosPacieController implements Initializable {
+public class PagPacientesController implements Initializable {
 
     @Autowired
-    private PacienteService service;
+    private PacienteService pacienteService;
 
     @Autowired
     private Navigator navigator;
@@ -80,7 +80,7 @@ public class PagTodosPacieController implements Initializable {
     }
 
     public void atualizarTabela() {
-        List<Paciente> pacientes = service.listarPacientes();
+        List<Paciente> pacientes = pacienteService.listarPacientes();
         listaPacientes.setAll(pacientes);
         tabelaPacientes.setItems(listaPacientes);
     }
@@ -104,7 +104,7 @@ public class PagTodosPacieController implements Initializable {
     private void removerPaciente(ActionEvent event) {
         Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
         if (selecionado != null) {
-            service.remover(selecionado.getId());
+            pacienteService.remover(selecionado.getId());
             atualizarTabela();
         }
     }

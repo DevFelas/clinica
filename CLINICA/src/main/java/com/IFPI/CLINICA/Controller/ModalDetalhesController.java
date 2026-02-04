@@ -1,8 +1,8 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Repository.AgendamentoRepository;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
+import com.IFPI.CLINICA.Service.AgendamentoService;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,50 +20,27 @@ import java.util.List;
 @Component
 public class ModalDetalhesController {
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
-
-    @Autowired
-    private ProcedimentoRepository procedimentoRepository;
-
+    @Autowired private AgendamentoService agendamentoService;
+    @Autowired private ProcedimentoRepository procedimentoRepository;
 
     private Agendamento agendamento;
     private ModoTelaAgendamento modo;
 
-    @FXML
-    private TextField txtPaciente;
-
-    @FXML
-    private TextField txtContato;
-
-    @FXML
-    private TextField txtCpf;
-
-    @FXML
-    private DatePicker datePicker;
-
-    @FXML
-    private ComboBox<Procedimento> cbProcedimento;
-
-    @FXML
-    private ComboBox<LocalTime> cbHorario;
-
-    @FXML
-    private TextField txtValor;
-
+    @FXML private TextField txtPaciente;
+    @FXML private TextField txtContato;
+    @FXML private TextField txtCpf;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<Procedimento> cbProcedimento;
+    @FXML private ComboBox<LocalTime> cbHorario;
+    @FXML private TextField txtValor;
+    @FXML private Button btnSalvar;
+    @FXML private Button btnRealizado;
 
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
     private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
 
-    @FXML
-    private Button btnSalvar;
-
-    @FXML
-    private Button btnRealizado;
-
     private boolean alterou = false;
-
     public boolean isAlterou() {
         return alterou;
     }
@@ -256,8 +233,7 @@ public class ModalDetalhesController {
             return false;
         }
 
-        List<Agendamento> agendados =
-                agendamentoRepository.findByData(data);
+        List<Agendamento> agendados = agendamentoService.buscarPorData(data);
 
         for (Agendamento ag : agendados) {
             if (temConflito(inicio, fim, ag)) {
@@ -275,7 +251,7 @@ public class ModalDetalhesController {
         agendamento.setHora(cbHorario.getValue());
         agendamento.setProcedimento(cbProcedimento.getValue());
 
-        agendamentoRepository.save(agendamento);
+        agendamentoService.marcarAgendamento(agendamento);
 
         alterou = true;
 
@@ -298,7 +274,7 @@ public class ModalDetalhesController {
                         com.IFPI.CLINICA.Model.StatusAgendamento.REALIZADA
                 );
 
-                agendamentoRepository.save(agendamento);
+                agendamentoService.marcarAgendamento(agendamento);
                 alterou = true;
 
                 // fecha o modal

@@ -3,7 +3,7 @@ package com.IFPI.CLINICA.Controller;
 import com.IFPI.CLINICA.Util.Navigator;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Service.clinicaTeste.FinanceiroService;
+import com.IFPI.CLINICA.Service.FinanceiroService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -16,8 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,7 +32,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Component
-public class FinanceiroController implements Initializable {
+public class FinanceiroController extends SuperController implements Initializable {
 
     @Autowired private Navigator navigator;
     @Autowired private FinanceiroService financeiroService;
@@ -46,6 +45,7 @@ public class FinanceiroController implements Initializable {
     @FXML private TextField totalDespesasField;
 
     // Campos dos procedimentos
+    @FXML private VBox procedimentosBox;
     @FXML private TextField consultaField;
     @FXML private TextField limpezaField;
     @FXML private TextField exodontiaField;
@@ -76,9 +76,10 @@ public class FinanceiroController implements Initializable {
     @FXML private Label infoDataProc;
     @FXML private Label infoValor;
     @FXML private Label infoStatus;
-
-    // Label de informação do usuário
     @FXML private Label textUsuario;
+    @FXML private Button btnFinanceiro;
+
+    private Procedimento procedimentoSelecionado = null;
 
     private ObservableList<TransacaoFinanceira> transacoes = FXCollections.observableArrayList();
     private NumberFormat formatoMoeda = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
@@ -89,23 +90,7 @@ public class FinanceiroController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            System.out.println("=== FINANCEIRO CONTROLLER INITIALIZE ===");
-            System.out.println("Spring Context disponível: " + (springContext != null ? "SIM" : "NÃO"));
-            System.out.println("FinanceiroService disponível: " + (financeiroService != null ? "SIM" : "NÃO"));
-            System.out.println("ProcedimentoService disponível: " + (procedimentoService != null ? "SIM" : "NÃO"));
-
-            // Recupera o usuário da sessão
-            Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-            System.out.println("Usuário logado: " + (usuario != null ? usuario.getLogin() : "NULO"));
-
-            // Configurar cargo do usuário (sem alterar lógica de senha)
-            if (usuario != null) {
-                if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
-                    textUsuario.setText("RECEPCIONISTA");
-                } else if (usuario.getPerfil() == Perfil.ADMIN) {
-                    textUsuario.setText("ADMINISTRADOR");
-                }
-            }
+            aplicarPermissoesUI(btnFinanceiro, textUsuario);
 
             // Configurar datas padrão (últimos 30 dias)
             dataFimPicker.setValue(LocalDate.now());
@@ -126,15 +111,67 @@ public class FinanceiroController implements Initializable {
             });
 
             // Carregar procedimentos do banco
-            carregarProcedimentosDoBanco();
+            carregarProcedimentos();
 
             System.out.println("=== FINANCEIRO CONTROLLER INICIALIZADO COM SUCESSO ===");
 
         } catch (Exception e) {
-            System.err.println("ERRO CRÍTICO no initialize do FinanceiroController: " + e.getMessage());
             e.printStackTrace();
             mostrarAlerta("Erro de Inicialização", "Não foi possível inicializar a tela financeira: " + e.getMessage());
         }
+    }
+
+    private void carregarProcedimentos() {
+        procedimentosBox.getChildren().clear();
+
+        List<Procedimento> lista = procedimentoService.listarProcedimentos();
+
+        for (Procedimento p : lista) {
+            HBox linha = criarLinhaProcedimento(p);
+            procedimentosBox.getChildren().add(linha);
+        }
+    }
+
+    private HBox criarLinhaProcedimento(Procedimento p) {
+        Label nome = new Label(p.getNome());
+
+        Region espaco = new Region();
+        HBox.setHgrow(espaco, Priority.ALWAYS);
+
+        TextField preco = new TextField(formatarDinheiro(p.getValor()));
+        preco.setEditable(false);
+        preco.setFocusTraversable(false);
+        preco.setFocusTraversable(false);
+
+        HBox linha = new HBox(8, nome, espaco, preco);
+        linha.setStyle("-fx-padding: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-background-radius: 6;");
+
+        // ✅ torna clicável e seleciona
+        linha.setOnMouseClicked(e -> selecionarProcedimento(linha, p));
+
+        return linha;
+    }
+
+    private HBox linhaSelecionada = null;
+
+    private void selecionarProcedimento(HBox linha, Procedimento p) {
+        // tira destaque do anterior
+        if (linhaSelecionada != null) {
+            linhaSelecionada.setStyle("-fx-padding: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-background-radius: 6;");
+        }
+
+        // destaca o atual
+        linha.setStyle("-fx-padding: 6; -fx-border-color: #2cb784; -fx-border-width: 2; -fx-border-radius: 6; -fx-background-radius: 6;");
+        linhaSelecionada = linha;
+
+        procedimentoSelecionado = p;
+    }
+
+
+    private String formatarDinheiro(Number valor) {
+        // se seu valor for BigDecimal, melhor ainda: troque Number por BigDecimal
+        java.text.NumberFormat nf = java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("pt", "BR"));
+        return nf.format(valor);
     }
 
     private void configurarTabela() {
@@ -348,9 +385,6 @@ public class FinanceiroController implements Initializable {
                 lucroField.setStyle("-fx-text-fill: #00a859; -fx-font-weight: bold; -fx-font-size: 18;");
             }
 
-            // Carregar valores dos procedimentos
-            carregarValoresProcedimentos();
-
             // Forçar atualização da tabela
             tabelaFinanceiro.refresh();
 
@@ -360,76 +394,6 @@ public class FinanceiroController implements Initializable {
             System.err.println("ERRO ao carregar dados financeiros: " + e.getMessage());
             e.printStackTrace();
             mostrarAlerta("Erro", "Não foi possível carregar os dados financeiros: " + e.getMessage());
-        }
-    }
-
-    private void carregarProcedimentosDoBanco() {
-        try {
-            System.out.println("=== CARREGANDO PROCEDIMENTOS DO BANCO ===");
-            List<Procedimento> procedimentos = procedimentoService.listarProcedimentos();
-            procedimentosMap.clear();
-
-            for (Procedimento proc : procedimentos) {
-                procedimentosMap.put(proc.getNome().toLowerCase(), proc);
-                System.out.println("Procedimento: " + proc.getNome() + " - R$ " + proc.getValor());
-            }
-
-            System.out.println("Carregados " + procedimentosMap.size() + " procedimentos do banco");
-
-        } catch (Exception e) {
-            System.err.println("ERRO ao carregar procedimentos do banco: " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    private void carregarValoresProcedimentos() {
-        try {
-            System.out.println("=== CARREGANDO VALORES DOS PROCEDIMENTOS ===");
-
-            // Buscar valores do banco para cada procedimento
-            List<Procedimento> procedimentos = procedimentoService.listarProcedimentos();
-            System.out.println("Total de procedimentos: " + procedimentos.size());
-
-            for (Procedimento proc : procedimentos) {
-                String nomeLower = proc.getNome().toLowerCase();
-                BigDecimal valor = proc.getValor();
-                String valorFormatado = formatoMoeda.format(valor);
-
-                System.out.println("Processando: " + proc.getNome() + " (lowercase: " + nomeLower + ")");
-
-                // Mapear para os campos corretos
-                if (nomeLower.contains("consulta")) {
-                    consultaField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Consulta = " + valorFormatado);
-                } else if (nomeLower.contains("limpeza")) {
-                    limpezaField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Limpeza = " + valorFormatado);
-                } else if (nomeLower.contains("exodontia")) {
-                    exodontiaField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Exodontia = " + valorFormatado);
-                } else if (nomeLower.contains("prótese") || nomeLower.contains("protese")) {
-                    proteseField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Prótese = " + valorFormatado);
-                } else if (nomeLower.contains("implante")) {
-                    implanteField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Implante = " + valorFormatado);
-                } else if (nomeLower.contains("manutenção") || nomeLower.contains("manutencao")) {
-                    manutencaoField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Manutenção = " + valorFormatado);
-                } else if (nomeLower.contains("montagem")) {
-                    montagemField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Montagem = " + valorFormatado);
-                } else if (nomeLower.contains("restauração") || nomeLower.contains("restauracao")) {
-                    restauracaoField.setText(valorFormatado);
-                    System.out.println("  -> Campo: Restauração = " + valorFormatado);
-                } else {
-                    System.out.println("  -> Não mapeado: " + proc.getNome());
-                }
-            }
-
-        } catch (Exception e) {
-            System.err.println("ERRO ao carregar valores dos procedimentos: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -502,47 +466,21 @@ public class FinanceiroController implements Initializable {
     }
 
     // ==================== MÉTODOS DE NAVEGAÇÃO ====================
+
     @FXML
-    private void irParaAgenda(ActionEvent event) {
-        System.out.println("Navegando para Agenda...");
-        navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml");
+    public void irPara(ActionEvent event) {
+        super.irPara(event);
     }
 
     @FXML
-    private void irParaPacientes(ActionEvent event) {
-        System.out.println("Navegando para Pacientes...");
-        navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml");
-    }
-
-    @FXML
-    private void irParaRegistro(ActionEvent event) {
-        System.out.println("Navegando para Registro...");
-        navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml");
-    }
-
-    @FXML
-    private void irParaFinanceiro(ActionEvent event) {
-        System.out.println("Navegando para Financeiro...");
-        navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml");
+    public void sair(ActionEvent event) {
+        super.sair(event);
     }
 
     // ==================== MÉTODOS DOS BOTÕES DIREITOS ====================
-    @FXML
-    private void onNovaReceita() {
-        System.out.println("=== BOTÃO NOVA RECEITA CLICADO ===");
-        System.out.println("Spring Context disponível: " + (springContext != null ? "SIM" : "NÃO"));
-        abrirDialogoReceita();
-    }
-
-    @FXML
-    private void onNovaDespesa() {
-        System.out.println("=== BOTÃO NOVA DESPESA CLICADO ===");
-        abrirDialogoDespesa();
-    }
-
-    @FXML
-    private void onNovoProcedimento() {
-        System.out.println("=== BOTÃO NOVO PROCEDIMENTO CLICADO ===");
+    @FXML private void onNovaReceita() {abrirDialogoReceita();}
+    @FXML private void onNovaDespesa() {abrirDialogoDespesa();}
+    @FXML private void onNovoProcedimento() {
         abrirDialogoNovoProcedimento();
     }
 
@@ -654,136 +592,146 @@ public class FinanceiroController implements Initializable {
         }
     }
 
-    @FXML
-    private void onSair() {
-        System.out.println("=== SOLICITAÇÃO DE SAÍDA ===");
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Confirmar Saída");
-        confirm.setHeaderText("Deseja realmente sair do sistema?");
-        confirm.setContentText("Você será redirecionado para a tela de login.");
-
-        Optional<ButtonType> result = confirm.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("Saindo do sistema...");
-            SessaoUsuario.getInstance().limparSessao();
-            navigator.trocarPagina(textUsuario, "/view/pages/Login.fxml");
+    public void onActionEditarProcedimento() {
+        if (procedimentoSelecionado == null) {
+            mostrarAlerta("Atenção", "Selecione um procedimento primeiro.");
+            return;
         }
+        abrirDialogoEditarProcedimento(procedimentoSelecionado);
     }
 
-    @FXML
-    private void onSalvarAlteracoes() {
-        System.out.println("=== SALVANDO ALTERAÇÕES DOS PROCEDIMENTOS ===");
+    private void abrirDialogoEditarProcedimento(Procedimento proc) {
         try {
-            // Mapear campos para nomes de procedimentos
-            Map<String, TextField> camposProcedimento = new HashMap<>();
-            camposProcedimento.put("Consulta", consultaField);
-            camposProcedimento.put("Limpeza", limpezaField);
-            camposProcedimento.put("Exodontia", exodontiaField);
-            camposProcedimento.put("Prótese", proteseField);
-            camposProcedimento.put("Implante", implanteField);
-            camposProcedimento.put("Manutenção", manutencaoField);
-            camposProcedimento.put("Montagem", montagemField);
-            camposProcedimento.put("Restauração", restauracaoField);
+            if (proc.getCorHex() == null || proc.getCorHex().trim().isEmpty()) {
+                proc.setCorHex("#09c6d9");
+            }
 
-            boolean algumAlterado = false;
-            List<String> erros = new ArrayList<>();
+            Dialog<Procedimento> dialog = new Dialog<>();
+            dialog.setTitle("Editar Procedimento");
+            dialog.setHeaderText("Editar: " + proc.getNome());
 
-            for (Map.Entry<String, TextField> entry : camposProcedimento.entrySet()) {
-                String nomeProcedimento = entry.getKey();
-                TextField campo = entry.getValue();
-                String textoValor = campo.getText().trim();
+            ButtonType salvarButtonType = new ButtonType("Salvar alterações", ButtonBar.ButtonData.OK_DONE);
+            ButtonType removerButtonType = new ButtonType("Remover", ButtonBar.ButtonData.OTHER);
 
-                System.out.println("Processando campo: " + nomeProcedimento + " = " + textoValor);
+            dialog.getDialogPane().getButtonTypes().addAll(salvarButtonType, removerButtonType, ButtonType.CANCEL);
 
-                if (textoValor.isEmpty()) {
-                    erros.add("Campo " + nomeProcedimento + " está vazio");
-                    continue;
-                }
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
 
-                try {
-                    // Remover "R$" e converter para BigDecimal
-                    textoValor = textoValor.replace("R$", "").trim();
-                    textoValor = textoValor.replace(".", "").replace(",", ".");
-                    BigDecimal novoValor = new BigDecimal(textoValor);
+            TextField nomeField = new TextField(proc.getNome());
+            TextField valorField = new TextField(proc.getValor() != null ? proc.getValor().toString().replace(".", ",") : "");
+            TextField tempoField = new TextField(
+                    proc.getTempo_previsto() != null
+                            ? proc.getTempo_previsto().toLocalTime().toString().substring(0, 5) // HH:MM
+                            : ""
+            );
+            TextField corField = new TextField(proc.getCorHex() != null ? proc.getCorHex() : "#09c6d9");
 
-                    // Buscar procedimento pelo nome
-                    Procedimento procedimento = null;
-                    for (Procedimento proc : procedimentosMap.values()) {
-                        if (proc.getNome().equalsIgnoreCase(nomeProcedimento) ||
-                                proc.getNome().toLowerCase().contains(nomeProcedimento.toLowerCase())) {
-                            procedimento = proc;
-                            break;
-                        }
-                    }
+            grid.add(new Label("Nome:"), 0, 0);
+            grid.add(nomeField, 1, 0);
+            grid.add(new Label("Valor:"), 0, 1);
+            grid.add(valorField, 1, 1);
+            grid.add(new Label("Tempo:"), 0, 2);
+            grid.add(tempoField, 1, 2);
+            grid.add(new Label("Cor (HEX):"), 0, 3);
+            grid.add(corField, 1, 3);
 
-                    if (procedimento != null) {
-                        // Verificar se o valor foi alterado
-                        if (procedimento.getValor().compareTo(novoValor) != 0) {
-                            System.out.println("Atualizando " + nomeProcedimento + " de " +
-                                    procedimento.getValor() + " para " + novoValor);
-                            procedimento.setValor(novoValor);
-                            procedimentoService.atualizarProcedimentoPorId(procedimento.getId(), procedimento);
-                            algumAlterado = true;
-                            System.out.println("Atualizado " + nomeProcedimento + " para R$ " + novoValor);
+            dialog.getDialogPane().setContent(grid);
+
+            Button btnRemover = (Button) dialog.getDialogPane().lookupButton(removerButtonType);
+            btnRemover.setOnAction(evt -> {
+                evt.consume();
+
+                Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                confirm.setTitle("Confirmar exclusão");
+                confirm.setHeaderText("Excluir o procedimento \"" + proc.getNome() + "\"?");
+                confirm.setContentText("Essa ação não pode ser desfeita.");
+
+                Optional<ButtonType> resp = confirm.showAndWait();
+                if (resp.isPresent() && resp.get() == ButtonType.OK) {
+                    try {
+                        procedimentoService.deletarProcedimentoPorId(proc.getId());
+
+                        mostrarAlerta("Sucesso", "Procedimento removido com sucesso!");
+                        dialog.close();
+
+                        carregarProcedimentos();
+                        procedimentoSelecionado = null;
+                        linhaSelecionada = null;
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        String msg = e.getMessage();
+                        if (msg != null && msg.contains("Referential integrity constraint violation")) {
+                            mostrarAlerta("Não é possível remover",
+                                    "Esse procedimento já está vinculado a agendamentos.\n");
                         } else {
-                            System.out.println("Valor de " + nomeProcedimento + " não foi alterado");
+                            mostrarAlerta("Erro", "Erro ao remover procedimento: " + e.getMessage());
                         }
-                    } else {
-                        String erroMsg = "Procedimento " + nomeProcedimento + " não encontrado no banco";
-                        erros.add(erroMsg);
-                        System.err.println(erroMsg);
+                    }
+                }
+            });
+
+            dialog.setResultConverter(btn -> {
+                if (btn == salvarButtonType) {
+                    if (nomeField.getText().trim().isEmpty() || valorField.getText().trim().isEmpty()) {
+                        mostrarAlerta("Erro", "Nome e valor são obrigatórios.");
+                        return null;
                     }
 
-                } catch (NumberFormatException e) {
-                    String erroMsg = "Valor inválido para " + nomeProcedimento + ": " + campo.getText();
-                    erros.add(erroMsg);
-                    System.err.println(erroMsg);
-                } catch (Exception e) {
-                    String erroMsg = "Erro ao atualizar " + nomeProcedimento + ": " + e.getMessage();
-                    erros.add(erroMsg);
-                    System.err.println(erroMsg);
-                    e.printStackTrace();
+                    try {
+                        BigDecimal novoValor = new BigDecimal(
+                                valorField.getText().trim().replace(".", "").replace(",", ".")
+                        );
+
+                        proc.setNome(nomeField.getText().trim());
+                        proc.setValor(novoValor);
+
+                        if (!tempoField.getText().trim().isEmpty()) {
+                            proc.setTempo_previsto(java.sql.Time.valueOf(tempoField.getText().trim() + ":00"));
+                        }
+
+                        String cor = corField.getText();
+                        cor = (cor == null) ? "" : cor.trim();
+                        if (cor.isEmpty()) cor = "#09c6d9";
+                        proc.setCorHex(cor);
+
+
+                        return proc;
+                    } catch (Exception e) {
+                        mostrarAlerta("Erro", "Dados inválidos: " + e.getMessage());
+                        return null;
+                    }
                 }
-            }
+                return null;
+            });
 
-            if (!erros.isEmpty()) {
-                Alert erroAlert = new Alert(Alert.AlertType.WARNING);
-                erroAlert.setTitle("Erros de Validação");
-                erroAlert.setHeaderText("Os seguintes erros foram encontrados:");
-                erroAlert.setContentText(String.join("\n", erros));
-                erroAlert.showAndWait();
-            }
+            Optional<Procedimento> result = dialog.showAndWait();
 
-            if (algumAlterado) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Sucesso");
-                alert.setHeaderText(null);
-                alert.setContentText("Valores dos procedimentos atualizados com sucesso!");
-                alert.showAndWait();
+            result.ifPresent(editado -> {
+                try {
+                    procedimentoService.atualizarProcedimentoPorId(editado.getId(), editado);
 
-                // Recarregar dados
-                carregarProcedimentosDoBanco();
-                carregarValoresProcedimentos();
-                System.out.println("Procedimentos atualizados e dados recarregados");
-            } else if (erros.isEmpty()) {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Informação");
-                alert.setHeaderText(null);
-                alert.setContentText("Nenhum valor foi alterado.");
-                alert.showAndWait();
-                System.out.println("Nenhum valor alterado");
-            }
+                    mostrarAlerta("Sucesso", "Procedimento atualizado com sucesso!");
+                    carregarProcedimentos();
+                    procedimentoSelecionado = null;
+                    linhaSelecionada = null;
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    mostrarAlerta("Erro", "Erro ao salvar alterações: " + e.getMessage());
+                }
+            });
 
         } catch (Exception e) {
-            System.err.println("ERRO CRÍTICO ao salvar alterações: " + e.getMessage());
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erro");
-            alert.setHeaderText("Erro ao atualizar valores");
-            alert.setContentText("Verifique os valores inseridos: " + e.getMessage());
-            alert.showAndWait();
+            mostrarAlerta("Erro", "Não foi possível abrir o diálogo: " + e.getMessage());
         }
     }
+
+
 
     // ==================== MÉTODOS AUXILIARES ====================
     private void confirmarPagamento(TransacaoFinanceira transacao) {
@@ -1095,8 +1043,7 @@ public class FinanceiroController implements Initializable {
                     System.out.println("Salvando novo procedimento no banco...");
                     procedimentoService.salvarProcedimento(procedimento);
                     mostrarAlerta("Sucesso", "Procedimento cadastrado com sucesso!");
-                    carregarProcedimentosDoBanco();
-                    carregarValoresProcedimentos();
+
                     System.out.println("Procedimento salvo com sucesso");
                 } catch (Exception e) {
                     System.err.println("ERRO ao salvar procedimento: " + e.getMessage());

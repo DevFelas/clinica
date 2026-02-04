@@ -3,6 +3,7 @@ package com.IFPI.CLINICA.Controller;
 import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Service.AgendamentoService;
+import com.IFPI.CLINICA.Service.FinanceiroService;
 import javafx.collections.FXCollections;
 import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import java.util.List;
 public class ModalDetalhesController {
 
     @Autowired private AgendamentoService agendamentoService;
+    @Autowired private FinanceiroService financeiroService;
     @Autowired private ProcedimentoRepository procedimentoRepository;
 
     private Agendamento agendamento;
@@ -103,11 +105,6 @@ public class ModalDetalhesController {
     @FXML
     private void fecharModal(ActionEvent event) {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
-    private void fecharModal() {
-        Stage stage = (Stage) btnSalvar.getScene().getWindow();
         stage.close();
     }
 
@@ -262,6 +259,14 @@ public class ModalDetalhesController {
     @FXML
     private void concluir() {
 
+        TransacaoFinanceira transacao = new TransacaoFinanceira();
+        transacao.setDescricao(agendamento.getProcedimento().toString());
+        transacao.setValor(agendamento.getProcedimento().getValor());
+        transacao.setData(agendamento.getData());
+        transacao.setTipo(TipoTransacao.ENTRADA);
+        transacao.setStatus(StatusTransacao.PAGO);
+        transacao.setPaciente(agendamento.getPaciente());
+
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Concluir Agendamento");
         confirm.setHeaderText(null);
@@ -270,11 +275,9 @@ public class ModalDetalhesController {
         confirm.showAndWait().ifPresent(resposta -> {
             if (resposta == ButtonType.OK) {
 
-                agendamento.setStatus(
-                        com.IFPI.CLINICA.Model.StatusAgendamento.REALIZADA
-                );
-
+                agendamento.setStatus(com.IFPI.CLINICA.Model.StatusAgendamento.REALIZADA);
                 agendamentoService.marcarAgendamento(agendamento);
+                financeiroService.criarTransacao(transacao);
                 alterou = true;
 
                 // fecha o modal

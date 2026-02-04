@@ -70,19 +70,19 @@
                 </children>
             </HBox>
 
-            <Button onAction="#irParaAgenda" style="-fx-background-color: transparent;" text="Agenda">
+            <Button onAction="#irPara" userData="/view/pages/Agenda.fxml" style="-fx-background-color: transparent;" text="Agenda">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button onAction="#irParaPacientes" style="-fx-background-color: transparent;" text="Pacientes">
+            <Button onAction="#irPara" userData="/view/pages/Pacientes.fxml" style="-fx-background-color: transparent;" text="Pacientes">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button onAction="#irParaRegistro" style="-fx-background-color: transparent;" text="Registro">
+            <Button onAction="#irPara" userData="/view/pages/Registro.fxml" style="-fx-background-color: transparent;" text="Registro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
-            <Button fx:id="btnFinanceiro" onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+            <Button fx:id="btnFinanceiro" onAction="#irPara" userData="/view/pages/Financeiro.fxml" style="-fx-background-color: transparent;" text="Financeiro">
                 <cursor>
                     <Cursor fx:constant="HAND" />
                 </cursor></Button>
@@ -121,7 +121,10 @@
                 <Button text="Cadastrar"
                         style="-fx-background-color: #36bc89;
                                -fx-background-radius: 30;"
-                        textFill="white"/>
+                        textFill="white"
+                        onAction="#irPara"
+                        userData="/view/pages/CadastroPessoa.fxml"
+                />
 
                 <!-- COMBOBOX COM TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO -->
                 <ComboBox fx:id="procedimentoCombo" promptText="Procedimento"/>

@@ -36,25 +36,28 @@ public class ProcedimentoService {
     }
 
     //UPDATE
-    public void atualizarProcedimentoPorId(Integer id, Procedimento procedimento){
-        //aqui eu vou colocar o id do procedimento que quero atualizar e depois os atributos a serem atualizados
-        //caso algum desses eu não tenha colocado como parâmetro, vai retornar o que já existe no banco
-        //isso é importante para que não atualize algo e perca o resto
-        Procedimento procedimentoEntity = buscarProcedimentoPorId(id);
-        Procedimento procedimentoAtualizado = Procedimento.builder()
-                .id(procedimentoEntity.getId())
-                .nome(procedimento.getNome() != null ? procedimento.getNome() :
-                        procedimentoEntity.getNome())
-                .valor(procedimento.getValor() != null ? procedimento.getValor() :
-                        procedimentoEntity.getValor())
-                .tempo_previsto(procedimento.getTempo_previsto() != null ? procedimento.getTempo_previsto() :
-                        procedimentoEntity.getTempo_previsto())
-                .build();
+    public Procedimento atualizarProcedimentoPorId(Integer id, Procedimento dados) {
+        Procedimento p = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Procedimento não encontrado: " + id));
 
-        repository.saveAndFlush(procedimentoAtualizado);
+        p.setNome(dados.getNome());
+        p.setValor(dados.getValor());
+        p.setTempo_previsto(dados.getTempo_previsto());
+        p.setCorHex(dados.getCorHex());
+
+        garantirDefaults(p);
+
+        return repository.save(p);
     }
 
     public List<Procedimento> listarProcedimentos() {
         return repository.findAll();
     }
+
+    private void garantirDefaults(Procedimento p) {
+        if (p.getCorHex() == null || p.getCorHex().trim().isEmpty()) {
+            p.setCorHex("#09c6d9");
+        }
+    }
+
 }

@@ -4,7 +4,7 @@ import com.IFPI.CLINICA.Model.CategoriaTransacao;
 import com.IFPI.CLINICA.Model.StatusTransacao;
 import com.IFPI.CLINICA.Model.TransacaoFinanceira;
 import com.IFPI.CLINICA.Model.TipoTransacao;
-import com.IFPI.CLINICA.Service.clinicaTeste.FinanceiroService;
+import com.IFPI.CLINICA.Service.FinanceiroService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;

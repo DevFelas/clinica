@@ -1,7 +1,7 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Service.clinicaTeste.FinanceiroService;
+import com.IFPI.CLINICA.Service.FinanceiroService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

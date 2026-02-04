@@ -24,16 +24,14 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.FXCollections;
-import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import java.awt.*;
 import java.time.LocalDate;
 
 @Component
-public class PagRegistroController {
+public class PagRegistroController extends SuperController{
 
     @Autowired private Navigator navigator;
 
@@ -68,10 +66,12 @@ public class PagRegistroController {
 
 
     // PAGINAÇÃO DO MENU LATERAL
-    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml"); }
-    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml"); }
-    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
-    @FXML private void irParaFinaneiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
+    @FXML public void irPara(ActionEvent event) {
+        super.irPara(event);
+    }
+    @FXML public void sair(ActionEvent event) {
+        super.sair(event);
+    }
 
     // Botão para limpar filtros
     @FXML
@@ -316,33 +316,6 @@ public class PagRegistroController {
                 System.out.println(newVal.getId());
                 System.out.println(newVal.getNome());
             }
-        });
-    }
-
-    @FXML
-    private void sair(ActionEvent event) {
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Sair do sistema");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Deseja realmente sair do sistema?");
-
-        confirm.showAndWait().ifPresent(resposta -> {
-
-            if (resposta == ButtonType.OK) {
-
-                // limpa sessão
-                SessaoUsuario.getInstance().limparSessao();
-
-                // volta para login
-                navigator.trocarPagina(
-                        (Node) event.getSource(),
-                        "/view/pages/Login.fxml"
-                );
-            }
-
-            // Só por segurança, mas já funciona normalmente o contador sem isso
-            aplicarFiltros();
         });
     }
 

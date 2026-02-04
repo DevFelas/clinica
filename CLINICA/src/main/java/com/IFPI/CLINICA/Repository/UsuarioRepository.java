@@ -6,8 +6,22 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+/**
+ * Interface de persistência para a entidade Usuario.
+ * Estende as funcionalidades do JpaRepository para fornecer suporte a operações
+ * de autenticação e gerenciamento de usuários no sistema.
+ */
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+
+    /**
+     * Define uma consulta personalizada para validação de credenciais de acesso.
+     * Este método utiliza a derivação de consulta do Spring Data para localizar
+     * um registro que coincida simultaneamente com o login e a senha fornecidos.
+     * @param login Identificador de acesso do usuário.
+     * @param senha Chave de autenticação do usuário.
+     * @return Um Optional contendo o Usuario caso as credenciais sejam válidas.
+     */
 
     /*
      * ATENÇÃO:

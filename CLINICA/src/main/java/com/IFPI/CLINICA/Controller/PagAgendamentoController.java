@@ -21,6 +21,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+/**
+ * Controller responsável pela tela de criação de novos agendamentos.
+ * Gerencia a busca de pacientes por CPF, validação de horários disponíveis
+ * considerando a duração dos procedimentos e verificação de conflitos na agenda.
+ */
 @Component
 public class PagAgendamentoController extends SuperController implements Initializable {
 
@@ -43,6 +48,10 @@ public class PagAgendamentoController extends SuperController implements Initial
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
     private static final LocalTime EXPEDIENTE_FIM = LocalTime.of(18, 0);
 
+    /**
+     * Inicializa a tela configurando as permissões de visibilidade por perfil
+     * e carregando a lista de procedimentos disponíveis.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -59,6 +68,9 @@ public class PagAgendamentoController extends SuperController implements Initial
 
     @FXML private void irParaAgenda() { navigator.trocarPagina(cpfField,"/view/pages/Agenda.fxml"); }
 
+    /**
+     * Executa o processo de agendamento após validar o formulário e a existência do paciente.
+     */
     @FXML
     private void onAgendar() {
         if (!validarFormulario()){
@@ -90,6 +102,10 @@ public class PagAgendamentoController extends SuperController implements Initial
         irParaAgenda();
     }
 
+    /**
+     * Valida os campos do formulário de agendamento.
+     * @return true se todos os campos estiverem preenchidos corretamente.
+     */
     private boolean validarFormulario() {
         String cpf = cpfField.getText();
 
@@ -123,6 +139,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         return true;
     }
 
+    /**
+     * Exibe alerta de aviso genérico para o usuário.
+     */
     private void mostrarAlerta(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Valida├º├úo");
@@ -131,6 +150,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         alert.showAndWait();
     }
 
+    /**
+     * Gera a lista completa de horários possíveis em intervalos de 30 minutos.
+     */
     private List<LocalTime> gerarHorariosBase() {
 
         List<LocalTime> horarios = new ArrayList<>();
@@ -146,6 +168,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         return horarios;
     }
 
+    /**
+     * Verifica se há sobreposição entre um novo horário pretendido e um agendamento existente.
+     */
     private boolean temConflito(LocalTime inicioNovo, LocalTime fimNovo, Agendamento existente ) {
         LocalTime inicioExistente = existente.getHora();
         LocalTime fimExistente = calcularHoraFim(existente);
@@ -153,6 +178,10 @@ public class PagAgendamentoController extends SuperController implements Initial
         return inicioNovo.isBefore(fimExistente) && fimNovo.isAfter(inicioExistente);
     }
 
+    /**
+     * Atualiza o ComboBox de horários, desabilitando aqueles que conflitam com outros
+     * agendamentos ou com o horário de almoço.
+     */
     private void atualizarHorarios() {
 
         LocalDate data = dataPicker.getValue();
@@ -213,7 +242,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         });
     }
 
-
+    /**
+     * Calcula o horário de término de um agendamento baseado na duração do procedimento.
+     */
     private LocalTime calcularHoraFim(Agendamento ag) {
 
         int minutos =
@@ -229,6 +260,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         return ag.getHora().plusMinutes(minutos);
     }
 
+    /**
+     * Verifica a disponibilidade de um horário específico, considerando expediente, almoço e conflitos.
+     */
     private boolean horarioEstaDisponivel(
             LocalTime inicio,
             LocalDate data,
@@ -266,6 +300,9 @@ public class PagAgendamentoController extends SuperController implements Initial
         return true;
     }
 
+    /**
+     * Busca um paciente pelo CPF e redireciona para o registro caso não seja encontrado.
+     */
     @FXML
     private void buscarPacientePorCpf() {
 
@@ -310,11 +347,29 @@ public class PagAgendamentoController extends SuperController implements Initial
         );
     }
 
+    /**
+     * Trata a ação disparada por um componente da interface
+     * e delega a navegação para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#irPara"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void irPara(ActionEvent event) {
         super.irPara(event);
     }
 
+    /**
+     * Trata a ação de saída disparada pela interface (ex.: clique em "Sair")
+     * e delega a lógica de logout/encerramento para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#sair"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void sair(ActionEvent event) {
         super.sair(event);

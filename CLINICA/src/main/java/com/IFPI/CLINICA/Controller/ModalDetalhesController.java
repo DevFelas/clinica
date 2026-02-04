@@ -18,6 +18,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller responsável pelo modal de detalhes e edição de agendamentos.
+ * Esta classe gerencia a lógica de validação de horários (incluindo pausa para almoço e fim de expediente),
+ * verificação de conflitos na agenda e atualização do status dos agendamentos.
+ */
 @Component
 public class ModalDetalhesController {
 
@@ -47,7 +52,10 @@ public class ModalDetalhesController {
         return alterou;
     }
 
-
+    /**
+     * Inicializa o modal com os dados do agendamento e o modo de operação (Edição ou Visualização).
+     * Configura listeners para reagir a mudanças de data e procedimento em tempo real.
+     */
     public void configurar(Agendamento agendamento, ModoTelaAgendamento modo) {
         this.agendamento = agendamento;
         this.modo = modo;
@@ -77,6 +85,9 @@ public class ModalDetalhesController {
         configurarModo();
     }
 
+    /**
+     * Preenche os campos do formulário com as informações do objeto Agendamento.
+     */
     private void preencherCampos() {
         txtPaciente.setText(agendamento.getPaciente().getNome());
         txtCpf.setText(agendamento.getPaciente().getCpf());
@@ -89,6 +100,10 @@ public class ModalDetalhesController {
         );
     }
 
+    /**
+     * Define a interatividade dos componentes baseada no modo da tela.
+     * Bloqueia campos sensíveis e alterna a visibilidade dos botões Salvar/Concluir.
+     */
     private void configurarModo() {
         boolean edicao = modo == ModoTelaAgendamento.EDICAO;
 
@@ -108,6 +123,9 @@ public class ModalDetalhesController {
         stage.close();
     }
 
+    /**
+     * Gera a grade de horários disponíveis na clínica (das 08:00 às 18:00 com intervalos de 30min).
+     */
     private List<LocalTime> gerarHorariosBase() {
 
         List<LocalTime> horarios = new ArrayList<>();
@@ -123,6 +141,9 @@ public class ModalDetalhesController {
         return horarios;
     }
 
+    /**
+     * Calcula o horário previsto de término baseado na duração do procedimento.
+     */
     private LocalTime calcularHoraFim(LocalTime inicio, Procedimento proc) {
 
         int minutos =
@@ -137,13 +158,16 @@ public class ModalDetalhesController {
         return inicio.plusMinutes(minutos);
     }
 
+    /**
+     * Verifica se um novo horário solicitado sobrepõe um agendamento já existente.
+     * Possui lógica especial para ignorar o próprio registro quando em modo de edição.
+     */
     private boolean temConflito(
             LocalTime inicioNovo,
             LocalTime fimNovo,
             Agendamento existente
     ) {
 
-        // 🔥 ignora o próprio agendamento (modo edição)
         if (modo == ModoTelaAgendamento.EDICAO &&
                 existente.getId().equals(agendamento.getId())) {
             return false;
@@ -157,6 +181,10 @@ public class ModalDetalhesController {
                 fimNovo.isAfter(inicioExistente);
     }
 
+    /**
+     * Atualiza o ComboBox de horários, aplicando a formatação visual e desabilitando
+     * horários que conflitem com agendamentos existentes, almoço ou fim de expediente.
+     */
     private void atualizarHorariosModal() {
 
         LocalDate data = datePicker.getValue();
@@ -209,6 +237,10 @@ public class ModalDetalhesController {
 
     }
 
+    /**
+     * Valida se um horário inicial específico permite a realização do procedimento.
+     * Considera o tempo de duração, o horário de almoço e conflitos com outros pacientes.
+     */
     private boolean horarioDisponivelModal(
             LocalTime inicio,
             LocalDate data,
@@ -241,6 +273,9 @@ public class ModalDetalhesController {
         return true;
     }
 
+    /**
+     * Persiste as alterações realizadas no agendamento e fecha o modal.
+     */
     @FXML
     private void salvar() {
 
@@ -256,6 +291,9 @@ public class ModalDetalhesController {
         stage.close();
     }
 
+    /**
+     * Altera o status do agendamento para REALIZADA após confirmação do usuário.
+     */
     @FXML
     private void concluir() {
 

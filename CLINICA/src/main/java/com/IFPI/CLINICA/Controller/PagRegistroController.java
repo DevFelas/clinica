@@ -30,6 +30,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 
+/**
+ * Controller responsável pela tela de Registro de Agendamentos.
+ * Gerencia a visualização em tabela com suporte a múltiplos filtros simultâneos
+ * (nome, procedimento e intervalo de datas) e controle de acesso por perfil.
+ */
 @Component
 public class PagRegistroController extends SuperController{
 

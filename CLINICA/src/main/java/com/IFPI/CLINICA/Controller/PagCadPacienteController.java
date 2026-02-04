@@ -16,6 +16,10 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ResourceBundle;
 
+/**
+ * Controller responsável pela gestão do formulário de pacientes (Cadastro e Edição).
+ * Implementa Initializable para configurar o estado inicial da view baseado no contexto de sessão e compartilhamento de dados.
+ */
 @Component
 public class PagCadPacienteController extends SuperController implements Initializable {
 
@@ -38,6 +42,12 @@ public class PagCadPacienteController extends SuperController implements Initial
     @FXML private Label tituloTela;
     @FXML private Button btnCadastrar;
 
+    /**
+     * Inicializa a interface do usuário:
+     * 1. Verifica permissões de acesso (Perfil).
+     * 2. Aplica máscaras e filtros de entrada (UX).
+     * 3. Determina se a tela operará em modo de Inclusão ou Edição através do DataShare.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -65,7 +75,10 @@ public class PagCadPacienteController extends SuperController implements Initial
     }
 
     // --- MÉTODOS DE FILTRO (UX) ---
-
+    /**
+     * Adiciona listeners aos campos para garantir que apenas dígitos sejam inseridos
+     * e respeitem o limite máximo de caracteres.
+     */
     private void configurarCampoNumerico(TextField campo, int max) {
         campo.textProperty().addListener((obs, velho, novo) -> {
             if (!novo.matches("\\d*")) {
@@ -77,6 +90,9 @@ public class PagCadPacienteController extends SuperController implements Initial
         });
     }
 
+    /**
+     * Garante que o campo aceite apenas caracteres alfabéticos, espaços e acentuação.
+     */
     private void configurarCampoApenasLetras(TextField campo) {
         campo.textProperty().addListener((obs, velho, novo) -> {
             // Aceita letras de A-Z, acentuação e espaços
@@ -86,8 +102,11 @@ public class PagCadPacienteController extends SuperController implements Initial
         });
     }
 
-    // --- AÇÃO PRINCIPAL ---
 
+    /**
+     * Coleta os dados da interface, realiza a validação de negócio (campos obrigatórios,
+     * Regex, tamanhos e lógica de data) e persiste o objeto via PacienteService.
+     */
     @FXML
     private void cadastrarPaciente(ActionEvent event) {
         // Coleta e Limpeza
@@ -171,6 +190,9 @@ public class PagCadPacienteController extends SuperController implements Initial
         }
     }
 
+    /**
+     * Mapeia os dados do objeto Paciente para os campos da tela em caso de edição.
+     */
     private void preencherCamposParaEdicao(Paciente p) {
         txtNome.setText(p.getNome());
         txtCpf.setText(p.getCpf());
@@ -184,6 +206,9 @@ public class PagCadPacienteController extends SuperController implements Initial
 
     @FXML private void irParaPacientes(ActionEvent event) { DataShare.limpar(); navigator.trocarPagina((Node) event.getSource(), "/view/pages/Pacientes.fxml"); }
 
+    /**
+     * Exibe um diálogo de erro padrão para falhas de validação ou exceções.
+     */
     private void mostrarErro(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Erro de Validação");
@@ -192,11 +217,29 @@ public class PagCadPacienteController extends SuperController implements Initial
         alert.showAndWait();
     }
 
+    /**
+     * Trata a ação disparada por um componente da interface
+     * e delega a navegação para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#irPara"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void irPara(ActionEvent event) {
         super.irPara(event);
     }
 
+    /**
+     * Trata a ação de saída disparada pela interface (ex.: clique em "Sair")
+     * e delega a lógica de logout/encerramento para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#sair"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void sair(ActionEvent event) {
         super.sair(event);

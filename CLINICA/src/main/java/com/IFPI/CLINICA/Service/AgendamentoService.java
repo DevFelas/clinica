@@ -10,17 +10,29 @@ import com.IFPI.CLINICA.Model.Agendamento;
 import java.time.LocalDate;
 import java.util.List;
 
-
+/**
+ * Camada de serviço responsável pela lógica de negócio relacionada aos agendamentos da clínica.
+ * Atua como intermediária entre os Controllers JavaFX e o repositório de dados JPA,
+ * garantindo a integridade das operações de agendamento, cancelamento e consulta.
+ */
 @Service
 public class AgendamentoService {
 
     private final AgendamentoRepository repository;
 
+    /**
+     * Injeção de dependência via construtor para o AgendamentoRepository.
+     */
     public AgendamentoService(AgendamentoRepository repository){
         this.repository = repository;
     }
 
-    //MARCAR AGENDAMENTO
+    /**
+     * Persiste um novo agendamento ou atualiza um existente de forma imediata.
+     * Utiliza 'saveAndFlush' para garantir que as alterações sejam enviadas ao banco instantaneamente.
+     * @param agendamento Objeto contendo os dados do paciente, data, hora e procedimento.
+     * @return O agendamento salvo ou null em caso de falha.
+     */
     public Agendamento marcarAgendamento(Agendamento agendamento) {
         try {
             return repository.saveAndFlush(agendamento);
@@ -30,17 +42,27 @@ public class AgendamentoService {
         }
     }
 
-    //LISTAR AGENDAMENTO
+    /**
+     * Recupera todos os registros de agendamento presentes na base de dados.
+     */
     public List<Agendamento> listarAgendamentos(){
         return repository.findAll();
     }
 
-    //LISTAR AGENDAMENTO POR PERÍODO
+    /**
+     * Filtra agendamentos dentro de um intervalo de datas específico.
+     * Útil para geração de relatórios e visualização de agenda semanal/mensal.
+     * * @param inicio Data inicial do filtro.
+     * @param fim Data final do filtro.
+     */
     public List<Agendamento> listarPorPeriodo(LocalDate inicio, LocalDate fim) {
         return repository.findByDataBetween(inicio, fim);
     }
 
-    //BUSCAR POR ID
+    /**
+     * Localiza um agendamento específico pelo seu identificador único.
+     * Caso não encontre, captura a exceção e retorna null para evitar interrupções no fluxo da UI.
+     */
     public Agendamento buscarPorId(Integer id){
         try {
             return repository.findById(id)
@@ -51,15 +73,25 @@ public class AgendamentoService {
         }
     }
 
+    /**
+     * Busca todos os agendamentos marcados para uma data específica.
+     */
     public List<Agendamento> buscarPorData(LocalDate data) {
         return repository.findByData(data);
     }
 
+    /**
+     * Realiza uma busca refinada por data e uma lista de status (ex: PENDENTE, REALIZADA).
+     */
     public List<Agendamento> buscarPorDataEStatus(LocalDate data, List<StatusAgendamento> status) {
         return repository.findByDataAndStatusIn(data, status);
     }
 
-    //CANCELAR AGENDAMENTO
+    /**
+     * Realiza o cancelamento lógico de um agendamento.
+     * Localiza o registro e altera seu status para 'CANCELADA', preservando o histórico no banco.
+     * * @param id Identificador do agendamento a ser cancelado.
+     */
     public Agendamento cancelarAgendamento(Integer id){
         try {
             Agendamento agendamento = repository.findById(id)
@@ -75,7 +107,11 @@ public class AgendamentoService {
         }
     }
 
-    //ALTERAR AGENDAMENTO
+    /**
+     * Atualiza as informações de tempo (data/hora) e status de um agendamento existente.
+     * * @param id Identificador do registro original.
+     * @param novoAgendamento Objeto contendo os novos dados a serem aplicados.
+     */
     public Agendamento alterarAgendamento(Integer id, Agendamento novoAgendamento) {
         try {
             Agendamento agendamentoExistente = repository.findById(id)

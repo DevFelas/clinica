@@ -21,6 +21,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller responsável pela tela de listagem e gerenciamento de pacientes.
+ * Gerencia a TableView, permitindo visualização formatada, edição e exclusão de registros.
+ */
 @Component
 public class PagPacientesController extends SuperController implements Initializable {
 
@@ -46,6 +50,10 @@ public class PagPacientesController extends SuperController implements Initializ
 
     private final ObservableList<Paciente> listaPacientes = FXCollections.observableArrayList();
 
+    /**
+     * Inicializa o controller configurando as fábricas de células da tabela e
+     * carregando os dados iniciais do banco de dados.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -55,6 +63,10 @@ public class PagPacientesController extends SuperController implements Initializ
         atualizarTabela();
     }
 
+    /**
+     * Define como cada coluna da TableView deve extrair e exibir os dados do objeto Paciente.
+     * Inclui formatação personalizada para CPF, Contato e Datas (padrão brasileiro).
+     */
     private void configurarColunas() {
         colNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
 
@@ -80,12 +92,18 @@ public class PagPacientesController extends SuperController implements Initializ
         if (colNum != null) colNum.setCellValueFactory(new PropertyValueFactory<>("numero"));
     }
 
+    /**
+     * Consulta o serviço de pacientes e sincroniza a lista observável com a TableView.
+     */
     public void atualizarTabela() {
         List<Paciente> pacientes = pacienteService.listarPacientes();
         listaPacientes.setAll(pacientes);
         tabelaPacientes.setItems(listaPacientes);
     }
 
+    /**
+     * Prepara o paciente selecionado para edição através do DataShare e navega para o formulário.
+     */
     @FXML
     private void editarPaciente(ActionEvent event) {
         Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
@@ -95,12 +113,18 @@ public class PagPacientesController extends SuperController implements Initializ
         }
     }
 
+    /**
+     * Limpa o contexto de edição e navega para a tela de cadastro de novo paciente.
+     */
     @FXML
     private void irParaCadPaciente(ActionEvent event) {
         DataShare.limpar();
         navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPaciente.fxml");
     }
 
+    /**
+     * Remove o paciente selecionado do sistema via PacienteService e atualiza a interface.
+     */
     @FXML
     private void removerPaciente(ActionEvent event) {
         Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
@@ -110,11 +134,29 @@ public class PagPacientesController extends SuperController implements Initializ
         }
     }
 
+    /**
+     * Trata a ação disparada por um componente da interface
+     * e delega a navegação para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#irPara"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void irPara(ActionEvent event) {
         super.irPara(event);
     }
 
+    /**
+     * Trata a ação de saída disparada pela interface (ex.: clique em "Sair")
+     * e delega a lógica de logout/encerramento para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#sair"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void sair(ActionEvent event) {
         super.sair(event);

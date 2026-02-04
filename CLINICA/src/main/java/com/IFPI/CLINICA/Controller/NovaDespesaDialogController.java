@@ -23,6 +23,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
+/**
+ * Controlador para o diálogo de criação de novas despesas financeiras.
+ * Gerencia a interface gráfica (JavaFX) para entrada de dados de saída de caixa,
+ * realizando validações e persistência via FinanceiroService.
+ */
 @Component
 public class NovaDespesaDialogController implements Initializable {
 
@@ -35,11 +40,17 @@ public class NovaDespesaDialogController implements Initializable {
     @FXML private TextField valorField;
     @FXML private ComboBox<StatusTransacao> statusCombo;
 
+    /**
+     * Listas observáveis que alimentam os ComboBoxes com os enums do sistema.
+     */
     private final ObservableList<CategoriaTransacao> categorias =
             FXCollections.observableArrayList(CategoriaTransacao.values());
     private final ObservableList<StatusTransacao> statusList =
             FXCollections.observableArrayList(StatusTransacao.values());
 
+    /**
+     * Inicializa os componentes do diálogo, define valores padrão e configura listeners.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("=== NOVA DESPESA DIALOG INITIALIZE ===");
@@ -64,6 +75,10 @@ public class NovaDespesaDialogController implements Initializable {
         System.out.println("Diálogo de nova despesa configurado com sucesso");
     }
 
+    /**
+     * Aplica uma restrição via listener para garantir que o campo de valor
+     * aceite apenas números e até duas casas decimais.
+     */
     private void configurarMascaraValor() {
         valorField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*(\\.\\d{0,2})?")) {
@@ -72,6 +87,10 @@ public class NovaDespesaDialogController implements Initializable {
         });
     }
 
+    /**
+     * Coleta os dados do formulário, valida e envia para o serviço de persistência.
+     * Em caso de sucesso, fecha a janela atual.
+     */
     @FXML
     private void salvar() {
         System.out.println("=== TENTANDO SALVAR NOVA DESPESA ===");
@@ -118,6 +137,9 @@ public class NovaDespesaDialogController implements Initializable {
         }
     }
 
+    /**
+     * Fecha o diálogo sem salvar nenhuma alteração.
+     */
     @FXML
     private void cancelar() {
         System.out.println("Cancelando criação de despesa");
@@ -125,6 +147,10 @@ public class NovaDespesaDialogController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Verifica se todos os campos obrigatórios foram preenchidos corretamente.
+     * @return true se o formulário for válido, false caso contrário.
+     */
     private boolean validarFormulario() {
         StringBuilder erros = new StringBuilder();
 
@@ -162,18 +188,27 @@ public class NovaDespesaDialogController implements Initializable {
         return true;
     }
 
+    /**
+     * Exibe alerta de informação.
+     */
     private void alertSucesso(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg);
         a.setHeaderText(null);
         a.showAndWait();
     }
 
+    /**
+     * Exibe alerta de informação.
+     */
     private void alertErro(String titulo, String msg) {
         Alert a = new Alert(Alert.AlertType.ERROR, msg);
         a.setTitle(titulo);
         a.showAndWait();
     }
 
+    /**
+     * Exibe alerta de aviso (campos faltantes).
+     */
     private void alertAviso(String titulo, String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING, msg);
         a.setTitle(titulo);

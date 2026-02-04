@@ -14,6 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Optional;
 
+/**
+ * Controlador responsável pela lógica de autenticação da tela de Login.
+ * Gerencia a entrada de dados do usuário, validação de credenciais
+ * e a navegação para a tela principal do sistema.
+ */
 @Component
 public class LoginController {
 
@@ -24,6 +29,11 @@ public class LoginController {
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private Navigator navigator;
 
+    /**
+     * Processa a tentativa de login do usuário.
+     * Valida se os campos estão preenchidos, consulta o repositório por credenciais
+     * válidas e, em caso de sucesso, inicia a sessão e navega para a agenda.
+     */
     @FXML
     private void handleLogin() {
         String login = campoLogin.getText();
@@ -56,8 +66,18 @@ public class LoginController {
         }
     }
 
+    /**
+     * Realiza a transição de tela para a interface da Agenda.
+     * @param origem O componente visual que disparou a ação (usado para localizar a Stage).
+     */
     private void irParaAgenda(Node origem) { navigator.trocarPagina(origem, "/view/pages/Agenda.fxml"); }
 
+    /**
+     * Utilitário para exibição de mensagens de alerta ao usuário via JavaFX Alert.
+     * * @param tipo O tipo do alerta (Informativo, Erro, Aviso, etc).
+     * @param titulo O título da janela de alerta.
+     * @param mensagem O texto descritivo do erro ou aviso.
+     */
     private void exibirAlerta(Alert.AlertType tipo, String titulo, String mensagem) {
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);

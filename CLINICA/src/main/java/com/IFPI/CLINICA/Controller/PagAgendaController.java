@@ -37,7 +37,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-
+/**
+ * Controller principal da tela de Agenda.
+ * Gerencia a visualização semanal dos agendamentos em um GridPane dinâmico,
+ * tratando regras de perfil de acesso, renderização de blocos de horário,
+ * intervalos de almoço e navegação do sistema.
+ */
 @Component
 public class PagAgendaController extends SuperController implements Initializable {
 
@@ -62,7 +67,10 @@ public class PagAgendaController extends SuperController implements Initializabl
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
 
-
+    /**
+     * Inicializa a tela configurando as permissões do usuário logado,
+     * calculando a semana atual e disparando a renderização visual da agenda.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         aplicarPermissoesUI(btnFinanceiro, textUsuario);
@@ -91,7 +99,9 @@ public class PagAgendaController extends SuperController implements Initializabl
     // BOTÕES DA LATERAL ESQUERDA //
     // +========================+ //
 
-
+    /**
+     * Abre o modal de edição para o agendamento selecionado.
+     */
     @FXML
     private void irParaEditar(ActionEvent event) {
         if (agendamentoSelecionado == null) return;
@@ -121,6 +131,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         }
     }
 
+    /**
+     * Abre o modal em modo de visualização (detalhes) para o agendamento selecionado.
+     */
     @FXML
     private void irParaDetalhar(ActionEvent event) {
         if (agendamentoSelecionado == null) return;
@@ -148,6 +161,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         }
     }
 
+    /**
+     * Solicita confirmação e cancela o agendamento selecionado através do service.
+     */
     @FXML
     private void cancelarAgendamento() {
         if (agendamentoSelecionado == null) return;
@@ -174,6 +190,9 @@ public class PagAgendaController extends SuperController implements Initializabl
     // COMPONENTES VISUAIS / UI //
     // +======================+ //
 
+    /**
+     * Constrói a estrutura visual da agenda (linhas de tempo e colunas de dias).
+     */
     private void montarAgenda() {
         agendaGrid.getChildren().clear();
         agendaGrid.getColumnConstraints().clear();
@@ -280,6 +299,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         configurarColunasELinhas(row);
     }
 
+    /**
+     * Limpa a seleção atual e reconstrói todos os elementos da agenda.
+     */
     private void atualizarAgenda() {
 
         montarAgenda();
@@ -294,7 +316,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         btnDetalhar.setDisable(true);
     }
 
-
+    /**
+     * Gera os intervalos de tempo (cada 30 min) exibidos no eixo vertical da agenda.
+     */
     private List<String> gerarHorarios() {
         List<String> horarios = new ArrayList<>();
 
@@ -306,20 +330,12 @@ public class PagAgendaController extends SuperController implements Initializabl
             horarios.add(time.toString());
             time = time.plusMinutes(30);
         }
-
-        // Tarde: 14:00 at 17:00
-        //time = LocalTime.of(14, 0);
-        //LocalTime fimTarde = LocalTime.of(18, 0);
-
-//        while (!time.isAfter(fimTarde)) {
-//            horarios.add(time.toString());
-//            time = time.plusMinutes(30);
-//        }
-
         return horarios;
     }
 
-
+    /**
+     * Define as restrições de crescimento e tamanho das colunas e linhas do GridPane.
+     */
     private void configurarColunasELinhas(int totalRows) {
 
         agendaGrid.getRowConstraints().clear();
@@ -361,7 +377,9 @@ public class PagAgendaController extends SuperController implements Initializabl
     private LocalDate semanaInicio;
     private LocalDate semanaFim;
 
-    // ALTERACAO PARA SERVICE AQUI:
+    /**
+     * Busca os agendamentos no banco de dados para o período semanal visível e os renderiza.
+     */
     private void carregarAgendamentos() {
 
         agendaGrid.getChildren()
@@ -380,12 +398,14 @@ public class PagAgendaController extends SuperController implements Initializabl
         }
     }
 
-
     private int calcularColuna(Agendamento ag) {
         // Segunda = 1 ... Domingo = 7
         return ag.getData().getDayOfWeek().getValue();
     }
 
+    /**
+     * Calcula o índice da linha baseado na hora de início do agendamento.
+     */
     private int calcularLinha(LocalTime hora) {
 
         LocalTime inicio = LocalTime.of(8, 0);
@@ -395,6 +415,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return (minutos / 30) + 1;
     }
 
+    /**
+     * Determina quantas linhas o bloco deve ocupar baseado na duração do procedimento.
+     */
     private int calcularRowSpan(Agendamento ag) {
 
         int minutos = ag.getProcedimento()
@@ -409,6 +432,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return (int) Math.ceil(minutos / 30.0);
     }
 
+    /**
+     * Cria o componente visual (Pane) que representa o agendamento no grid.
+     */
     private Pane criarBloco(Agendamento ag) {
 
         // Conteúdo principal
@@ -486,6 +512,9 @@ public class PagAgendaController extends SuperController implements Initializabl
 
     }
 
+    /**
+     * Posiciona o bloco visual do agendamento no grid seguindo coluna, linha e rowSpan.
+     */
     private void renderizarAgendamento(Agendamento ag) {
         int coluna = calcularColuna(ag);
         int linha = calcularLinha(ag.getHora());
@@ -500,6 +529,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return ag.getProcedimento().getCorHex();
     }
 
+    /**
+     * Atualiza o intervalo da semana exibida com base em uma nova data selecionada no DatePicker.
+     */
     private void atualizarSemana(LocalDate dataSelecionada) {
 
         // Calcula a segunda-feira da semana selecionada
@@ -516,6 +548,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return !horario.isBefore(ALMOCO_INICIO) && horario.isBefore(ALMOCO_FIM);
     }
 
+    /**
+     * Cria o bloco cinza indicativo do horário de almoço.
+     */
     private StackPane criarBlocoAlmoco() {
 
         Label label = new Label("Horário de almoço");
@@ -536,6 +571,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return bloco;
     }
 
+    /**
+     * Renderiza os blocos de almoço para todos os dias da semana no intervalo definido.
+     */
     private void renderizarAlmoco() {
 
         // cada linha = 30 minutos
@@ -561,6 +599,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         }
     }
 
+    /**
+     * Destaca visualmente o agendamento clicado e habilita as ações de controle (Editar/Cancelar/Detalhar).
+     */
     private void selecionarAgendamento(Agendamento ag, Pane box) {
 
         // remove destaque do anterior
@@ -588,6 +629,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         btnDetalhar.setDisable(false);
     }
 
+    /**
+     * Utilitário para escurecer cores hexadecimais (usado para sinalizar agendamentos realizados).
+     */
     private String escurecerCor(String hex, double fator) {
 
         int r = Integer.valueOf(hex.substring(1, 3), 16);
@@ -601,7 +645,9 @@ public class PagAgendaController extends SuperController implements Initializabl
         return String.format("#%02x%02x%02x", r, g, b);
     }
 
-
+    /**
+     * Carrega a legenda de cores dos procedimentos na barra lateral.
+     */
     private void carregarLegendaProcedimentos() {
 
         boxProcedimentos.getChildren().clear();
@@ -622,11 +668,29 @@ public class PagAgendaController extends SuperController implements Initializabl
         }
     }
 
+    /**
+     * Trata a ação disparada por um componente da interface
+     * e delega a navegação para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#irPara"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void irPara(ActionEvent event) {
         super.irPara(event);
     }
 
+    /**
+     * Trata a ação de saída disparada pela interface (ex.: clique em "Sair")
+     * e delega a lógica de logout/encerramento para a implementação da superclasse.
+     *
+     * <p>Este método é anotado com {@link javafx.fxml.FXML} para ser invocado pelo
+     * JavaFX via FXML (ex.: {@code onAction="#sair"}).</p>
+     *
+     * @param event o evento de ação gerado pelo JavaFX ao executar a interação do usuário
+     */
     @FXML
     public void sair(ActionEvent event) {
         super.sair(event);

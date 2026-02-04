@@ -19,6 +19,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * Controller responsável pelo diálogo de cadastro de novas receitas (entradas financeiras).
+ * Gerencia a lógica de seleção de procedimentos, preenchimento automático de valores
+ * e persistência de transações do tipo ENTRADA.
+ */
 @Component
 public class NovaReceitaDialogController implements Initializable {
 
@@ -44,6 +49,10 @@ public class NovaReceitaDialogController implements Initializable {
     private ObservableList<String> tiposReceita = FXCollections.observableArrayList();
     private List<Procedimento> procedimentos;
 
+    /**
+     * Inicializa o diálogo carregando os procedimentos disponíveis no banco de dados,
+     * configurando os itens dos ComboBoxes e definindo os valores padrão dos campos.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         System.out.println("=== NOVA RECEITA DIALOG INITIALIZE ===");
@@ -90,6 +99,10 @@ public class NovaReceitaDialogController implements Initializable {
         System.out.println("Diálogo de nova receita configurado com sucesso");
     }
 
+    /**
+     * Configura o listener do ComboBox de tipo de receita para preencher automaticamente
+     * a descrição, o valor e a categoria de acordo com o procedimento selecionado.
+     */
     private void configurarListenerTipoReceita() {
         tipoReceitaCombo.setOnAction(e -> {
             String selecionado = tipoReceitaCombo.getValue();
@@ -125,6 +138,10 @@ public class NovaReceitaDialogController implements Initializable {
         });
     }
 
+    /**
+     * Mapeia o nome do procedimento para a categoria financeira correspondente.
+     * @param nomeProcedimento Nome do procedimento dental selecionado.
+     */
     private void preencherCategoriaAutomaticamente(String nomeProcedimento) {
         if (nomeProcedimento != null) {
             String nomeLower = nomeProcedimento.toLowerCase();
@@ -153,6 +170,9 @@ public class NovaReceitaDialogController implements Initializable {
         }
     }
 
+    /**
+     * Aplica máscara no campo de valor para permitir apenas números, pontos ou vírgulas.
+     */
     private void configurarMascaraValor() {
         valorField.textProperty().addListener((obs, oldVal, newVal) -> {
             if (!newVal.matches("\\d*([.,]\\d{0,2})?")) {
@@ -161,6 +181,10 @@ public class NovaReceitaDialogController implements Initializable {
         });
     }
 
+    /**
+     * Valida os campos e persiste a nova receita financeira no banco de dados.
+     * Utiliza o padrão Builder para criar o objeto TransacaoFinanceira.
+     */
     @FXML
     private void salvar() {
         System.out.println("=== TENTANDO SALVAR NOVA RECEITA ===");
@@ -213,6 +237,9 @@ public class NovaReceitaDialogController implements Initializable {
         }
     }
 
+    /**
+     * Fecha o diálogo sem realizar o salvamento dos dados.
+     */
     @FXML
     private void cancelar() {
         System.out.println("Cancelando criação de receita");
@@ -220,6 +247,10 @@ public class NovaReceitaDialogController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Realiza a validação de todos os campos obrigatórios e do formato do valor numérico.
+     * @return true se o formulário for válido, false caso contrário.
+     */
     private boolean validarFormulario() {
         StringBuilder erros = new StringBuilder();
 
@@ -268,18 +299,27 @@ public class NovaReceitaDialogController implements Initializable {
         return true;
     }
 
+    /**
+     * Exibe um alerta de sucesso ao usuário.
+     */
     private void alertSucesso(String msg) {
         Alert a = new Alert(Alert.AlertType.INFORMATION, msg);
         a.setHeaderText(null);
         a.showAndWait();
     }
 
+    /**
+     * Exibe um alerta de erro crítico ao usuário.
+     */
     private void alertErro(String titulo, String msg) {
         Alert a = new Alert(Alert.AlertType.ERROR, msg);
         a.setTitle(titulo);
         a.showAndWait();
     }
 
+    /**
+     * Exibe um alerta de aviso para erros de validação.
+     */
     private void alertAviso(String titulo, String msg) {
         Alert a = new Alert(Alert.AlertType.WARNING, msg);
         a.setTitle(titulo);

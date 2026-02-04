@@ -1,6 +1,7 @@
-package com.IFPI.CLINICA.Service.clinicaTeste;
+package com.IFPI.CLINICA.Service;
 
 import com.IFPI.CLINICA.Model.*;
+import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Repository.TransacaoFinanceiraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ public class FinanceiroService {
 
     @Autowired
     private TransacaoFinanceiraRepository repository;
+
+    @Autowired
+    private ProcedimentoRepository procedimentoRepository;
 
     public List<TransacaoFinanceira> listarTransacoes(LocalDate inicio, LocalDate fim) {
         if (inicio != null && fim != null) {
@@ -87,4 +91,21 @@ public class FinanceiroService {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Transação não encontrada com ID: " + id));
     }
+
+    public Procedimento atualizarProcedimentoPorId(Integer id, Procedimento dados) {
+        Procedimento p = procedimentoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Procedimento não encontrado: " + id));
+
+        p.setNome(dados.getNome());
+        p.setValor(dados.getValor());
+        p.setTempo_previsto(dados.getTempo_previsto());
+        p.setCorHex(dados.getCorHex());
+
+        return procedimentoRepository.save(p);
+    }
+
+    public List<Procedimento> listarTodos() {
+        return procedimentoRepository.findAll();
+    }
+
 }

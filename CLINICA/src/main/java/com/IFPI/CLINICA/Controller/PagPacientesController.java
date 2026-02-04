@@ -11,10 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +22,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 @Component
-public class PagPacientesController implements Initializable {
+public class PagPacientesController extends SuperController implements Initializable {
 
     @Autowired
     private PacienteService pacienteService;
@@ -34,6 +31,7 @@ public class PagPacientesController implements Initializable {
     private Navigator navigator;
 
     @FXML private Label textUsuario;
+    @FXML private Button btnFinanceiro;
     @FXML private TextField campoBusca;
     @FXML private TableView<Paciente> tabelaPacientes;
 
@@ -50,6 +48,9 @@ public class PagPacientesController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        aplicarPermissoesUI(btnFinanceiro, textUsuario);
+
         configurarColunas();
         atualizarTabela();
     }
@@ -90,14 +91,14 @@ public class PagPacientesController implements Initializable {
         Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
         if (selecionado != null) {
             DataShare.setPacienteParaEditar(selecionado);
-            navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml");
+            navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPaciente.fxml");
         }
     }
 
     @FXML
     private void irParaCadPaciente(ActionEvent event) {
         DataShare.limpar();
-        navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml");
+        navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPaciente.fxml");
     }
 
     @FXML
@@ -109,9 +110,14 @@ public class PagPacientesController implements Initializable {
         }
     }
 
-    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml"); }
-    @FXML private void irParaPacientes(ActionEvent event) { atualizarTabela(); }
-    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
-    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
-    @FXML private void sair(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Login.fxml"); }
+    @FXML
+    public void irPara(ActionEvent event) {
+        super.irPara(event);
+    }
+
+    @FXML
+    public void sair(ActionEvent event) {
+        super.sair(event);
+    }
+
 }

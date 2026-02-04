@@ -1,12 +1,9 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.Paciente;
-import com.IFPI.CLINICA.Model.Perfil;
-import com.IFPI.CLINICA.Model.Usuario;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Util.DataShare;
 import com.IFPI.CLINICA.Util.Navigator;
-import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -20,7 +17,7 @@ import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 @Component
-public class PagCadPacienteController implements Initializable {
+public class PagCadPacienteController extends SuperController implements Initializable {
 
     @Autowired
     private PacienteService service;
@@ -43,16 +40,8 @@ public class PagCadPacienteController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        // 1. Lógica de Perfil
-        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-        if (usuario != null) {
-            if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
-                btnFinanceiro.setVisible(false);
-                textUsuario.setText("RECEPCIONISTA");
-            } else if (usuario.getPerfil() == Perfil.ADMIN) {
-                textUsuario.setText("ADMINISTRADOR");
-            }
-        }
+
+        aplicarPermissoesUI(btnFinanceiro, textUsuario);
 
         // 2. Travas de Teclado (Filtros em tempo real)
         configurarCampoNumerico(txtCpf, 11);     // CPF: só números, max 11
@@ -193,12 +182,7 @@ public class PagCadPacienteController implements Initializable {
         txtNumero.setText(p.getNumero());
     }
 
-    // --- NAVEGAÇÃO ---
-
-    @FXML private void irParaAgenda(ActionEvent event) { DataShare.limpar(); navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml"); }
-    @FXML private void irParaPacientes(ActionEvent event) { DataShare.limpar(); navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml"); }
-    @FXML private void irParaRegistro(ActionEvent event) { DataShare.limpar(); navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
-    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
+    @FXML private void irParaPacientes(ActionEvent event) { DataShare.limpar(); navigator.trocarPagina((Node) event.getSource(), "/view/pages/Pacientes.fxml"); }
 
     private void mostrarErro(String mensagem) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -209,16 +193,13 @@ public class PagCadPacienteController implements Initializable {
     }
 
     @FXML
-    private void sair(ActionEvent event) {
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Sair do sistema");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Deseja realmente sair?");
-        confirm.showAndWait().ifPresent(resposta -> {
-            if (resposta == ButtonType.OK) {
-                SessaoUsuario.getInstance().limparSessao();
-                navigator.trocarPagina((Node) event.getSource(), "/view/pages/Login.fxml");
-            }
-        });
+    public void irPara(ActionEvent event) {
+        super.irPara(event);
     }
+
+    @FXML
+    public void sair(ActionEvent event) {
+        super.sair(event);
+    }
+
 }

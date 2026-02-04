@@ -1,19 +1,14 @@
 package com.IFPI.CLINICA.Controller;
 
 import com.IFPI.CLINICA.Model.*;
-import com.IFPI.CLINICA.Repository.AgendamentoRepository;
-import com.IFPI.CLINICA.Repository.PacienteRepository;
-import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.PacienteService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
 import com.IFPI.CLINICA.Util.Navigator;
-import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +22,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
-public class PagAgendamentoController implements Initializable {
+public class PagAgendamentoController extends SuperController implements Initializable {
 
     @Autowired private Navigator navigator;
     @Autowired private AgendamentoService agendamentoService;
@@ -51,17 +46,7 @@ public class PagAgendamentoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-
-        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
-            btnFinanceiro.setVisible(false);
-            textUsuario.setText("RECEPCIONISTA");
-        }
-
-        if (usuario.getPerfil() == Perfil.ADMIN) {
-            textUsuario.setText("ADMINISTRADOR");
-        }
-
+        aplicarPermissoesUI(btnFinanceiro, textUsuario);
 
         procedimentoCombo.setItems(FXCollections.observableArrayList(procedimentoService.listarProcedimentos()));
 
@@ -72,18 +57,7 @@ public class PagAgendamentoController implements Initializable {
 
     }
 
-    // PAGINAÇÃO DO MENU LATERAL
-
-
-    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agenda.fxml"); }
-    // Outro botão sem um event para que possa ser chamado aqui no proprio código
     @FXML private void irParaAgenda() { navigator.trocarPagina(cpfField,"/view/pages/Agenda.fxml"); }
-    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml"); }
-    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
-    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
-    // Botão para cadastrar um novo paciente
-    @FXML private void irParaCadPaciente(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml"); }
-
 
     @FXML
     private void onAgendar() {
@@ -337,27 +311,13 @@ public class PagAgendamentoController implements Initializable {
     }
 
     @FXML
-    private void sair(ActionEvent event) {
+    public void irPara(ActionEvent event) {
+        super.irPara(event);
+    }
 
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Sair do sistema");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Deseja realmente sair do sistema?");
-
-        confirm.showAndWait().ifPresent(resposta -> {
-
-            if (resposta == ButtonType.OK) {
-
-                // limpa sessão
-                SessaoUsuario.getInstance().limparSessao();
-
-                // volta para login
-                navigator.trocarPagina(
-                        (Node) event.getSource(),
-                        "/view/pages/Login.fxml"
-                );
-            }
-        });
+    @FXML
+    public void sair(ActionEvent event) {
+        super.sair(event);
     }
 
 }

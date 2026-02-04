@@ -73,30 +73,26 @@
                 </children>
             </HBox>
 
-            <Button onAction="#irParaAgenda" style="-fx-background-color: transparent;" text="Agenda">
+            <Button onAction="#irPara" userData="/view/pages/Agenda.fxml" style="-fx-background-color: transparent;" text="Agenda">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </Button>
-            <Button onAction="#irParaPacientes" style="-fx-background-color: transparent;" text="Pacientes">
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button onAction="#irPara" userData="/view/pages/Pacientes.fxml" style="-fx-background-color: transparent;" text="Pacientes">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </Button>
-            <Button onAction="#irParaRegistro" style="-fx-background-color: transparent;" text="Registro">
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button onAction="#irPara" userData="/view/pages/Registro.fxml" style="-fx-background-color: transparent;" text="Registro">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </Button>
-            <Button fx:id="btnFinanceiro" onAction="#irParaFinanceiro" style="-fx-background-color: transparent;" text="Financeiro">
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
+            <Button fx:id="btnFinanceiro" onAction="#irPara" userData="/view/pages/Financeiro.fxml" style="-fx-background-color: transparent;" text="Financeiro">
                 <cursor>
-                    <Cursor fx:constant="HAND"/>
-                </cursor>
-            </Button>
+                    <Cursor fx:constant="HAND" />
+                </cursor></Button>
 
             <Region VBox.vgrow="ALWAYS"/>
 
-            <Button prefHeight="26.0" prefWidth="77.0" onAction="#onSair"
+            <Button prefHeight="26.0" prefWidth="77.0" onAction="#sair"
                     style="-fx-background-color: transparent; -fx-border-color: #d82123; -fx-border-radius: 10;"
                     text="Sair" textFill="#d82123">
                 <cursor>
@@ -138,7 +134,7 @@
                 </VBox>
 
                 <!-- Procedimentos compacto -->
-                <VBox spacing="8" prefWidth="250"
+                <VBox spacing="8" prefWidth="380"
                       style="-fx-border-color: #ccc; -fx-border-radius: 10;
                              -fx-padding: 12; -fx-background-color: #f9f9f9;">
                     <Label text="Procedimentos e Valores">
@@ -147,18 +143,20 @@
 
                     <Separator/>
 
-                    <VBox spacing="6" maxHeight="180">
+                    <VBox spacing="6" maxHeight="200">
                         <ScrollPane fitToWidth="true" style="-fx-background-color: transparent;">
                             <content>
-                                <VBox spacing="4">
-                                    <HBox><Label text="Consulta"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="consultaField" text="R$ 100,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Limpeza"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="limpezaField" text="R$ 100,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Exodontia"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="exodontiaField" text="R$ 250,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Prótese"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="proteseField" text="R$ 800,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Implante"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="implanteField" text="R$ 1.500,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Manutenção"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="manutencaoField" text="R$ 80,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Montagem"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="montagemField" text="R$ 500,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
-                                    <HBox><Label text="Restauração"/><Region HBox.hgrow="ALWAYS"/><TextField fx:id="restauracaoField" text="R$ 150,00" editable="false" style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"/></HBox>
+                                <VBox fx:id="procedimentosBox" spacing="6" prefWidth="320" maxWidth="Infinity">
+                                    <HBox>
+                                        <Label text="Consulta"/>
+                                        <Region HBox.hgrow="ALWAYS"/>
+                                        <TextField fx:id="consultaField"
+                                                   text="R$ 100,00"
+                                                   editable="false"
+                                                   style="-fx-background-color: transparent; -fx-border-color: #ddd; -fx-pref-width: 80;"
+                                        />
+                                    </HBox>
+
                                 </VBox>
                             </content>
                         </ScrollPane>
@@ -166,7 +164,7 @@
 
                     <Separator/>
 
-                    <Button text="Salvar Alterações" onAction="#onSalvarAlteracoes"
+                    <Button text="Editar" onAction="#onActionEditarProcedimento"
                             style="-fx-background-color: #36bc89; -fx-background-radius: 20; -fx-font-size: 12;"
                             textFill="white" maxWidth="Infinity">
                         <cursor><Cursor fx:constant="HAND"/></cursor>

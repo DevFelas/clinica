@@ -1,14 +1,13 @@
 package com.IFPI.CLINICA.Controller;
 
+import com.IFPI.CLINICA.Controller.SuperController;
 import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.ProcedimentoService;
-import com.IFPI.CLINICA.Util.SessaoUsuario;
 import com.IFPI.CLINICA.Util.Navigator;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.shape.Circle;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,8 +37,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+
 @Component
-public class PagAgendaController implements Initializable{
+public class PagAgendaController extends SuperController implements Initializable {
 
     // ALTERAÇÃO PARA SERVICE AQUI:
     @Autowired private AgendamentoService agendamentoService;
@@ -65,12 +65,7 @@ public class PagAgendaController implements Initializable{
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Usuario usuario = SessaoUsuario.getInstance().getUsuarioLogado();
-        if (usuario.getPerfil() == Perfil.RECEPCIONISTA) {
-            btnFinanceiro.setVisible(false);
-            textUsuario.setText("RECEPCIONISTA");
-        }
-        if (usuario.getPerfil() == Perfil.ADMIN) {textUsuario.setText("ADMINISTRADOR");}
+        aplicarPermissoesUI(btnFinanceiro, textUsuario);
 
         semanaInicio = LocalDate.now().with(DayOfWeek.MONDAY); // Pega a segunda-feira da semana atual
         semanaFim = semanaInicio.plusDays(6); //incrementa 6 dias
@@ -91,20 +86,11 @@ public class PagAgendaController implements Initializable{
         btnDetalhar.setDisable(true);
     }
 
-    // +===============+ //
-    // PAGINAÇÃO DO MENU //
-    // +===============+ //
-
-    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agenda.fxml"); }
-    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/TodosPacientes.fxml"); }
-    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Registro.fxml"); }
-    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Financeiro.fxml"); }
 
     // +========================+ //
     // BOTÕES DA LATERAL ESQUERDA //
     // +========================+ //
 
-    @FXML private void irParaNovoAgendamento(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agendamento.fxml"); }
 
     @FXML
     private void irParaEditar(ActionEvent event) {
@@ -636,32 +622,14 @@ public class PagAgendaController implements Initializable{
         }
     }
 
-    // +==+ //
-    // SAIR //
-    // +==+ //
+    @FXML
+    public void irPara(ActionEvent event) {
+        super.irPara(event);
+    }
 
     @FXML
-    private void sair(ActionEvent event) {
-
-        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
-        confirm.setTitle("Sair do sistema");
-        confirm.setHeaderText(null);
-        confirm.setContentText("Deseja realmente sair do sistema?");
-
-        confirm.showAndWait().ifPresent(resposta -> {
-
-            if (resposta == ButtonType.OK) {
-
-                // limpa sessão
-                SessaoUsuario.getInstance().limparSessao();
-
-                // volta para login
-                navigator.trocarPagina(
-                        (Node) event.getSource(),
-                        "/view/pages/Login.fxml"
-                );
-            }
-        });
+    public void sair(ActionEvent event) {
+        super.sair(event);
     }
 
 }

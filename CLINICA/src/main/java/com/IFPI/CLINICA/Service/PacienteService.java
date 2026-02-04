@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PacienteService {
@@ -29,6 +30,10 @@ public class PacienteService {
     public Paciente buscarPorId(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
+    }
+
+    public Optional<Paciente> buscarPorCpf(String cpf) {
+        return repository.findByCpf(cpf);
     }
 
     public Paciente atualizar(Integer id, Paciente dados) {

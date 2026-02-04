@@ -25,10 +25,10 @@ public class AgendamentoControler {
         return service.marcarAgendamento(agendamento);
     }
 
-    @GetMapping
-    public List<Agendamento> listar(){
-        return service.listarAgendamentos();
-    }
+//    @GetMapping
+//    public List<Agendamento> listar(){
+//        return service.listarAgendamentos();
+//    }
 
     @GetMapping("/{id}")
     public Agendamento buscarPorId(@PathVariable Integer id){

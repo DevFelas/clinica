@@ -4,6 +4,9 @@ import com.IFPI.CLINICA.Model.*;
 import com.IFPI.CLINICA.Repository.AgendamentoRepository;
 import com.IFPI.CLINICA.Repository.PacienteRepository;
 import com.IFPI.CLINICA.Repository.ProcedimentoRepository;
+import com.IFPI.CLINICA.Service.AgendamentoService;
+import com.IFPI.CLINICA.Service.PacienteService;
+import com.IFPI.CLINICA.Service.ProcedimentoService;
 import com.IFPI.CLINICA.Util.Navigator;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.FXCollections;
@@ -20,42 +23,26 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 @Component
 public class PagAgendamentoController implements Initializable {
 
-    @Autowired
-    private Navigator navigator;
+    @Autowired private Navigator navigator;
+    @Autowired private AgendamentoService agendamentoService;
+    @Autowired private ProcedimentoService procedimentoService;
+    @Autowired private PacienteService pacienteService;
 
-    @Autowired
-    private AgendamentoRepository agendamentoRepository;
+    @FXML private TextField cpfField;
+    @FXML private ComboBox<Procedimento> procedimentoCombo;
+    @FXML private ComboBox<LocalTime> horarioCombo;
+    @FXML private DatePicker dataPicker;
+    @FXML private Button btnFinanceiro;
+    @FXML private Label textUsuario;
 
-    @Autowired
-    private ProcedimentoRepository procedimentoRepository;
+    private Optional<Paciente> pacienteEncontrado = Optional.empty();
 
-    @Autowired
-    private PacienteRepository pacienteRepository;
-
-    @FXML
-    private TextField cpfField;
-
-    @FXML
-    private ComboBox<Procedimento> procedimentoCombo;
-
-    @FXML
-    private ComboBox<LocalTime> horarioCombo;
-
-    @FXML
-    private DatePicker dataPicker;
-
-    private Paciente pacienteEncontrado;
-
-    @FXML
-    private Button btnFinanceiro;
-
-    @FXML
-    private Label textUsuario;
 
     private static final LocalTime ALMOCO_INICIO = LocalTime.of(12, 0);
     private static final LocalTime ALMOCO_FIM = LocalTime.of(14, 0);
@@ -75,12 +62,8 @@ public class PagAgendamentoController implements Initializable {
             textUsuario.setText("ADMINISTRADOR");
         }
 
-        // ADICIONE TODOS OS 8 PROCEDIMENTOS DO FINANCEIRO
-        procedimentoCombo.setItems(
-                FXCollections.observableArrayList(
-                        procedimentoRepository.findAll()
-                )
-        );
+
+        procedimentoCombo.setItems(FXCollections.observableArrayList(procedimentoService.listarProcedimentos()));
 
         // Horários disponíveis (mantive os originais, mas pode expandir se quiser)
         dataPicker.valueProperty().addListener((obs, o, n) -> atualizarHorarios());
@@ -91,71 +74,25 @@ public class PagAgendamentoController implements Initializable {
 
     // PAGINAÇÃO DO MENU LATERAL
 
-    // Botão para ir para tela da Agenda
-    @FXML
-    private void irParaAgenda(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Agenda.fxml"
-        );
-    }
+
+    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(),"/view/pages/Agenda.fxml"); }
     // Outro botão sem um event para que possa ser chamado aqui no proprio código
-    @FXML
-    private void irParaAgenda() {
-        navigator.trocarPagina(
-                cpfField,
-                "/view/pages/Agenda.fxml"
-        );
-    }
-
-    @FXML
-    private void irParaPacientes(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/TodosPacientes.fxml"
-        );
-    }
-
-    // Bot├úo para ir para tela de Registro (Descomentar quando a tela existir)
-    @FXML
-    private void irParaRegistro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Registro.fxml"
-        );
-    }
-
-    // Bot├úo para ir para tela Financeiro (Descomentar quando a tela existir
-    @FXML
-    private void irParaFinanceiro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Financeiro.fxml"
-        );
-    }
-
+    @FXML private void irParaAgenda() { navigator.trocarPagina(cpfField,"/view/pages/Agenda.fxml"); }
+    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml"); }
+    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
+    @FXML private void irParaFinanceiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
     // Botão para cadastrar um novo paciente
-    @FXML
-    private void irParaCadPaciente(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/CadastroPessoa.fxml"
-        );
-    }
+    @FXML private void irParaCadPaciente(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/CadastroPessoa.fxml"); }
+
 
     @FXML
     private void onAgendar() {
-
         if (!validarFormulario()){
             return;
         }
 
         String cpf = cpfField.getText().replaceAll("\\D", "");
-
-        pacienteEncontrado =
-                pacienteRepository.findByCpf(cpf)
-                        .orElse(null);
-
+        pacienteEncontrado = pacienteService.buscarPorCpf(cpf);
         if (pacienteEncontrado == null) {
             mostrarAlerta("Paciente não encontrado para o CPF informado.");
             return;
@@ -163,12 +100,12 @@ public class PagAgendamentoController implements Initializable {
 
         Agendamento agendamento = new Agendamento();
         agendamento.setStatus(StatusAgendamento.AGENDADA);
-        agendamento.setPaciente(pacienteEncontrado);
+        pacienteEncontrado.ifPresent(paciente -> {agendamento.setPaciente(paciente);});
         agendamento.setProcedimento(procedimentoCombo.getValue());
         agendamento.setData(dataPicker.getValue());
         agendamento.setHora(horarioCombo.getValue());
 
-        agendamentoRepository.save(agendamento);
+        agendamentoService.marcarAgendamento(agendamento);
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Sucesso");
@@ -337,7 +274,7 @@ public class PagAgendamentoController implements Initializable {
         }
 
         List<Agendamento> agendados =
-                agendamentoRepository.findByDataAndStatusIn(
+                agendamentoService.buscarPorDataEStatus(
                         data,
                         List.of(
                                 StatusAgendamento.AGENDADA,
@@ -372,7 +309,7 @@ public class PagAgendamentoController implements Initializable {
             return;
         }
 
-        pacienteRepository.findByCpf(cpf).ifPresentOrElse(
+        pacienteService.buscarPorCpf(cpf).ifPresentOrElse(
                 usuario -> {
                     // AQUI você usa os dados do paciente
                     System.out.println("Paciente encontrado: " + usuario.getNome());

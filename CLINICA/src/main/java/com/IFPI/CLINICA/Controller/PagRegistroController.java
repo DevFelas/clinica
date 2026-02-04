@@ -6,7 +6,6 @@ import com.IFPI.CLINICA.Model.Agendamento;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import javafx.beans.property.SimpleStringProperty;
-import com.IFPI.CLINICA.Model.Paciente;
 import com.IFPI.CLINICA.Model.Procedimento;
 import com.IFPI.CLINICA.Service.AgendamentoService;
 import com.IFPI.CLINICA.Service.PacienteService;
@@ -15,7 +14,6 @@ import com.IFPI.CLINICA.Util.Navigator;
 import com.IFPI.CLINICA.Util.SessaoUsuario;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -37,113 +35,43 @@ import java.time.LocalDate;
 @Component
 public class PagRegistroController {
 
+    @Autowired private Navigator navigator;
+
     private ObservableList<Agendamento> listaAgendamentos;
     private FilteredList<Agendamento> listaFiltrada;
 
-    @Autowired
-    private ProcedimentoService procedimentoService;
+    @Autowired private ProcedimentoService procedimentoService;
+    @Autowired private PacienteService service;
+    @Autowired private AgendamentoService agendamentoService;
 
-    @FXML
-    private ComboBox<Procedimento> comboProcedimentos;
+    @FXML private ComboBox<Procedimento> comboProcedimentos;
 
-    @Autowired
-    private Navigator navigator;
+    @FXML private TextField campoPesquisa;
+    @FXML private DatePicker dataInicio;
 
-    @Autowired
-    private PacienteService service;
+    @FXML private DatePicker dataFim;
+    @FXML private Button btnNovaConsulta;
+    @FXML private Button btnEditar;
+    @FXML private Button btnCancelar;
+    @FXML private Button btnDetalhar;
+    @FXML private Button btnSair;
+    @FXML private Label lblTotal;
 
-    @Autowired
-    private AgendamentoService agendamentoService;
-
-    @FXML
-    private TextField campoPesquisa;
-
-    @FXML
-    private DatePicker dataInicio;
-
-    @FXML
-    private DatePicker dataFim;
-
-    @FXML
-    private Button btnNovaConsulta;
-
-    @FXML
-    private Button btnEditar;
-
-    @FXML
-    private Button btnCancelar;
-
-    @FXML
-    private Button btnDetalhar;
-
-    @FXML
-    private Button btnSair;
-
-    @FXML
-    private Label lblTotal;
-
-    @FXML
-    private TableView<Agendamento> tabelaAgendamentos;
-
-    @FXML
-    private TableColumn<Agendamento, String> colPaciente;
-
-    @FXML
-    private TableColumn<Agendamento, String> colProcedimento;
-
-    @FXML
-    private TableColumn<Agendamento, String> colHorario;
-
-    @FXML
-    private TableColumn<Agendamento, LocalDate> colData;
-
-    @FXML
-    private TableColumn<Agendamento, String> colStatus;
-
-    @FXML
-    private Button btnFinanceiro;
-
-    @FXML
-    private Label textUsuario;
+    @FXML private TableView<Agendamento> tabelaAgendamentos;
+    @FXML private TableColumn<Agendamento, String> colPaciente;
+    @FXML private TableColumn<Agendamento, String> colProcedimento;
+    @FXML private TableColumn<Agendamento, String> colHorario;
+    @FXML private TableColumn<Agendamento, LocalDate> colData;
+    @FXML private TableColumn<Agendamento, String> colStatus;
+    @FXML private Button btnFinanceiro;
+    @FXML private Label textUsuario;
 
 
     // PAGINAÇÃO DO MENU LATERAL
-
-    // Botão para ir para tela da Agenda
-    @FXML
-    private void irParaAgenda(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Agenda.fxml"
-        );
-    }
-
-    // Botão para ir para tela de Pacintes
-    @FXML
-    private void irParaPacientes(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/TodosPacientes.fxml"
-        );
-    }
-
-    // Botão para ir para tela de Registro (Descomentar quando a tela existir)
-    @FXML
-    private void irParaRegistro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Registro.fxml"
-        );
-    }
-
-    // Botão para ir para tela Financeiro (Descomentar quando a tela existir
-    @FXML
-    private void irParaFinaneiro(ActionEvent event) {
-        navigator.trocarPagina(
-                (Node) event.getSource(),
-                "/view/pages/Financeiro.fxml"
-        );
-    }
+    @FXML private void irParaAgenda(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Agenda.fxml"); }
+    @FXML private void irParaPacientes(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/TodosPacientes.fxml"); }
+    @FXML private void irParaRegistro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Registro.fxml"); }
+    @FXML private void irParaFinaneiro(ActionEvent event) { navigator.trocarPagina((Node) event.getSource(), "/view/pages/Financeiro.fxml"); }
 
     // Botão para limpar filtros
     @FXML

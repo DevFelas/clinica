@@ -19,7 +19,10 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 
 /**
  * Controller responsável pela tela de listagem e gerenciamento de pacientes.
@@ -34,6 +37,7 @@ public class PagPacientesController extends SuperController implements Initializ
     @Autowired
     private Navigator navigator;
 
+    @FXML private Label labelContador;
     @FXML private Label textUsuario;
     @FXML private Button btnFinanceiro;
     @FXML private TextField campoBusca;
@@ -61,6 +65,7 @@ public class PagPacientesController extends SuperController implements Initializ
 
         configurarColunas();
         atualizarTabela();
+        campoBusca.setPromptText("Pesquisar por nome ou CPF...");
     }
 
     /**
@@ -92,13 +97,72 @@ public class PagPacientesController extends SuperController implements Initializ
         if (colNum != null) colNum.setCellValueFactory(new PropertyValueFactory<>("numero"));
     }
 
+    // Atualiza o texto tanto quando você abre a tela quanto quando você filtra
+    private void atualizarTextoContador(int quantidade) {
+        if (labelContador != null) {
+            if (quantidade == 0) {
+                labelContador.setText("Nenhum paciente encontrado");
+            } else {
+                labelContador.setText(quantidade + (quantidade == 1 ? " paciente encontrado" : " pacientes encontrados"));
+            }
+        }
+    }
+
     /**
      * Consulta o serviço de pacientes e sincroniza a lista observável com a TableView.
      */
     public void atualizarTabela() {
+        // 1. Busca a lista atualizada do banco
         List<Paciente> pacientes = pacienteService.listarPacientes();
+
+        // Ordenar por nome antes de mostrar
+        pacientes.sort((p1, p2) -> p1.getNome().compareToIgnoreCase(p2.getNome()));
+
         listaPacientes.setAll(pacientes);
-        tabelaPacientes.setItems(listaPacientes);
+
+        // 2. Cria a lista filtrável
+        FilteredList<Paciente> filtro = new FilteredList<>(listaPacientes, p -> true);
+
+        // 3. Configura o campo de busca
+        campoBusca.textProperty().addListener((obs, velho, novo) -> {
+            filtro.setPredicate(paciente -> {
+                // Se o campo estiver vazio, exibe todos
+                if (novo == null || novo.isBlank()) {
+                    return true;
+                }
+
+                String busca = novo.toLowerCase().trim();
+                String buscaApenasNumeros = busca.replaceAll("\\D", "");
+
+                // --- FILTRO POR NOME OU SOBRENOME ---
+                // O "contains" permite achar "Silva" mesmo digitando no meio
+                if (paciente.getNome() != null && paciente.getNome().toLowerCase().contains(busca)) {
+                    return true;
+                }
+
+                // --- FILTRO POR CPF ---
+                if (paciente.getCpf() != null && !buscaApenasNumeros.isEmpty()) {
+                    String cpfBancoLimpo = paciente.getCpf().replaceAll("\\D", "");
+
+                    // Usa startsWith para garantir a sequência exata do início
+                    if (cpfBancoLimpo.startsWith(buscaApenasNumeros)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
+
+            //5. Atualiza o contador com base no que sobrou ao filtrar
+            atualizarTextoContador(filtro.size());
+
+        });
+
+        // 4. Alimenta a tabela
+        tabelaPacientes.setItems(filtro);
+
+        //5. Quando abre a tela mostra o total
+        atualizarTextoContador(listaPacientes.size());
     }
 
     /**
@@ -127,10 +191,36 @@ public class PagPacientesController extends SuperController implements Initializ
      */
     @FXML
     private void removerPaciente(ActionEvent event) {
+        // 1. Pega o paciente selecionado na tabela
         Paciente selecionado = tabelaPacientes.getSelectionModel().getSelectedItem();
+
         if (selecionado != null) {
-            pacienteService.remover(selecionado.getId());
-            atualizarTabela();
+            // 2. Cria o Alerta de Confirmação
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirmação de Exclusão");
+            alert.setHeaderText("Excluir Paciente");
+            alert.setContentText("Tem certeza que deseja excluir: " + selecionado.getNome() + "?");
+
+            // Personaliza os botões para ficar em Português
+            ButtonType btnSim = new ButtonType("Sim", ButtonBar.ButtonData.YES);
+            ButtonType btnNao = new ButtonType("Não", ButtonBar.ButtonData.NO);
+            alert.getButtonTypes().setAll(btnSim, btnNao);
+
+            // 3. Mostra o alerta e espera a resposta
+            Optional<ButtonType> resultado = alert.showAndWait();
+
+            if (resultado.isPresent() && resultado.get() == btnSim) {
+                // Se confirmou, remove do banco e atualiza tudo
+                pacienteService.remover(selecionado.getId());
+                atualizarTabela(); // Isso já recarrega a lista e deve atualizar o contador
+            }
+        } else {
+            // Alerta caso não tenha nada selecionado
+            Alert aviso = new Alert(Alert.AlertType.WARNING);
+            aviso.setTitle("Atenção");
+            aviso.setHeaderText(null);
+            aviso.setContentText("Por favor, selecione um paciente na tabela para remover.");
+            aviso.showAndWait();
         }
     }
 
